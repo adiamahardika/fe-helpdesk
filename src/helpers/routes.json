@@ -1,0 +1,11 @@
+{
+  "dashboard": "/dashboard",
+  "users": "/users",
+  "add_user": "/add-user",
+  "edit_user": "/edit-user",
+  "role": "/role",
+  "add_role": "/add-role",
+  "edit_role": "/edit-role",
+  "login": "/login",
+  "logout": "/logout"
+}
