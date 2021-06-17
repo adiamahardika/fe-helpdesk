@@ -6,7 +6,7 @@ test:
   image: node:latest
   stage: test
   script:
-    - npm install
+    - npm install --force
     - npm run test
   only:
     - dev
