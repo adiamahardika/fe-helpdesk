@@ -3,7 +3,7 @@ stages:
   - staging
 
 test:
-  image: node:latest
+  image: node:14.17.1
   stage: test
   script:
     - npm install --force
