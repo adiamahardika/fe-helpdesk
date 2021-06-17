@@ -7,7 +7,6 @@ test:
   stage: test
   script:
     - npm install --force
-    - npm run test
   only:
     - dev
   tags:
