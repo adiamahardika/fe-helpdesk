@@ -13,7 +13,6 @@ import {
 // Layout Related Components
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import Footer from "./Footer";
 import Rightbar from "../CommonForBoth/Rightbar";
 
 class Layout extends Component {
@@ -52,7 +51,7 @@ class Layout extends Component {
     let currentage = this.capitalizeFirstLetter(this.props.location.pathname);
 
     document.title =
-      currentage + " | Skote - Responsive Bootstrap 4 Admin Dashboard";
+      currentage + " | BRI Dashboard";
     if (this.props.leftSideBarTheme) {
       this.props.changeSidebarTheme(this.props.leftSideBarTheme);
     }
@@ -101,7 +100,6 @@ class Layout extends Component {
           <div className="main-content">
             {this.props.children}
           </div>
-          <Footer />
         </div>
         { this.props.showRightSidebar ? <Rightbar /> : null  }
       </React.Fragment>
