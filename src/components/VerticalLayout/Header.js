@@ -9,9 +9,9 @@ import { Link } from "react-router-dom";
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu";
 
 import logo from "../../assets/images/logo-bri-sm.png";
-import logoLightPng from "../../assets/images/logo-light.png";
+import logoLightPng from "../../assets/images/mygrapari.png";
 import logoLightSvg from "../../assets/images/logo-bri-sm.png";
-import logoDark from "../../assets/images/logo-bri.png";
+import logoDark from "../../assets/images/mygrapari.png";
 
 //i18n
 import { withNamespaces } from "react-i18next";

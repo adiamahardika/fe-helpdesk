@@ -5,10 +5,10 @@ import { withRouter, useHistory } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { readCaptcha } from "../../store/auth/captcha/actions";
 import { bindActionCreators } from "redux";
-import logo from "../../assets/images/logo-bri.png";
-import login2 from "../../assets/images/img-login2.svg";
+import logo from "../../assets/images/mygrapari.png";
+import login2 from "../../assets/images/login.png";
 import general_constant from "../../helpers/general_constant.json";
-import routes from "../../helpers/routes.json"
+import routes from "../../helpers/routes.json";
 import "../../assets/css/style.css";
 require("dotenv").config();
 
@@ -65,7 +65,7 @@ const Login = (props) => {
           md={6}
           className="d-flex flex-column justify-content-center"
           style={{
-            backgroundColor: "#556ee6",
+            backgroundColor: "#EC1C24",
             padding: "5%",
           }}
         >
@@ -103,7 +103,7 @@ const Login = (props) => {
             style={{ width: "40%" }}
             alt=""
           />
-          <h3
+          <div
             style={{
               fontSize: "30px",
               fontWeight: "bold",
@@ -111,7 +111,15 @@ const Login = (props) => {
             className="mt-3"
           >
             Welcome Back!
-          </h3>
+          </div>
+          <div
+            style={{
+              fontSize: "25px",
+              fontWeight: "bold",
+            }}
+          >
+            Trilogi Ticketing Apps
+          </div>
           <div style={{ color: "#6A7482" }}>
             To keep connected with us please login with <br />
             your personal info
@@ -229,7 +237,8 @@ const Login = (props) => {
               </Col>
               <div className="mt-3">
                 <button
-                  className="btn btn2 btn-primary btn-block waves-effect waves-light"
+                  className="btn btn2 btn-block waves-effect waves-light"
+                  style={{ backgroundColor: "#EC1C24", color: "white" }}
                   type="submit"
                 >
                   Log In
