@@ -16,7 +16,7 @@ import Role from "../pages/Settings/Role/index";
 import AddRole from "../pages/Settings/Role/add_role";
 import EditRole from "../pages/Settings/Role/edit_role";
 const userRoutes = [
-  { path: "/dashboard", component: Dashboard },
+  { path: routes.dashboard, component: Dashboard },
   { path: routes.users, component: Users },
   { path: routes.add_user, component: AddUser },
   { path: routes.edit_user, component: EditUser },
@@ -25,7 +25,11 @@ const userRoutes = [
   { path: routes.edit_role, component: EditRole },
 
   // this route should be at the end of all other routes
-  { path: "/", exact: true, component: () => <Redirect to="/dashboard" /> },
+  {
+    path: "/",
+    exact: true,
+    component: () => <Redirect to={routes.dashboard} />,
+  },
 ];
 
 const authRoutes = [

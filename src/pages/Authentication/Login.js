@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import { withRouter, useHistory } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { readCaptcha } from "../../store/auth/captcha/actions";
+import { bindActionCreators } from "redux";
 import logo from "../../assets/images/logo-bri.png";
 import login2 from "../../assets/images/img-login2.svg";
 import general_constant from "../../helpers/general_constant.json";
-import { bindActionCreators } from "redux";
+import routes from "../../helpers/routes.json"
 import "../../assets/css/style.css";
 require("dotenv").config();
 
@@ -42,7 +43,7 @@ const Login = (props) => {
               JSON.stringify(value.response.role[0].listPermission)
             );
             localStorage.setItem("isAuth", true);
-            history.push("/");
+            history.push(routes.dashboard);
           } else {
             setMessage(value.description);
           }
