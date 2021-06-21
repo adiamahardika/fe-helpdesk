@@ -22,7 +22,11 @@ import {
   UPDATE_USER_PROFILE_FULFILLED,
 } from "./actionTypes";
 
-export const createUser = (data) => {
+export const createUser = (value) => {
+  let data = {
+    body: value,
+    url: "/api/user/add",
+  };
   return {
     type: CREATE_USER,
     payload: data,
@@ -43,10 +47,13 @@ export const createUserFulfilled = (payload) => {
   };
 };
 
-export const readUser = (data) => {
+export const readUser = (value) => {
+  let data = {
+    url: `/api/user/${value.search}/${value.size}/${value.page_no}`,
+  };
   return {
     type: READ_USER,
-    payload: data
+    payload: data,
   };
 };
 
@@ -64,7 +71,10 @@ export const readUserFulfilled = (data) => {
   };
 };
 
-export const readUserDetail = (data) => {
+export const readUserDetail = (value) => {
+  let data = {
+    url: `/api/user/${value}`,
+  };
   return {
     type: READ_USER_DETAIL,
     payload: data,
@@ -85,7 +95,11 @@ export const readUserDetailFulfilled = (data) => {
   };
 };
 
-export const updateUser = (data) => {
+export const updateUser = (value) => {
+  let data = {
+    body: value,
+    url: "/api/user/edituser",
+  };
   return {
     type: UPDATE_USER,
     payload: data,
@@ -106,7 +120,11 @@ export const updateUserFulfilled = (payload) => {
   };
 };
 
-export const updateUserProfile = (data) => {
+export const updateUserProfile = (value) => {
+  let data = {
+    body: value,
+    url: "/api/user/edit-user-profile",
+  };
   return {
     type: UPDATE_USER_PROFILE,
     payload: data,
@@ -127,7 +145,11 @@ export const updateUserProfileFulfilled = (payload) => {
   };
 };
 
-export const deleteUser = (data) => {
+export const deleteUser = (value) => {
+  let data = {
+    delete_url: `/api/user/${value.id}`,
+    read_url: `/api/user/${value.search}/${value.size}/${value.page_no}`,
+  };
   return {
     type: DELETE_USER,
     payload: data,
@@ -148,7 +170,11 @@ export const deleteUserFulfilled = (payload) => {
   };
 };
 
-export const resetPassword = (data) => {
+export const resetPassword = (value) => {
+  let data = {
+    body: value,
+    url: "/api/resetpassword",
+  };
   return {
     type: RESET_PASSWORD,
     payload: data,

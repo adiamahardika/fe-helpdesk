@@ -24,23 +24,23 @@ import {
   deleteRoleFulfilled,
 } from "./actions";
 import {
-  createRoleMethod,
-  readRoleMethod,
-  updateRoleMethod,
-  deleteRoleMethod,
-} from "./method";
+  postMethod,
+  getMethod,
+  putMethod,
+  deleteMethod,
+} from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
 
-function* readRole() {
-  const data = yield call(readRoleMethod);
-  if (data.responseCode === general_constant.success_response_code) {
-    yield put(readRoleFulfilled(data));
+function* readRole({ payload: data }) {
+  const response = yield call(getMethod, data);
+  if (response.responseCode === general_constant.success_response_code) {
+    yield put(readRoleFulfilled(response));
   } else {
-    yield put(readRoleReject(data));
+    yield put(readRoleReject(response));
   }
 }
 function* createRole({ payload: data }) {
-  const response = yield call(createRoleMethod, data);
+  const response = yield call(postMethod, data);
   if (response.responseCode === general_constant.success_response_code) {
     yield put(createRoleFulfilled(response));
   } else {
@@ -48,15 +48,15 @@ function* createRole({ payload: data }) {
   }
 }
 function* updateRole({ payload: data }) {
-  const response = yield call(updateRoleMethod, data);
+  const response = yield call(putMethod, data);
   if (response.responseCode === general_constant.success_response_code) {
     yield put(updateRoleFulfilled(response));
   } else {
     yield put(updateRoleReject(response));
   }
 }
-function* deleteRole({ payload: id }) {
-  const response = yield call(deleteRoleMethod, id);
+function* deleteRole({ payload: data }) {
+  const response = yield call(deleteMethod, data);
   if (response.responseCode === general_constant.success_response_code) {
     yield put(deleteRoleFulfilled(response));
   } else {

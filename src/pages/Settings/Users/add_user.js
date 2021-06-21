@@ -16,7 +16,7 @@ import routes from "../../../helpers/routes.json";
 const AddUser = (props) => {
   const message = props.message_user;
   const response_code = props.response_code_user;
-  const option_role = props.option_role;
+  const loading = props.loading;
   const list_role = props.list_role;
   const permissions = JSON.parse(localStorage.getItem("permission"));
   const history = useHistory();
@@ -126,7 +126,7 @@ const AddUser = (props) => {
 
   const ShowSweetAlert = () => {
     let value = null;
-    if (isShowSweetAlert) {
+    if (isShowSweetAlert && loading === true) {
       if (response_code === general_constant.success_response_code) {
         value = (
           <SweetAlert

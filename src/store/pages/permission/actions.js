@@ -5,8 +5,12 @@ import {
 } from "./actionTypes";
 
 export const readPermission = () => {
+  const data = {
+    url: `/api/permission`,
+  };
   return {
     type: READ_PERMISSION,
+    payload: data,
   };
 };
 

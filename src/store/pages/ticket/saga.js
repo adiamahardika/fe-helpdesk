@@ -9,11 +9,11 @@ import {
 
 import { READ_TICKET } from "./actionTypes";
 import { readTicketReject, readTicketFulfilled } from "./actions";
-import { readMethod } from "../../method";
+import { getMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
 
 function* readTicket({ payload: data }) {
-  const response = yield call(readMethod, data);
+  const response = yield call(getMethod, data);
   if (response.responseCode === general_constant.success_response_code) {
     yield put(readTicketFulfilled(response));
   } else {

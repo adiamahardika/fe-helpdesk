@@ -5,8 +5,12 @@ import {
 } from "./actionTypes";
 
 export const readCaptcha = () => {
+  const data = {
+    url: `/captcha/get`,
+  };
   return {
     type: READ_CAPTCHA,
+    payload: data,
   };
 };
 

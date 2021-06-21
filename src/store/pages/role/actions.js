@@ -13,7 +13,11 @@ import {
   DELETE_ROLE_FULFILLED,
 } from "./actionTypes";
 
-export const createRole = (data) => {
+export const createRole = (value) => {
+  let data = {
+    body: value,
+    url: "/api/role",
+  };
   return {
     type: CREATE_ROLE,
     payload: data,
@@ -35,8 +39,12 @@ export const createRoleFulfilled = (payload) => {
 };
 
 export const readRole = () => {
+  let data = {
+    url: "/api/role",
+  };
   return {
     type: READ_ROLE,
+    payload: data,
   };
 };
 
@@ -54,10 +62,14 @@ export const readRoleFulfilled = (data) => {
   };
 };
 
-export const updateRole = (data) => {
+export const updateRole = (value) => {
+  let data = {
+    body: value,
+    url: "/api/role",
+  };
   return {
     type: UPDATE_ROLE,
-    payload: { data },
+    payload: data,
   };
 };
 
@@ -76,9 +88,13 @@ export const updateRoleFulfilled = (payload) => {
 };
 
 export const deleteRole = (id) => {
+  let data = {
+    delete_url: `/api/role/${id}`,
+    read_url: `/api/role`,
+  };
   return {
     type: DELETE_ROLE,
-    payload: id,
+    payload: data,
   };
 };
 

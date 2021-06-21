@@ -2,15 +2,15 @@ import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 import { READ_PERMISSION } from "./actionTypes";
 import { readPermissionReject, readPermissionFulfilled } from "./actions";
-import { readPermissionMethod } from "./method";
+import { getMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
 
-function* readPermission() {
-  const data = yield call(readPermissionMethod);
-  if (data.responseCode === general_constant.success_response_code) {
-    yield put(readPermissionFulfilled(data));
+function* readPermission({ payload: data }) {
+  const response = yield call(getMethod, data);
+  if (response.responseCode === general_constant.success_response_code) {
+    yield put(readPermissionFulfilled(response));
   } else {
-    yield put(readPermissionReject(data));
+    yield put(readPermissionReject(response));
   }
 }
 
