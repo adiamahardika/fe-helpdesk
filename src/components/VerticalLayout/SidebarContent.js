@@ -82,6 +82,12 @@ const SidebarContent = (props) => {
       <div id="sidebar-menu">
         <ul className="metismenu list-unstyled" id="side-menu">
           <li>
+            <Link to={routes.ticket} className="waves-effect">
+              <i className="fas fa-ticket-alt"></i>
+              <span>{props.t("Ticket")}</span>
+            </Link>
+          </li>
+          <li>
             <Link to="/#" className="has-arrow waves-effect">
               <i className="bx bxs-cog"></i>
               <span>{props.t("Settings")}</span>

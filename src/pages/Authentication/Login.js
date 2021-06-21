@@ -43,7 +43,7 @@ const Login = (props) => {
               JSON.stringify(value.response.role[0].listPermission)
             );
             localStorage.setItem("isAuth", true);
-            history.push(routes.dashboard);
+            history.push(routes.ticket);
           } else {
             setMessage(value.description);
           }

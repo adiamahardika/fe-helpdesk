@@ -1,0 +1,379 @@
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Card,
+  CardBody,
+  Modal,
+  Table,
+  Col,
+  Row,
+  Badge,
+} from "reactstrap";
+import { readTicket } from "../../store/pages/ticket/actions";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { parseFullDate } from "../../helpers/index";
+import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
+import code_all_permissions from "../../helpers/code_all_permissions.json";
+import SweetAlert from "react-bootstrap-sweetalert";
+import ReactPaginate from "react-paginate";
+import general_constant from "../../helpers/general_constant.json";
+import routes from "../../helpers/routes.json";
+import "../../assets/css/pagination.css";
+
+const Ticket = (props) => {
+  const list_ticket = props.list_ticket;
+  const message = props.message_ticket;
+  const response_code = props.response_code_ticket;
+  const total_pages_ticket = props.total_pages_ticket;
+  const active_page_ticket = props.active_page_ticket;
+  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const history = useHistory();
+
+  const [deleteUser, setDeleteUser] = useState(false);
+  const [addUser, setAddUser] = useState(false);
+  const [editUser, setEditUser] = useState(false);
+
+  const [modalDelete, setModalDelete] = useState(false);
+
+  const [data, setData] = useState({ size: 10, page_no: 0, search: "*" });
+  const [selectedData, setSelectedData] = useState(null);
+  const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
+
+  const removeBodyCss = () => {
+    document.body.classList.add("no_padding");
+  };
+
+  const ShowSweetAlert = () => {
+    let value = null;
+    if (isShowSweetAlert) {
+      if (response_code === general_constant.success_response_code) {
+        value = (
+          <SweetAlert
+            title={general_constant.success_message}
+            success
+            confirmBtnBsStyle="success"
+            onConfirm={() => {
+              setIsShowSweetAlert(false);
+              setSelectedData(null);
+              history.push(routes.ticket);
+            }}
+          >
+            The ticket has successfully deleted!
+          </SweetAlert>
+        );
+      } else {
+        value = (
+          <SweetAlert
+            title={general_constant.error_message}
+            error
+            confirmBtnBsStyle="success"
+            onConfirm={() => {
+              setIsShowSweetAlert(false);
+            }}
+          >
+            {message}
+          </SweetAlert>
+        );
+      }
+    }
+    return value;
+  };
+  const handlePageClick = (value) => {
+    props.readTicket({ ...data, page_no: value.selected });
+    setData({ ...data, page_no: value.selected });
+  };
+  const StatusLabel = (value) => {
+    let color = null;
+    if (value) {
+      switch (value.value) {
+        case "New":
+          color = "#f46a6a";
+          break;
+        case "Waiting Reply":
+          color = "#f1b44c";
+          break;
+        case "Replied":
+          color = "#556ee6";
+          break;
+        case "In Progress":
+          color = "#34c38f";
+          break;
+        case "Resolved":
+          color = "#34c38f";
+          break;
+        case "On Hold":
+          color = "#343a40";
+          break;
+        default:
+          color = "#34c38f";
+      }
+      return <td style={{ color: color }}>{value.value}</td>;
+    }
+  };
+  const PriorityLabel = (value) => {
+    let color = null;
+    if (value) {
+      switch (value.value) {
+        case "High":
+          color = "#f46a6a";
+          break;
+        case "Medium":
+          color = "#f1b44c";
+          break;
+        case "Critical":
+          color = "#9400d3";
+          break;
+        case "Low":
+          color = "#34c38f";
+          break;
+        default:
+          color = "#34c38f";
+      }
+      return (
+        <span
+          style={{
+            fontSize: "12px",
+            display: "inlineBlock",
+            padding: "0.5rem 0.75rem",
+            fontWeight: "bold",
+            borderRadius: "0.5rem",
+            backgroundColor: color,
+            color: "#ffffff",
+          }}
+        >
+          {value.value}
+        </span>
+      );
+    }
+  };
+
+  useEffect(() => {
+    props.readTicket(data);
+  }, []);
+  return (
+    <React.Fragment>
+      <div className="page-content">
+        <Container fluid>
+          <Breadcrumbs title={"Ticket"} breadcrumbItem={"Ticket"} />
+          <Card>
+            <CardBody>
+              <Row className="mb-3 d-flex align-items-end">
+                <Col md="10">
+                  <Row className="d-flex align-items-end">
+                    <Col md="2">
+                      <div className="form-group mb-0">
+                        <label>Show Data</label>
+                        <div>
+                          <select
+                            className="form-control"
+                            defaultValue={10}
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                size: parseInt(event.target.value),
+                                page_no: 0,
+                              }),
+                              props.readTicket({
+                                ...data,
+                                size: parseInt(event.target.value),
+                                page_no: 0,
+                              })
+                            )}
+                          >
+                            <option value={10}>10</option>
+                            <option value={25}>25</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                          </select>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col md="2" className="d-flex justify-content-end">
+                  <Link to={routes.add_ticket}>
+                    <button
+                      type="button"
+                      className="btn btn-primary waves-effect waves-light"
+                    >
+                      <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
+                      New
+                    </button>
+                  </Link>
+                </Col>
+              </Row>
+
+              <div className="table-responsive">
+                <Table className="table table-centered table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">No</th>
+                      <th scope="col">Ticket Code</th>
+                      <th scope="col">Terminal Id</th>
+                      <th scope="col">Location</th>
+                      <th scope="col">Submitted</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Subject</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Replies</th>
+                      <th scope="col">Replies Staff</th>
+                      <th scope="col">Owner</th>
+                      <th scope="col">Time Worked</th>
+                      <th scope="col">Last Replier</th>
+                      <th scope="col">Updated</th>
+                      <th scope="col">Priority</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {list_ticket &&
+                      list_ticket.map((value, index) => {
+                        return (
+                          <tr key={value.id}>
+                            <th scope="row">
+                              <div>{index + 1}</div>
+                            </th>
+                            <td>{value.kodeTicket}</td>
+                            <td>{value.terminal_id}</td>
+                            <td>{value.lokasi}</td>
+                            <td style={{ minWidth: "100px" }}>
+                              {parseFullDate(value.tglDibuat)}
+                            </td>
+                            <td>{value.kategori}</td>
+                            <td>{value.judul}</td>
+                            <StatusLabel value={value.status} />
+                            <td>0</td>
+                            <td>0</td>
+                            <td>{value.usernamePembuat}</td>
+                            <td>{value.totalWaktu}</td>
+                            <td>{value.usernamePembalas}</td>
+                            <td style={{ minWidth: "100px" }}>
+                              {parseFullDate(value.tglDiperbarui)}
+                            </td>
+                            <td>
+                              {" "}
+                              <PriorityLabel value={value.prioritas} />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </Table>
+                {list_ticket && list_ticket.length <= 0 && (
+                  <div style={{ textAlign: "center" }}>No Data</div>
+                )}
+              </div>
+              <Row className="d-flex align-items-end">
+                <ReactPaginate
+                  previousLabel={"previous"}
+                  nextLabel={"next"}
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={total_pages_ticket}
+                  marginPagesDisplayed={1}
+                  pageRangeDisplayed={5}
+                  forcePage={active_page_ticket}
+                  onPageChange={handlePageClick}
+                  containerClassName={"pagination"}
+                  subContainerClassName={"pages pagination"}
+                  activeClassName={"active"}
+                />
+              </Row>
+            </CardBody>
+          </Card>
+
+          {/* Modal Delete */}
+          <Modal
+            isOpen={modalDelete}
+            toggle={() => {
+              setModalDelete(!modalDelete);
+              removeBodyCss();
+              setSelectedData(null);
+            }}
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Delete User
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalDelete(false);
+                  setSelectedData(null);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Are you sure want to delete this ticket?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalDelete(!modalDelete);
+                  removeBodyCss();
+                  setSelectedData(null);
+                }}
+                className="btn btn-secondary waves-effect"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger waves-effect waves-light"
+                onClick={() => {
+                  setIsShowSweetAlert(true);
+                  props.deleteUser({ ...data, id: selectedData.id });
+                  setModalDelete(!modalDelete);
+                  removeBodyCss();
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </Modal>
+          <ShowSweetAlert />
+        </Container>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const mapStatetoProps = (state) => {
+  const {
+    list_ticket,
+    message_ticket,
+    response_code_ticket,
+    loading,
+    page_ticket,
+    total_pages_ticket,
+    active_page_ticket,
+  } = state.Ticket;
+  return {
+    list_ticket,
+    response_code_ticket,
+    message_ticket,
+    page_ticket,
+    total_pages_ticket,
+    active_page_ticket,
+    loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      readTicket,
+    },
+    dispatch
+  );
+
+export default connect(mapStatetoProps, mapDispatchToProps)(Ticket);
