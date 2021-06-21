@@ -9,7 +9,6 @@ import logo from "../../assets/images/mygrapari.png";
 import login2 from "../../assets/images/login.png";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
-import "../../assets/css/style.css";
 require("dotenv").config();
 
 const Login = (props) => {

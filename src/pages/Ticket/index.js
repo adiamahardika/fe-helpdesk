@@ -32,11 +32,7 @@ const Ticket = (props) => {
   const permissions = JSON.parse(localStorage.getItem("permission"));
   const history = useHistory();
 
-  const [deleteUser, setDeleteUser] = useState(false);
-  const [addUser, setAddUser] = useState(false);
-  const [editUser, setEditUser] = useState(false);
-
-  const [modalDelete, setModalDelete] = useState(false);
+  const [modalDetail, setModalDetail] = useState(false);
 
   const [data, setData] = useState({ size: 10, page_no: 0, search: "*" });
   const [selectedData, setSelectedData] = useState(null);
@@ -144,7 +140,7 @@ const Ticket = (props) => {
             color: "#ffffff",
           }}
         >
-          {value.value}
+          #{value.value}
         </span>
       );
     }
@@ -211,20 +207,15 @@ const Ticket = (props) => {
                   <thead>
                     <tr>
                       <th scope="col">No</th>
-                      <th scope="col">Ticket Code</th>
+                      <th scope="col">Ticket Id</th>
                       <th scope="col">Terminal Id</th>
                       <th scope="col">Location</th>
                       <th scope="col">Submitted</th>
                       <th scope="col">Category</th>
                       <th scope="col">Subject</th>
                       <th scope="col">Status</th>
-                      <th scope="col">Replies</th>
-                      <th scope="col">Replies Staff</th>
-                      <th scope="col">Owner</th>
-                      <th scope="col">Time Worked</th>
-                      <th scope="col">Last Replier</th>
-                      <th scope="col">Updated</th>
                       <th scope="col">Priority</th>
+                      <th scope="col">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -244,17 +235,30 @@ const Ticket = (props) => {
                             <td>{value.kategori}</td>
                             <td>{value.judul}</td>
                             <StatusLabel value={value.status} />
-                            <td>0</td>
-                            <td>0</td>
-                            <td>{value.usernamePembuat}</td>
-                            <td>{value.totalWaktu}</td>
-                            <td>{value.usernamePembalas}</td>
-                            <td style={{ minWidth: "100px" }}>
-                              {parseFullDate(value.tglDiperbarui)}
-                            </td>
                             <td>
                               {" "}
                               <PriorityLabel value={value.prioritas} />
+                            </td>
+                            <td>
+                              <div
+                                style={{
+                                  display: "grid",
+                                  gridAutoFlow: "column",
+                                  columnGap: "4px",
+                                }}
+                              >
+                                <button
+                                  type="button"
+                                  className="btn btn-info waves-effect waves-light"
+                                  style={{ minWidth: "max-content" }}
+                                  onClick={() => {
+                                    setSelectedData(value);
+                                    setModalDetail(!modalDetail);
+                                  }}
+                                >
+                                  <i className="bx bx-show-alt font-size-16 align-middle"></i>
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         );
@@ -284,23 +288,32 @@ const Ticket = (props) => {
             </CardBody>
           </Card>
 
-          {/* Modal Delete */}
+          {/* Modal Detail */}
           <Modal
-            isOpen={modalDelete}
+            isOpen={modalDetail}
             toggle={() => {
-              setModalDelete(!modalDelete);
+              setModalDetail(!modalDetail);
               removeBodyCss();
               setSelectedData(null);
             }}
           >
-            <div className="modal-header">
+            <div
+              className="modal-header"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr repeat(2, max-content)",
+                columnGap: "1rem",
+                alignItems: "center",
+              }}
+            >
               <h5 className="modal-title mt-0" id="myModalLabel">
-                Delete User
+                Ticket {selectedData && selectedData.kodeTicket}
               </h5>
+              <PriorityLabel value={selectedData && selectedData.prioritas} />
               <button
                 type="button"
                 onClick={() => {
-                  setModalDelete(false);
+                  setModalDetail(false);
                   setSelectedData(null);
                 }}
                 className="close"
@@ -311,33 +324,84 @@ const Ticket = (props) => {
               </button>
             </div>
             <div className="modal-body">
-              Are you sure want to delete this ticket?
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                onClick={() => {
-                  setModalDelete(!modalDelete);
-                  removeBodyCss();
-                  setSelectedData(null);
-                }}
-                className="btn btn-secondary waves-effect"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger waves-effect waves-light"
-                onClick={() => {
-                  setIsShowSweetAlert(true);
-                  props.deleteUser({ ...data, id: selectedData.id });
-                  setModalDelete(!modalDelete);
-                  removeBodyCss();
-                }}
-              >
-                Delete
-              </button>
+              <div className="table-responsive">
+                <Table className="table table-centered">
+                  <tbody>
+                    <tr>
+                      <th>Ticket Id</th>
+                      <td>{selectedData && selectedData.kodeTicket}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Terminal Id</th>
+                      <td>{selectedData && selectedData.terminal_id}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Location</th>
+                      <td>{selectedData && selectedData.lokasi}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Submitted</th>
+                      <td>
+                        {selectedData && parseFullDate(selectedData.tglDibuat)}
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Category</th>
+                      <td>{selectedData && selectedData.kategori}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Subject</th>
+                      <td>{selectedData && selectedData.judul}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Status</th>
+                      <StatusLabel
+                        value={selectedData && selectedData.status}
+                      />
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Replies</th>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Replies Staff</th>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Owner</th>
+                      <td>{selectedData && selectedData.usernamePembuat}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Time Worked</th>
+                      <td>{selectedData && selectedData.totalWaktu}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Last Replier</th>
+                      <td>{selectedData && selectedData.usernamePembalas}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Updated</th>
+                      <td>
+                        {selectedData &&
+                          parseFullDate(selectedData.tglDiperbarui)}
+                      </td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </div>
             </div>
           </Modal>
           <ShowSweetAlert />
