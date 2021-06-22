@@ -6,6 +6,7 @@ import User from "./pages/users/reducer";
 import Role from "./pages/role/reducer";
 import Permission from "./pages/permission/reducer";
 import Ticket from "./pages/ticket/reducer";
+import Category from "./pages/category/reducer";
 // Authentication
 import Login from "./auth/login/reducer";
 import Account from "./auth/register/reducer";
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   Permission,
   Captcha,
   Ticket,
+  Category,
 });
 
 export default rootReducer;

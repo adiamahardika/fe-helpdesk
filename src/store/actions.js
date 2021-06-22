@@ -3,6 +3,7 @@ export * from "./pages/users/actions";
 export * from "./pages/permission/actions";
 export * from "./pages/role/actions";
 export * from "./pages/ticket/actions";
+export * from "./pages/category/actions";
 
 // Authentication module
 export * from './auth/register/actions';

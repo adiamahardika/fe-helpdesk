@@ -16,6 +16,7 @@ import Role from "../pages/Settings/Role/index";
 import AddRole from "../pages/Settings/Role/add_role";
 import EditRole from "../pages/Settings/Role/edit_role";
 import Ticket from "../pages/Ticket/index"
+import Category from "../pages/Category/index"
 
 const userRoutes = [
   { path: routes.dashboard, component: Dashboard },
@@ -26,6 +27,7 @@ const userRoutes = [
   { path: routes.add_role, component: AddRole },
   { path: routes.edit_role, component: EditRole },
   { path: routes.ticket, component: Ticket },
+  { path: routes.category, component: Category },
 
   // this route should be at the end of all other routes
   {

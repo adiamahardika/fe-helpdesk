@@ -88,6 +88,12 @@ const SidebarContent = (props) => {
             </Link>
           </li>
           <li>
+            <Link to={routes.category} className="waves-effect">
+              <i className="bx bx-list-ul"></i>
+              <span>{props.t("Category")}</span>
+            </Link>
+          </li>
+          <li>
             <Link to="/#" className="has-arrow waves-effect">
               <i className="bx bxs-cog"></i>
               <span>{props.t("Settings")}</span>
