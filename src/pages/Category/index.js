@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, Table, Col, Row } from "reactstrap";
-import { readCategory } from "../../store/pages/category/actions";
+import { Container, Card, CardBody, Table, Col, Row, Modal } from "reactstrap";
+import {
+  readCategory,
+  deleteCategory,
+} from "../../store/pages/category/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import { parseFullDate } from "../../helpers/index";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -30,6 +34,8 @@ const Category = (props) => {
   });
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
+
+  const [modalDelete, setModalDelete] = useState(false);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -138,6 +144,7 @@ const Category = (props) => {
                             <option value="nama">Name</option>
                             <option value="codeLevel">Code Level</option>
                             <option value="parent">Parent</option>
+                            <option value="updateAt">Last Update</option>
                           </select>
                         </div>
                       </div>
@@ -169,7 +176,7 @@ const Category = (props) => {
                   </Row>
                 </Col>
                 <Col md="2" className="d-flex justify-content-end">
-                  <Link to={routes.add_ticket}>
+                  <Link to={routes.add_category}>
                     <button
                       type="button"
                       className="btn btn-primary waves-effect waves-light"
@@ -181,7 +188,7 @@ const Category = (props) => {
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col md={6}>
+                <Col md={10}>
                   <div className="table-responsive">
                     <Table className="table table-centered table-striped">
                       <thead>
@@ -190,6 +197,8 @@ const Category = (props) => {
                           <th scope="col">Name</th>
                           <th scope="col">Code Level</th>
                           <th scope="col">Parent</th>
+                          <th scope="col">Last Update</th>
+                          <th scope="col">Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -203,6 +212,44 @@ const Category = (props) => {
                                 <td>{value.nama}</td>
                                 <td>{value.codeLevel}</td>
                                 <td>{value.parent}</td>
+                                <td>{parseFullDate(value.updateAt)}</td>
+                                <td>
+                                  <div
+                                    style={{
+                                      display: "grid",
+                                      rowGap: "8px",
+                                      gridAutoFlow: "column",
+                                      gridAutoColumns: "max-content",
+                                      columnGap: "4px",
+                                    }}
+                                  >
+                                    <Link
+                                      to={{
+                                        pathname: routes.edit_category,
+                                        editValue: value,
+                                      }}
+                                    >
+                                      <button
+                                        type="button"
+                                        className="btn btn-primary waves-effect waves-light"
+                                        style={{ minWidth: "max-content" }}
+                                      >
+                                        <i className="bx bx-edit font-size-16 align-middle"></i>
+                                      </button>
+                                    </Link>
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger waves-effect waves-light"
+                                      style={{ minWidth: "max-content" }}
+                                      onClick={() => {
+                                        setSelectedData(value);
+                                        setModalDelete(!modalDelete);
+                                      }}
+                                    >
+                                      <i className="bx bx-trash font-size-16 align-middle"></i>
+                                    </button>
+                                  </div>
+                                </td>
                               </tr>
                             );
                           })}
@@ -232,6 +279,49 @@ const Category = (props) => {
               </Row>
             </CardBody>
           </Card>
+          <Modal
+            isOpen={modalDelete}
+            toggle={() => {
+              setModalDelete(!modalDelete);
+              removeBodyCss();
+              setSelectedData(null);
+            }}
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Delete User
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalDelete(false);
+                  setSelectedData(null);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Are you sure want to delete this category?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-danger waves-effect waves-light"
+                onClick={() => {
+                  setIsShowSweetAlert(true);
+                  props.deleteCategory({ ...data, id: selectedData.id });
+                  setModalDelete(!modalDelete);
+                  removeBodyCss();
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </Modal>
           <ShowSweetAlert />
         </Container>
       </div>
@@ -245,7 +335,6 @@ const mapStatetoProps = (state) => {
     message_category,
     response_code_category,
     loading,
-    page_category,
     total_pages_category,
     active_page_category,
   } = state.Category;
@@ -253,7 +342,6 @@ const mapStatetoProps = (state) => {
     list_category,
     response_code_category,
     message_category,
-    page_category,
     total_pages_category,
     active_page_category,
     loading,
@@ -264,6 +352,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       readCategory,
+      deleteCategory,
     },
     dispatch
   );

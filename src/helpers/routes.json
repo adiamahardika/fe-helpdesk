@@ -8,6 +8,8 @@
   "edit_role": "/edit-role",
   "ticket": "/ticket",
   "category": "/category",
+  "add_category": "/add-category",
+  "edit_category": "/edit-category",
   "login": "/login",
   "logout": "/logout"
 }

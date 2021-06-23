@@ -15,8 +15,10 @@ import EditUser from "../pages/Settings/Users/edit_user";
 import Role from "../pages/Settings/Role/index";
 import AddRole from "../pages/Settings/Role/add_role";
 import EditRole from "../pages/Settings/Role/edit_role";
-import Ticket from "../pages/Ticket/index"
-import Category from "../pages/Category/index"
+import Ticket from "../pages/Ticket/index";
+import Category from "../pages/Category/index";
+import AddCategory from "../pages/Category/add_category";
+import EditCategory from "../pages/Category/edit_category";
 
 const userRoutes = [
   { path: routes.dashboard, component: Dashboard },
@@ -28,6 +30,8 @@ const userRoutes = [
   { path: routes.edit_role, component: EditRole },
   { path: routes.ticket, component: Ticket },
   { path: routes.category, component: Category },
+  { path: routes.add_category, component: AddCategory },
+  { path: routes.edit_category, component: EditCategory },
 
   // this route should be at the end of all other routes
   {
