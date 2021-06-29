@@ -227,7 +227,7 @@ const Ticket = (props) => {
                               <div>{index + 1}</div>
                             </th>
                             <td>{value.kodeTicket}</td>
-                            <td>{value.terminal_id}</td>
+                            <td>{value.terminalId}</td>
                             <td>{value.lokasi}</td>
                             <td style={{ minWidth: "100px" }}>
                               {parseFullDate(value.tglDibuat)}
@@ -334,12 +334,17 @@ const Ticket = (props) => {
                     </tr>
                     <tr>
                       <th>Terminal Id</th>
-                      <td>{selectedData && selectedData.terminal_id}</td>
+                      <td>{selectedData && selectedData.terminalId}</td>
                       <td></td>
                     </tr>
                     <tr>
                       <th>Location</th>
                       <td>{selectedData && selectedData.lokasi}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Email</th>
+                      <td>{selectedData && selectedData.email}</td>
                       <td></td>
                     </tr>
                     <tr>

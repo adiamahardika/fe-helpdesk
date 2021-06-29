@@ -2,6 +2,9 @@ import {
   READ_TICKET,
   READ_TICKET_REJECT,
   READ_TICKET_FULFILLED,
+  CREATE_TICKET,
+  CREATE_TICKET_REJECT,
+  CREATE_TICKET_FULFILLED,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -36,6 +39,25 @@ const Ticket = (state = INIT_STATE, action) => {
         message_ticket: action.payload.description,
         active_page_ticket: action.payload.page,
         total_pages_ticket: action.payload.totalPages,
+        loading: true,
+      };
+    case CREATE_TICKET:
+      return {
+        ...state,
+        loading: true,
+      };
+    case CREATE_TICKET_REJECT:
+      return {
+        ...state,
+        response_code_ticket: action.payload.responseCode,
+        message_ticket: action.payload.description,
+        loading: true,
+      };
+    case CREATE_TICKET_FULFILLED:
+      return {
+        ...state,
+        response_code_ticket: action.payload.responseCode,
+        message_ticket: action.payload.description,
         loading: true,
       };
 
