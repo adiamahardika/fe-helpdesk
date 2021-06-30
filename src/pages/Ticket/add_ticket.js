@@ -7,6 +7,7 @@ import {
   Row,
   Col,
   CardTitle,
+  Modal,
 } from "reactstrap";
 import { readCategory } from "../../store/pages/category/actions";
 import { readUser } from "../../store/pages/users/actions";
@@ -43,8 +44,8 @@ const priority = [
 ];
 
 const AddTicket = (props) => {
-  const message = props.message_ticket;
-  const response_code = props.response_code_ticket;
+  let message = props.message_ticket;
+  let response_code = props.response_code_ticket;
   const loading = props.loading;
   const list_category = props.list_category;
   const list_user = props.list_user;
@@ -60,6 +61,13 @@ const AddTicket = (props) => {
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
   const [customchk, setcustomchk] = useState(true);
+  const [modalFilter, setModalFilter] = useState(false);
+  const [modalRequirements, setModalRequirements] = useState(false);
+  console.log(selectedFiles1);
+
+  const removeBodyCss = () => {
+    document.body.classList.add("no_padding");
+  };
 
   const handleAcceptedFiles = (files, number) => {
     let icon = null;
@@ -68,50 +76,104 @@ const AddTicket = (props) => {
     let today = new Date();
     let split = files[0].type.split("/");
     let fileName = files[0].name.split(".");
+    let extensionCheck = false;
+    let sizeCheck = false;
 
-    if (split[0] === "application") {
-      icon = "bx bxs-file";
-      fileType = "file";
-    } else if (split[0] === "image") {
-      fileType = "image";
+    if (files[0].size <= 2000000) {
+      sizeCheck = true;
     }
-    Object.assign(files[0], {
-      preview: URL.createObjectURL(files[0]),
-      formattedSize: formatBytes(files[0].size),
-      icon: icon,
-      file: fileType,
-    });
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        let base64 = reader.result.split(",");
-        if (number === "1") {
-          setSelectedFiles1(files[0]);
-          setData({
-            ...data,
-            base64_1: base64[1],
-            base64FileName1:
-              ("0" + today.getHours()).slice(-2) +
-              ("0" + today.getMinutes()).slice(-2) +
-              ("0" + today.getSeconds()).slice(-2) +
-              "." +
-              fileName[fileName.length - 1],
-          });
-        } else {
-          setSelectedFiles2(files[0]);
-          setData({
-            ...data,
-            base64_2: base64[1],
-            base64FileName2:
-              ("0" + today.getHours()).slice(-2) +
-              ("0" + today.getMinutes()).slice(-2) +
-              ("0" + today.getSeconds()).slice(-2) +
-              "." +
-              fileName[fileName.length - 1],
-          });
-        }
+    switch (fileName[1]) {
+      case "gif":
+        extensionCheck = true;
+        break;
+      case "jpg":
+        extensionCheck = true;
+        break;
+      case "jpeg":
+        extensionCheck = true;
+        break;
+      case "png":
+        extensionCheck = true;
+        break;
+      case "zip":
+        extensionCheck = true;
+        break;
+      case "rar":
+        extensionCheck = true;
+        break;
+      case "csv":
+        extensionCheck = true;
+        break;
+      case "doc":
+        extensionCheck = true;
+        break;
+      case "docx":
+        extensionCheck = true;
+        break;
+      case "xls":
+        extensionCheck = true;
+        break;
+      case "xlsx":
+        extensionCheck = true;
+        break;
+      case "txt":
+        extensionCheck = true;
+        break;
+      case "pdf":
+        extensionCheck = true;
+        break;
+
+      default:
+        extensionCheck = false;
+    }
+
+    if (extensionCheck && sizeCheck) {
+      if (split[0] === "application") {
+        icon = "bx bxs-file";
+        fileType = "file";
+      } else if (split[0] === "image") {
+        fileType = "image";
       }
-    };
-    reader.readAsDataURL(files[0]);
+      Object.assign(files[0], {
+        preview: URL.createObjectURL(files[0]),
+        formattedSize: formatBytes(files[0].size),
+        icon: icon,
+        file: fileType,
+      });
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          let base64 = reader.result.split(",");
+          if (number === "1") {
+            setSelectedFiles1(files[0]);
+            setData({
+              ...data,
+              base64_1: base64[1],
+              base64FileName1:
+                ("0" + today.getHours()).slice(-2) +
+                ("0" + today.getMinutes()).slice(-2) +
+                ("0" + today.getSeconds()).slice(-2) +
+                "." +
+                fileName[fileName.length - 1],
+            });
+          } else {
+            setSelectedFiles2(files[0]);
+            setData({
+              ...data,
+              base64_2: base64[1],
+              base64FileName2:
+                ("0" + today.getHours()).slice(-2) +
+                ("0" + today.getMinutes()).slice(-2) +
+                ("0" + today.getSeconds()).slice(-2) +
+                "." +
+                fileName[fileName.length - 1],
+            });
+          }
+        }
+      };
+      reader.readAsDataURL(files[0]);
+    } else {
+      setModalFilter(true);
+    }
   };
   const formatBytes = (bytes, decimals = 2) => {
     if (bytes === 0) return "0 Bytes";
@@ -458,7 +520,28 @@ const AddTicket = (props) => {
                     <Row className="mt-3">
                       <Col>
                         <FormGroup className="select2-container">
-                          <label className="control-label">Attachment</label>
+                          <label
+                            className="control-label"
+                            style={{
+                              display: "grid",
+                              alignItems: "center",
+                              gridAutoFlow: "column",
+                            }}
+                          >
+                            Attachment
+                            <span
+                              className="btn-link waves-effect text-right"
+                              onClick={() => {
+                                setModalFilter(false);
+                                setModalRequirements(true);
+                              }}
+                            >
+                              See requirements{" "}
+                              <span style={{ color: "#f1b44c" }}>
+                                <i className="bx bxs-error align-middle"></i>
+                              </span>
+                            </span>
+                          </label>
                           <Dropzone
                             onDrop={(acceptedFiles) => {
                               handleAcceptedFiles(acceptedFiles, "1");
@@ -751,6 +834,91 @@ const AddTicket = (props) => {
               </div>
             </CardBody>
           </Card>
+          {/* Modal Filter */}
+          <Modal
+            isOpen={modalFilter}
+            toggle={() => {
+              setModalFilter(!modalFilter);
+              removeBodyCss();
+            }}
+            centered
+          >
+            <div className="modal-header">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalFilter(false);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body text-center">
+              <span style={{ color: "#f46a6a" }}>
+                {" "}
+                <i className="display-4 bx bxs-x-circle align-middle"></i>
+              </span>
+              <h3 className="mb-3">Cannot upload this file!</h3>
+              <button
+                className="btn btn-link waves-effect"
+                onClick={() => {
+                  setModalFilter(false);
+                  setModalRequirements(true);
+                }}
+                style={{ fontSize: "1rem" }}
+              >
+                See requirements{" "}
+                <span style={{ color: "#f1b44c" }}>
+                  <i className="bx bxs-error align-middle"></i>
+                </span>
+              </button>
+            </div>
+          </Modal>
+
+          <Modal
+            isOpen={modalRequirements}
+            toggle={() => {
+              setModalRequirements(!modalRequirements);
+              removeBodyCss();
+            }}
+            centered
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                File Upload Limits{" "}
+                <span style={{ color: "#f1b44c" }}>
+                  <i className="bx bxs-error align-middle"></i>
+                </span>
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalRequirements(false);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div
+              className="modal-body"
+              style={{ lineHeight: "24px", fontSize: "14px" }}
+            >
+              1. Maximum number of attachments: <strong>2</strong> <br />
+              2. Maximum size per attachment: <strong>2 MB</strong>
+              <br />
+              3. You may upload files ending with: <br />
+              <strong>
+                .gif, .jpg, .png, .zip, .rar, .csv, .doc, .docx, .xls, .xlsx,
+                .txt, .pdf
+              </strong>
+            </div>
+          </Modal>
           {Prompt}
           <ShowSweetAlert />
         </Container>
