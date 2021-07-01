@@ -9,8 +9,8 @@ import {
 
 export const readTicket = (value) => {
   const data = {
-    ...value,
-    url: `/api/ticketing/list-ticket/${value.size}/${value.page_no}`,
+    body: value,
+    url: `/api/ticketing/list-ticket`,
   };
   return {
     type: READ_TICKET,

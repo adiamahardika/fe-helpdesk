@@ -18,7 +18,7 @@ import { getMethod, postMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
 
 function* readTicket({ payload: data }) {
-  const response = yield call(getMethod, data);
+  const response = yield call(postMethod, data);
   if (response.responseCode === general_constant.success_response_code) {
     yield put(readTicketFulfilled(response));
   } else {

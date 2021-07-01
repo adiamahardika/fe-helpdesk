@@ -34,7 +34,13 @@ const Ticket = (props) => {
 
   const [modalDetail, setModalDetail] = useState(false);
 
-  const [data, setData] = useState({ size: 10, page_no: 0, search: "*" });
+  const [data, setData] = useState({
+    pageSize: 10,
+    pageNo: 0,
+    search: "*",
+    sortBy: "tglDibuat",
+    sortType: "desc",
+  });
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
 
@@ -78,8 +84,8 @@ const Ticket = (props) => {
     return value;
   };
   const handlePageClick = (value) => {
-    props.readTicket({ ...data, page_no: value.selected });
-    setData({ ...data, page_no: value.selected });
+    props.readTicket({ ...data, pageNo: value.selected });
+    setData({ ...data, pageNo: value.selected });
   };
   const StatusLabel = (value) => {
     let color = null;
@@ -169,13 +175,13 @@ const Ticket = (props) => {
                             onChange={(event) => (
                               setData({
                                 ...data,
-                                size: parseInt(event.target.value),
-                                page_no: 0,
+                                pageSize: parseInt(event.target.value),
+                                pageNo: 0,
                               }),
                               props.readTicket({
                                 ...data,
-                                size: parseInt(event.target.value),
-                                page_no: 0,
+                                pageSize: parseInt(event.target.value),
+                                pageNo: 0,
                               })
                             )}
                           >
@@ -187,6 +193,90 @@ const Ticket = (props) => {
                         </div>
                       </div>
                     </Col>
+                    <Col md="2">
+                      <div className="form-group mb-0">
+                        <label>Sort By</label>
+                        <div>
+                          <select
+                            className="form-control"
+                            defaultValue={10}
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                sortBy: event.target.value,
+                              }),
+                              props.readTicket({
+                                ...data,
+                                sortBy: event.target.value,
+                              })
+                            )}
+                          >
+                            <option value="tglDibuat">Submitted</option>
+                            <option value="judul">Subject</option>
+                            <option value="terminalId">Terminal Id</option>
+                            <option value="status">Status</option>
+                          </select>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col md="2">
+                      <div className="form-group mb-0">
+                        <div>
+                          <select
+                            className="form-control"
+                            defaultValue={10}
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                sortType: event.target.value,
+                              }),
+                              props.readTicket({
+                                ...data,
+                                sortType: event.target.value,
+                              })
+                            )}
+                          >
+                            <option value="desc">DESC</option>
+                            <option value="asc">ASC</option>
+                          </select>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col sm="4">
+                      <div className="form-group mb-0">
+                        <div>
+                          <input
+                            className="form-control"
+                            type="search"
+                            placeholder="Search..."
+                            onChange={(event) =>
+                              event.target.value === ""
+                                ? (props.readTicket({ ...data, search: "*" }),
+                                  setData({
+                                    ...data,
+                                    search: event.target.value,
+                                  }))
+                                : setData({
+                                    ...data,
+                                    search: event.target.value,
+                                  })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </Col>
+                    <div>
+                      <button
+                        type="button"
+                        className="btn btn-primary waves-effect waves-light"
+                        onClick={() => {
+                          props.readTicket(data);
+                        }}
+                      >
+                        <i className="bx bx-search-alt-2 font-size-16 align-middle mr-2"></i>{" "}
+                        Search
+                      </button>
+                    </div>
                   </Row>
                 </Col>
                 <Col md="2" className="d-flex justify-content-end">
