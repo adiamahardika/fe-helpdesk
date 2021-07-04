@@ -348,6 +348,21 @@ const Ticket = (props) => {
                                 >
                                   <i className="bx bx-show-alt font-size-16 align-middle"></i>
                                 </button>
+                                <Link
+                                  to={{
+                                    pathname: routes.detail_ticket,
+                                    search: `?ticketId=${value.kodeTicket}`,
+                                    detailValue: value.kodeTicket,
+                                  }}
+                                >
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary waves-effect waves-light"
+                                    style={{ minWidth: "max-content" }}
+                                  >
+                                    <i className="bx bxs-detail font-size-16 align-middle"></i>
+                                  </button>
+                                </Link>
                               </div>
                             </td>
                           </tr>

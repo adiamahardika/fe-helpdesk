@@ -17,6 +17,7 @@ import AddRole from "../pages/Settings/Role/add_role";
 import EditRole from "../pages/Settings/Role/edit_role";
 import Ticket from "../pages/Ticket/index";
 import AddTicket from "../pages/Ticket/add_ticket";
+import DetailTicket from "../pages/Ticket/detail_ticket";
 import Category from "../pages/Category/index";
 import AddCategory from "../pages/Category/add_category";
 import EditCategory from "../pages/Category/edit_category";
@@ -31,6 +32,7 @@ const userRoutes = [
   { path: routes.edit_role, component: EditRole },
   { path: routes.ticket, component: Ticket },
   { path: routes.add_ticket, component: AddTicket },
+  { path: routes.detail_ticket, component: DetailTicket },
   { path: routes.category, component: Category },
   { path: routes.add_category, component: AddCategory },
   { path: routes.edit_category, component: EditCategory },

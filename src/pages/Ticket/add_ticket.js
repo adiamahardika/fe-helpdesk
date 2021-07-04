@@ -63,7 +63,6 @@ const AddTicket = (props) => {
   const [customchk, setcustomchk] = useState(true);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
-  console.log(selectedFiles1);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -246,8 +245,8 @@ const AddTicket = (props) => {
             onSubmitCreate();
           }}
         >
-          <i className="bx bx bx-save font-size-16 align-middle mr-2"></i>
-          Save
+          <i className="bx bxs-send font-size-16 align-middle mr-2"></i>
+          Submit
         </button>
       );
     } else {
@@ -258,8 +257,8 @@ const AddTicket = (props) => {
           disabled
           style={{ cursor: "default" }}
         >
-          <i className="bx bx bx-save font-size-16 align-middle mr-2"></i>
-          Save
+          <i className="bx bxs-send font-size-16 align-middle mr-2"></i>
+          Submit
         </button>
       );
     }
