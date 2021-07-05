@@ -8,6 +8,9 @@ import {
   READ_DETAIL_TICKET,
   READ_DETAIL_TICKET_REJECT,
   READ_DETAIL_TICKET_FULFILLED,
+  UPDATE_TICKET,
+  UPDATE_TICKET_REJECT,
+  UPDATE_TICKET_FULFILLED,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -83,6 +86,26 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         detail_ticket: action.payload.listDetailTicket,
         list_reply_ticket: action.payload.listReplyTicket,
+        response_code_ticket: action.payload.responseCode,
+        message_ticket: action.payload.description,
+        loading: true,
+      };
+
+    case UPDATE_TICKET:
+      return {
+        ...state,
+        loading: true,
+      };
+    case UPDATE_TICKET_REJECT:
+      return {
+        ...state,
+        response_code_ticket: action.payload.responseCode,
+        message_ticket: action.payload.description,
+        loading: true,
+      };
+    case UPDATE_TICKET_FULFILLED:
+      return {
+        ...state,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
         loading: true,

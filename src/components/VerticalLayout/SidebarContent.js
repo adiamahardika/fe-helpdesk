@@ -13,7 +13,7 @@ const SidebarContent = (props) => {
   const permissions = JSON.parse(localStorage.getItem("permission"));
   const [isViewUsers, setIsViewUsers] = useState(true);
   const [isViewRoles, setIsViewRoles] = useState(true);
-  const [isViewAuditTrail, setIsViewAuditTrail] = useState(true);
+  const [isViewCategory, setIsViewCategory] = useState(true);
 
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -23,13 +23,13 @@ const SidebarContent = (props) => {
     let viewRoles = permissions.find(
       (value) => value.code === code_all_permissions.view_role
     );
-    let viewAuditTrail = permissions.find(
-      (value) => value.code === code_all_permissions.view_audit_trail
+    let viewCategory = permissions.find(
+      (value) => value.code === code_all_permissions.view_category
     );
 
     viewUsers ? setIsViewUsers(true) : setIsViewUsers(false);
     viewRoles ? setIsViewRoles(true) : setIsViewRoles(false);
-    viewAuditTrail ? setIsViewAuditTrail(true) : setIsViewAuditTrail(false);
+    viewCategory ? setIsViewCategory(true) : setIsViewCategory(false);
 
     var pathName = props.location.pathname;
     const initMenu = () => {
@@ -87,12 +87,14 @@ const SidebarContent = (props) => {
               <span>{props.t("Ticket")}</span>
             </Link>
           </li>
-          <li>
-            <Link to={routes.category} className="waves-effect">
-              <i className="bx bx-list-ul"></i>
-              <span>{props.t("Category")}</span>
-            </Link>
-          </li>
+          {isViewUsers && (
+            <li>
+              <Link to={routes.category} className="waves-effect">
+                <i className="bx bx-list-ul"></i>
+                <span>{props.t("Category")}</span>
+              </Link>
+            </li>
+          )}
           <li>
             <Link to="/#" className="has-arrow waves-effect">
               <i className="bx bxs-cog"></i>

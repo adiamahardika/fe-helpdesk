@@ -8,6 +8,9 @@ import {
   READ_DETAIL_TICKET,
   READ_DETAIL_TICKET_REJECT,
   READ_DETAIL_TICKET_FULFILLED,
+  UPDATE_TICKET,
+  UPDATE_TICKET_REJECT,
+  UPDATE_TICKET_FULFILLED,
 } from "./actionTypes";
 
 export const readTicket = (value) => {
@@ -80,6 +83,31 @@ export const readDetailTicketReject = (payload) => {
 export const readDetailTicketFulfilled = (data) => {
   return {
     type: READ_DETAIL_TICKET_FULFILLED,
+    payload: data,
+  };
+};
+
+export const updateTicket = (value) => {
+  const data = {
+    body: value,
+    url: `/api/ticketing/edit-ticket`,
+  };
+  return {
+    type: UPDATE_TICKET,
+    payload: data,
+  };
+};
+
+export const updateTicketReject = (payload) => {
+  return {
+    type: UPDATE_TICKET_REJECT,
+    payload: payload,
+  };
+};
+
+export const updateTicketFulfilled = (data) => {
+  return {
+    type: UPDATE_TICKET_FULFILLED,
     payload: data,
   };
 };

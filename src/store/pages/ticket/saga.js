@@ -7,7 +7,12 @@ import {
   takeLatest,
 } from "redux-saga/effects";
 
-import { READ_TICKET, CREATE_TICKET, READ_DETAIL_TICKET } from "./actionTypes";
+import {
+  READ_TICKET,
+  CREATE_TICKET,
+  READ_DETAIL_TICKET,
+  UPDATE_TICKET,
+} from "./actionTypes";
 import {
   readTicketReject,
   readTicketFulfilled,
@@ -15,8 +20,10 @@ import {
   createTicketFulfilled,
   readDetailTicketReject,
   readDetailTicketFulfilled,
+  updateTicketReject,
+  updateTicketFulfilled,
 } from "./actions";
-import { getMethod, postMethod } from "../../method";
+import { getMethod, postMethod, putMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
 
 function* readTicket({ payload: data }) {
@@ -43,6 +50,14 @@ function* readDetailTicket({ payload: data }) {
     yield put(readDetailTicketReject(response));
   }
 }
+function* updateTicket({ payload: data }) {
+  const response = yield call(putMethod, data);
+  if (response.responseCode === general_constant.success_response_code) {
+    yield put(updateTicketFulfilled(response));
+  } else {
+    yield put(updateTicketReject(response));
+  }
+}
 
 export function* watchReadTicket() {
   yield takeLatest(READ_TICKET, readTicket);
@@ -53,12 +68,16 @@ export function* watchCreateTicket() {
 export function* watchReadDetailTicket() {
   yield takeLatest(READ_DETAIL_TICKET, readDetailTicket);
 }
+export function* watchUpdateTicket() {
+  yield takeLatest(UPDATE_TICKET, updateTicket);
+}
 
 function* TicketSaga() {
   yield all([
     fork(watchReadTicket),
     fork(watchCreateTicket),
     fork(watchReadDetailTicket),
+    fork(watchUpdateTicket),
   ]);
 }
 

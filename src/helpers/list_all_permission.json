@@ -1,10 +1,10 @@
 [
   {
-    "name": "Dashboard",
+    "name": "Ticket",
     "code": "1",
     "sub_level_1": [
       {
-        "name": "View Dashboard",
+        "name": "View Ticket",
         "code": "1.1"
       }
     ]
@@ -68,38 +68,24 @@
     ]
   },
   {
-    "name": "Reporting",
+    "name": "Category",
     "code": "3",
     "sub_level_1": [
       {
-        "name": "Transaction",
-        "code": "3.1",
-        "sub_level_2": [
-          {
-            "name": "View Transaction",
-            "code": "3.1.1"
-          }
-        ]
+        "name": "View Category",
+        "code": "3.1"
       },
       {
-        "name": "History",
-        "code": "3.2",
-        "sub_level_2": [
-          {
-            "name": "View History",
-            "code": "3.2.1"
-          }
-        ]
+        "name": "Add Category",
+        "code": "3.2"
       },
       {
-        "name": "Audit Trail",
-        "code": "3.3",
-        "sub_level_2": [
-          {
-            "name": "View Audit Trail",
-            "code": "3.3.1"
-          }
-        ]
+        "name": "Edit Category",
+        "code": "3.3"
+      },
+      {
+        "name": "Delete Category",
+        "code": "3.4"
       }
     ]
   }

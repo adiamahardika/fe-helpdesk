@@ -105,7 +105,7 @@ const AddUser = (props) => {
             onSubmitCreate();
           }}
         >
-          <i className="bx bx bx-save font-size-16 align-middle mr-2"></i>
+          <i className="bx bx-save font-size-16 align-middle mr-2"></i>
           Save
         </button>
       );
@@ -117,7 +117,7 @@ const AddUser = (props) => {
           disabled
           style={{ cursor: "default" }}
         >
-          <i className="bx bx bx-save font-size-16 align-middle mr-2"></i>
+          <i className="bx bx-save font-size-16 align-middle mr-2"></i>
           Save
         </button>
       );

@@ -8,8 +8,14 @@ import {
   CardTitle,
   FormGroup,
   Modal,
+  Button,
 } from "reactstrap";
-import { readDetailTicket } from "../../store/pages/ticket/actions";
+import {
+  readDetailTicket,
+  updateTicket,
+} from "../../store/pages/ticket/actions";
+import { readCategory } from "../../store/pages/category/actions";
+import { readUser } from "../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { parseFullDate } from "../../helpers/index";
@@ -26,9 +32,37 @@ import Dropzone from "react-dropzone";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import "../../assets/css/pagination.css";
 
+const list_status = [
+  { name: "New", color: "#f46a6a" },
+  { name: "Waiting Reply", color: "#f1b44c" },
+  { name: "Replied", color: "#556ee6" },
+  { name: "In Progress", color: "#34c38f" },
+  { name: "Resolved", color: "#34c38f" },
+  { name: "On Hold", color: "#343a40" },
+];
+const list_priority = [
+  {
+    name: "Low",
+    color: "#34c38f",
+  },
+  {
+    name: "Medium",
+    color: "#f1b44c",
+  },
+  {
+    name: "High",
+    color: "#f46a6a",
+  },
+  {
+    name: "Critical",
+    color: "#9400d3",
+  },
+];
 const DetailTicket = (props) => {
   const detail_ticket = props.detail_ticket;
   const list_reply_ticket = props.list_reply_ticket;
+  const list_category = props.list_category;
+  const list_user = props.list_user;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const permissions = JSON.parse(localStorage.getItem("permission"));
@@ -38,10 +72,14 @@ const DetailTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
+  const [editData, setEditData] = useState(null);
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
+  const [showEditTicket, setShowEditTicket] = useState(false);
+  const [statusColor, setStatusColor] = useState(null);
+  const [priorityColor, setPriorityColor] = useState(null);
 
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
@@ -165,6 +203,114 @@ const DetailTicket = (props) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   };
+  const onShowEdit = () => {
+    setShowEditTicket(true);
+    setEditData(detail_ticket);
+    if (detail_ticket) {
+      switch (detail_ticket.status) {
+        case "New":
+          setStatusColor("#f46a6a");
+          break;
+        case "Waiting Reply":
+          setStatusColor("#f1b44c");
+          break;
+        case "Replied":
+          setStatusColor("#556ee6");
+          break;
+        case "In Progress":
+          setStatusColor("#34c38f");
+          break;
+        case "Resolved":
+          setStatusColor("#34c38f");
+          break;
+        case "On Hold":
+          setStatusColor("#343a40");
+          break;
+        default:
+          setStatusColor("#34c38f");
+      }
+      switch (detail_ticket.prioritas) {
+        case "High":
+          setPriorityColor("#f46a6a");
+          break;
+        case "Medium":
+          setPriorityColor("#f1b44c");
+          break;
+        case "Critical":
+          setPriorityColor("#9400d3");
+          break;
+        case "Low":
+          setPriorityColor("#34c38f");
+          break;
+        default:
+          setPriorityColor("#34c38f");
+      }
+    }
+  };
+  const onChangeStatus = async (value) => {
+    if (value) {
+      switch (value) {
+        case "New":
+          setStatusColor("#f46a6a");
+          break;
+        case "Waiting Reply":
+          setStatusColor("#f1b44c");
+          break;
+        case "Replied":
+          setStatusColor("#556ee6");
+          break;
+        case "In Progress":
+          setStatusColor("#34c38f");
+          break;
+        case "Resolved":
+          setStatusColor("#34c38f");
+          break;
+        case "On Hold":
+          setStatusColor("#343a40");
+          break;
+        default:
+          setStatusColor("#34c38f");
+      }
+      setEditData({
+        ...editData,
+        status: value,
+      });
+    }
+    setDirty();
+  };
+  const onChangePriority = async (value) => {
+    if (value) {
+      switch (value) {
+        case "High":
+          setPriorityColor("#f46a6a");
+          break;
+        case "Medium":
+          setPriorityColor("#f1b44c");
+          break;
+        case "Critical":
+          setPriorityColor("#9400d3");
+          break;
+        case "Low":
+          setPriorityColor("#34c38f");
+          break;
+        default:
+          setPriorityColor("#34c38f");
+      }
+      setEditData({
+        ...editData,
+        prioritas: value,
+      });
+    }
+    setDirty();
+  };
+  console.log(editData)
+  const onSubmitUpdate = async () => {
+    props.updateTicket(editData);
+    props.readDetailTicket(ticketId);
+    setIsShowSweetAlert(true);
+    setShowEditTicket(false)
+    setPristine();
+  };
 
   const onSubmitCreate = async () => {
     props.createTicket(data);
@@ -211,10 +357,10 @@ const DetailTicket = (props) => {
             onConfirm={() => {
               setIsShowSweetAlert(false);
               setSelectedData(null);
-              history.push(routes.ticket);
+              history.push(routes.detail_ticket + "?ticketId=" + ticketId);
             }}
           >
-            The ticket has successfully deleted!
+            The ticket has successfully edited!
           </SweetAlert>
         );
       } else {
@@ -303,6 +449,13 @@ const DetailTicket = (props) => {
 
   useEffect(() => {
     props.readDetailTicket(ticketId);
+    props.readCategory({
+      size: 0,
+      page_no: 0,
+      sort_by: "nama",
+      order_by: "asc",
+    });
+    props.readUser({ size: 1000, page_no: 0, search: "*" });
   }, []);
   return (
     <React.Fragment>
@@ -370,49 +523,276 @@ const DetailTicket = (props) => {
                         parseFullDate(detail_ticket.tglDiperbarui)}
                     </Col>
                   </Row>
+                  <Row className="align-items-center mb-2">
+                    <Col className="d-flex" style={{ flexFlow: "column" }}>
+                      <strong>Time Worked</strong>
+                      {detail_ticket && detail_ticket.totalWaktu}
+                    </Col>
+                  </Row>
                   <div
                     className="mt-3"
                     style={{
                       borderTopColor: "#cfcfcf",
                       borderTopStyle: "solid",
                       borderTopWidth: "0.5px",
-                      paddingTop: "1rem",
+                      paddingTop: "4px",
                     }}
                   >
-                    <Row className="align-items-center mb-2">
-                      <Col className="d-flex" style={{ flexFlow: "column" }}>
-                        <strong>Category</strong>
-                        {detail_ticket && detail_ticket.kategori}
+                    <Row className="align-items-center">
+                      <Col className="d-flex justify-content-end align-items-center">
+                        <span
+                          className="btn-link waves-effect text-right"
+                          onClick={() => onShowEdit()}
+                        >
+                          Edit
+                          <i className="bx bxs-edit font-size-16 align-middle ml-1"></i>
+                        </span>
                       </Col>
                     </Row>
-                    <Row className="align-items-center mb-2">
-                      <Col className="d-flex" style={{ flexFlow: "column" }}>
-                        <strong>Status</strong>
-                        <StatusLabel
-                          value={detail_ticket && detail_ticket.status}
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="align-items-center mb-2">
-                      <Col className="d-flex" style={{ flexFlow: "column" }}>
-                        <strong>Priority</strong>
-                        <PriorityLabel
-                          value={detail_ticket && detail_ticket.prioritas}
-                        />
-                      </Col>
-                    </Row>
-                    <Row className="align-items-center mb-2">
-                      <Col className="d-flex" style={{ flexFlow: "column" }}>
-                        <strong>Assign To</strong>
-                        {detail_ticket && detail_ticket.assignedTo}
-                      </Col>
-                    </Row>
-                    <Row className="align-items-center mb-2">
-                      <Col className="d-flex" style={{ flexFlow: "column" }}>
-                        <strong>Time Worked</strong>
-                        {detail_ticket && detail_ticket.totalWaktu}
-                      </Col>
-                    </Row>
+                    {showEditTicket ? (
+                      <>
+                        <Row>
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <label className="control-label">Category</label>
+                              <div>
+                                <select
+                                  name="kategori"
+                                  className="form-control"
+                                  onChange={(event) => (
+                                    setEditData({
+                                      ...editData,
+                                      kategori: event.target.value,
+                                    }),
+                                    setDirty()
+                                  )}
+                                >
+                                  {list_category &&
+                                    list_category.map((value, index) => (
+                                      <option
+                                        key={index}
+                                        value={value && value.nama}
+                                        onChange={(event) => (
+                                          setEditData({
+                                            ...editData,
+                                            kategori: event.target.value,
+                                          }),
+                                          setDirty()
+                                        )}
+                                        selected={
+                                          detail_ticket &&
+                                          detail_ticket.kategori === value.nama
+                                        }
+                                      >
+                                        {value.nama}
+                                      </option>
+                                    ))}
+                                </select>
+                              </div>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <label className="control-label">Status</label>
+                              <div>
+                                <select
+                                  name="kategori"
+                                  className="form-control"
+                                  onChange={(event) =>
+                                    onChangeStatus(event.target.value)
+                                  }
+                                  style={{
+                                    color: statusColor,
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {list_status.map((value, index) => (
+                                    <option
+                                      key={index}
+                                      value={value && value.nama}
+                                      onChange={(event) =>
+                                        onChangeStatus(event.target.value)
+                                      }
+                                      style={{
+                                        color: value.color,
+                                        fontWeight: "bold",
+                                      }}
+                                      selected={
+                                        detail_ticket &&
+                                        detail_ticket.status === value.name
+                                      }
+                                    >
+                                      {value.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <label className="control-label">Priority</label>
+                              <div>
+                                <select
+                                  name="priority"
+                                  className="form-control"
+                                  onChange={(event) =>
+                                    onChangePriority(event.target.value)
+                                  }
+                                  style={{
+                                    color: priorityColor,
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {list_priority.map((value, index) => (
+                                    <option
+                                      key={index}
+                                      value={value.name}
+                                      onChange={(event) =>
+                                        onChangePriority(event.target.value)
+                                      }
+                                      style={{
+                                        color: value.color,
+                                        fontWeight: "bold",
+                                      }}
+                                      selected={
+                                        detail_ticket &&
+                                        detail_ticket.prioritas === value.name
+                                      }
+                                    >
+                                      {value.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            {" "}
+                            <FormGroup className="select2-container">
+                              <label className="control-label">Assign To</label>
+                              <div>
+                                <select
+                                  name="assignedTo"
+                                  className="form-control"
+                                  defaultValue="Unassigned"
+                                  onChange={(event) =>
+                                    setEditData({
+                                      ...editData,
+                                      assignedTo: event.target.value,
+                                    })
+                                  }
+                                >
+                                  <option
+                                    value="Unassigned"
+                                    selected={
+                                      detail_ticket &&
+                                      detail_ticket.assignedTo === "Unassigned"
+                                    }
+                                  >
+                                    Unassigned
+                                  </option>
+                                  {list_user &&
+                                    list_user.map((value, index) => (
+                                      <option
+                                        key={index}
+                                        value={value.name}
+                                        onChange={(event) =>
+                                          setData({
+                                            ...data,
+                                            assignedTo: event.target.value,
+                                          })
+                                        }
+                                        selected={
+                                          detail_ticket &&
+                                          detail_ticket.assignedTo ===
+                                            value.name
+                                        }
+                                      >
+                                        {value.name}
+                                      </option>
+                                    ))}
+                                </select>
+                              </div>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                      </>
+                    ) : (
+                      <>
+                        <Row className="align-items-center mb-2">
+                          <Col
+                            className="d-flex"
+                            style={{ flexFlow: "column" }}
+                          >
+                            <strong>Category</strong>
+                            {detail_ticket && detail_ticket.kategori}
+                          </Col>
+                        </Row>
+                        <Row className="align-items-center mb-2">
+                          <Col
+                            className="d-flex"
+                            style={{ flexFlow: "column" }}
+                          >
+                            <strong>Status</strong>
+                            <StatusLabel
+                              value={detail_ticket && detail_ticket.status}
+                            />
+                          </Col>
+                        </Row>
+                        <Row className="align-items-center mb-2">
+                          <Col
+                            className="d-flex"
+                            style={{ flexFlow: "column" }}
+                          >
+                            <strong>Priority</strong>
+                            <PriorityLabel
+                              value={detail_ticket && detail_ticket.prioritas}
+                            />
+                          </Col>
+                        </Row>
+                        <Row className={`align-items-center`}>
+                          <Col
+                            className="d-flex"
+                            style={{ flexFlow: "column" }}
+                          >
+                            <strong>Assign To</strong>
+                            {detail_ticket && detail_ticket.assignedTo}
+                          </Col>
+                        </Row>
+                      </>
+                    )}
+
+                    {showEditTicket && (
+                      <Row>
+                        <Col className="d-flex justify-content-end">
+                          <Button
+                            color="primary"
+                            outline
+                            className="waves-effect waves-light"
+                            onClick={() => setShowEditTicket(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </Col>
+                        <Col className="d-flex justify-content-start">
+                          <button
+                            type="button"
+                            className="btn btn-primary waves-effect waves-light"
+                            onClick={() => onSubmitUpdate()}
+                          >
+                            <i className="bx bx-save font-size-16 align-middle mr-2"></i>
+                            Save
+                          </button>
+                        </Col>
+                      </Row>
+                    )}
                   </div>
                 </CardBody>
               </Card>
@@ -854,7 +1234,11 @@ const mapStatetoProps = (state) => {
     response_code_ticket,
     loading,
   } = state.Ticket;
+  const { list_category } = state.Category;
+  const { list_user } = state.User;
   return {
+    list_category,
+    list_user,
     detail_ticket,
     list_reply_ticket,
     response_code_ticket,
@@ -868,6 +1252,9 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       readDetailTicket,
+      updateTicket,
+      readCategory,
+      readUser,
     },
     dispatch
   );
