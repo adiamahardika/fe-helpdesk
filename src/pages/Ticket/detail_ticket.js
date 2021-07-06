@@ -13,6 +13,7 @@ import {
 import {
   readDetailTicket,
   updateTicket,
+  replyTicket,
 } from "../../store/pages/ticket/actions";
 import { readCategory } from "../../store/pages/category/actions";
 import { readUser } from "../../store/pages/users/actions";
@@ -35,6 +36,12 @@ import "../../assets/css/pagination.css";
 const list_status = [
   { name: "New", color: "#f46a6a" },
   { name: "Waiting Reply", color: "#f1b44c" },
+  { name: "Replied", color: "#556ee6" },
+  { name: "In Progress", color: "#34c38f" },
+  { name: "Resolved", color: "#34c38f" },
+  { name: "On Hold", color: "#343a40" },
+];
+const list_reply_status = [
   { name: "Replied", color: "#556ee6" },
   { name: "In Progress", color: "#34c38f" },
   { name: "Resolved", color: "#34c38f" },
@@ -65,21 +72,21 @@ const DetailTicket = (props) => {
   const list_user = props.list_user;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const username = localStorage.getItem("username");
   const history = useHistory();
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
-  const [data, setData] = useState(null);
+  const [replyData, setReplyData] = useState(null);
   const [editData, setEditData] = useState(null);
-  const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
   const [showEditTicket, setShowEditTicket] = useState(false);
   const [statusColor, setStatusColor] = useState(null);
   const [priorityColor, setPriorityColor] = useState(null);
+  const [checkedSubmitAs, setCheckedSubmitAs] = useState(null);
 
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
@@ -164,8 +171,8 @@ const DetailTicket = (props) => {
           let base64 = reader.result.split(",");
           if (number === "1") {
             setSelectedFiles1(files[0]);
-            setData({
-              ...data,
+            setReplyData({
+              ...replyData,
               base64_1: base64[1],
               base64FileName1:
                 ("0" + today.getHours()).slice(-2) +
@@ -176,8 +183,8 @@ const DetailTicket = (props) => {
             });
           } else {
             setSelectedFiles2(files[0]);
-            setData({
-              ...data,
+            setReplyData({
+              ...replyData,
               base64_2: base64[1],
               base64FileName2:
                 ("0" + today.getHours()).slice(-2) +
@@ -303,28 +310,54 @@ const DetailTicket = (props) => {
     }
     setDirty();
   };
-  console.log(editData)
+  const onChangeSubmitAs = (value, index) => {
+    let array = [];
+    checkedSubmitAs.map((newValue, newIndex) => {
+      if (newIndex === index) {
+        return array.push(true);
+      } else {
+        return array.push(false);
+      }
+    });
+    setCheckedSubmitAs(array);
+    setReplyData({ ...replyData, status: value });
+  };
+  console.log(replyData);
   const onSubmitUpdate = async () => {
     props.updateTicket(editData);
     props.readDetailTicket(ticketId);
     setIsShowSweetAlert(true);
-    setShowEditTicket(false)
+    setShowEditTicket(false);
     setPristine();
   };
-
-  const onSubmitCreate = async () => {
-    props.createTicket(data);
-    setIsShowSweetAlert(true);
+  const onSubmitReply = async () => {
+    props.replyTicket(replyData);
+    props.readDetailTicket(ticketId);
+    setReplyData({
+      kodeTicket: ticketId,
+      usernamePengirim: username,
+      status: "Replied",
+      base64FileName1: "",
+      base64_1: "",
+      base64FileName2: "",
+      base64_2: "",
+    });
+    setSelectedFiles1(null);
+    setSelectedFiles2(null);
     setPristine();
   };
-  const ButtonSubmitCreate = () => {
-    if (data && Object.keys(data).length >= 16) {
+  const ButtonSubmitReply = () => {
+    if (
+      replyData &&
+      replyData.isi !== "" &&
+      Object.keys(replyData).length >= 8
+    ) {
       return (
         <button
           type="button"
           className="btn btn-primary waves-effect waves-light"
           onClick={() => {
-            onSubmitCreate();
+            onSubmitReply();
           }}
         >
           <i className="bx bxs-send font-size-16 align-middle mr-2"></i>
@@ -345,6 +378,7 @@ const DetailTicket = (props) => {
       );
     }
   };
+
   const ShowSweetAlert = () => {
     let value = null;
     if (isShowSweetAlert) {
@@ -356,7 +390,6 @@ const DetailTicket = (props) => {
             confirmBtnBsStyle="success"
             onConfirm={() => {
               setIsShowSweetAlert(false);
-              setSelectedData(null);
               history.push(routes.detail_ticket + "?ticketId=" + ticketId);
             }}
           >
@@ -456,6 +489,16 @@ const DetailTicket = (props) => {
       order_by: "asc",
     });
     props.readUser({ size: 1000, page_no: 0, search: "*" });
+    setReplyData({
+      kodeTicket: ticketId,
+      usernamePengirim: username,
+      status: "Replied",
+      base64FileName1: "",
+      base64_1: "",
+      base64FileName2: "",
+      base64_2: "",
+    });
+    setCheckedSubmitAs([true, false, false, false]);
   }, []);
   return (
     <React.Fragment>
@@ -482,7 +525,9 @@ const DetailTicket = (props) => {
                           }
                         >
                           {detail_ticket &&
-                            detail_ticket.usernamePembuat.charAt(0)}
+                            detail_ticket.usernamePembuat
+                              .charAt(0)
+                              .toUpperCase()}
                         </span>
                       </div>
                     </Col>
@@ -512,7 +557,7 @@ const DetailTicket = (props) => {
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Created On</strong>
+                      <strong>Replyd On</strong>
                       {detail_ticket && parseFullDate(detail_ticket.tglDibuat)}
                     </Col>
                   </Row>
@@ -704,8 +749,8 @@ const DetailTicket = (props) => {
                                         key={index}
                                         value={value.name}
                                         onChange={(event) =>
-                                          setData({
-                                            ...data,
+                                          setReplyData({
+                                            ...replyData,
                                             assignedTo: event.target.value,
                                           })
                                         }
@@ -838,7 +883,7 @@ const DetailTicket = (props) => {
                                      }
                                     font-size-16`}
                             >
-                              {value.usernamePengirim.charAt(0)}
+                              {value.usernamePengirim.charAt(0).toUpperCase()}
                             </span>
                           </div>
                         </Col>
@@ -878,7 +923,7 @@ const DetailTicket = (props) => {
                   </CardTitle>
                   <AvForm>
                     <Row className="justify-content-center">
-                      <Col md={8}>
+                      <Col md={10}>
                         <Row>
                           <Col>
                             <FormGroup className="select2-container">
@@ -894,6 +939,13 @@ const DetailTicket = (props) => {
                                 validate={{
                                   required: { value: true },
                                 }}
+                                onChange={(event) => (
+                                  setReplyData({
+                                    ...replyData,
+                                    [event.target.name]: event.target.value,
+                                  }),
+                                  setDirty()
+                                )}
                               />
                             </FormGroup>
                           </Col>
@@ -1114,6 +1166,58 @@ const DetailTicket = (props) => {
                             </FormGroup>
                           </Col>
                         </Row>
+                        <Row className="mt-2 justify-content-center">
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <label className="control-label">Submit as</label>
+                              <div
+                                style={{
+                                  display: "grid",
+                                  gridTemplateColumns: "repeat(4, 1fr)",
+                                  columnGap: "1rem",
+                                }}
+                              >
+                                {list_reply_status.map((value, index) => (
+                                  <ul
+                                    className="sub-menu"
+                                    aria-expanded="true"
+                                    style={{ listStyle: "none" }}
+                                    key={index}
+                                  >
+                                    <li>
+                                      <div className="has-arrow">
+                                        <div className="custom-control custom-checkbox mb-3">
+                                          <input
+                                            type="checkbox"
+                                            className="custom-control-input"
+                                            id="CustomCheck1"
+                                            onChange={() => false}
+                                            checked={
+                                              checkedSubmitAs &&
+                                              checkedSubmitAs[index]
+                                            }
+                                          />
+                                          <label
+                                            className="custom-control-label"
+                                            style={{ color: value.color }}
+                                            onClick={() =>
+                                              onChangeSubmitAs(
+                                                value.name,
+                                                index
+                                              )
+                                            }
+                                          >
+                                            <span>{value.name}</span>
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                ))}
+                              </div>
+                            </FormGroup>
+                          </Col>
+                        </Row>
                       </Col>
                     </Row>
                   </AvForm>
@@ -1127,7 +1231,7 @@ const DetailTicket = (props) => {
                     }}
                   >
                     {" "}
-                    <ButtonSubmitCreate />
+                    <ButtonSubmitReply />
                   </div>
                 </CardBody>
               </Card>
@@ -1255,6 +1359,7 @@ const mapDispatchToProps = (dispatch) =>
       updateTicket,
       readCategory,
       readUser,
+      replyTicket,
     },
     dispatch
   );
