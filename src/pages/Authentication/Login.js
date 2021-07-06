@@ -6,7 +6,7 @@ import { AvForm, AvField } from "availity-reactstrap-validation";
 import { readCaptcha } from "../../store/auth/captcha/actions";
 import { bindActionCreators } from "redux";
 import logo from "../../assets/images/mygrapari.png";
-import login2 from "../../assets/images/login.png";
+import login2 from "../../assets/images/login-image.svg";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 require("dotenv").config();
@@ -61,12 +61,8 @@ const Login = (props) => {
     <React.Fragment>
       <Row style={{ height: "100vh", width: "100vw" }}>
         <Col
-          md={6}
-          className="d-flex flex-column justify-content-center"
-          style={{
-            backgroundColor: "#EC1C24",
-            padding: "5%",
-          }}
+          md={8}
+          className="d-flex flex-column justify-content-center text-center"
         >
           <img
             src={login2}
@@ -76,7 +72,7 @@ const Login = (props) => {
           />
           <h5
             style={{
-              color: "white",
+              color: "#EC1C24",
               fontSize: "14px",
               marginLeft: "4rem",
               marginTop: "10%",
@@ -87,41 +83,24 @@ const Login = (props) => {
           </h5>
         </Col>
         <Col
-          md={6}
+          md={4}
           className="d-flex flex-column justify-content-center"
           style={{
             paddingTop: "5vh",
             paddingBottom: "5vh",
-            paddingLeft: "10vw",
-            paddingRight: "10vw",
+            paddingLeft: "3vw",
+            paddingRight: "3vw",
+            backgroundColor: "white",
           }}
         >
-          <img
-            src={logo}
-            className="logo mr-auto"
-            style={{ width: "40%" }}
-            alt=""
-          />
           <div
             style={{
-              fontSize: "30px",
+              fontSize: "24px",
               fontWeight: "bold",
             }}
             className="mt-3"
           >
-            Welcome Back!
-          </div>
-          <div
-            style={{
-              fontSize: "25px",
-              fontWeight: "bold",
-            }}
-          >
-            Trilogi Ticketing Apps
-          </div>
-          <div style={{ color: "#6A7482" }}>
-            To keep connected with us please login with <br />
-            your personal info
+            Welcome! Please log in.
           </div>
           <div className="mt-4">
             <AvForm
@@ -130,7 +109,7 @@ const Login = (props) => {
             >
               {message && <Alert color="danger">{message}</Alert>}
               <Row>
-                <Col md={6}>
+                <Col>
                   <div className="form-group">
                     <AvField
                       name="username"
@@ -149,7 +128,9 @@ const Login = (props) => {
                     />
                   </div>
                 </Col>
-                <Col md={6} className="pl-0">
+              </Row>
+              <Row>
+                <Col>
                   <div className="form-group" style={{ display: "grid" }}>
                     <label
                       htmlFor="example-datetime-local-input"
@@ -237,7 +218,11 @@ const Login = (props) => {
               <div className="mt-3">
                 <button
                   className="btn btn2 btn-block waves-effect waves-light"
-                  style={{ backgroundColor: "#EC1C24", color: "white" }}
+                  style={{
+                    color: "white",
+                    backgroundImage:
+                      "linear-gradient(to right, #EC1C24 10%, #FFA20A 60%)",
+                  }}
                   type="submit"
                 >
                   Log In
