@@ -21,6 +21,7 @@ import DetailTicket from "../pages/Ticket/detail_ticket";
 import Category from "../pages/Category/index";
 import AddCategory from "../pages/Category/add_category";
 import EditCategory from "../pages/Category/edit_category";
+import Profile from "../pages/Profile/index";
 
 const userRoutes = [
   { path: routes.dashboard, component: Dashboard },
@@ -36,6 +37,7 @@ const userRoutes = [
   { path: routes.category, component: Category },
   { path: routes.add_category, component: AddCategory },
   { path: routes.edit_category, component: EditCategory },
+  { path: routes.profile, component: Profile },
 
   // this route should be at the end of all other routes
   {

@@ -4,11 +4,13 @@ import { withNamespaces } from "react-i18next";
 // Redux
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
+import routes from "../../../helpers/routes.json";
 
 const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
   const name = localStorage.getItem("name");
+  const username = localStorage.getItem("username");
 
   return (
     <React.Fragment>
@@ -26,7 +28,13 @@ const ProfileMenu = (props) => {
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
         </DropdownToggle>
         <DropdownMenu right>
-          <Link to="/profile" className="dropdown-item">
+          <Link
+            to={{
+              pathname: routes.profile,
+              search: `?username=${username}`,
+            }}
+            className="dropdown-item"
+          >
             {" "}
             <i className="bx bx-user font-size-16 align-middle mr-1"></i>
             {props.t("Profile")}{" "}
