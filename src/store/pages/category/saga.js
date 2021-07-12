@@ -2,6 +2,7 @@ import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 import {
   READ_CATEGORY,
+  READ_DETAIL_CATEGORY,
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
@@ -9,6 +10,8 @@ import {
 import {
   readCategoryReject,
   readCategoryFulfilled,
+  readDetailCategoryReject,
+  readDetailCategoryFulfilled,
   createCategoryReject,
   createCategoryFulfilled,
   updateCategoryReject,
@@ -25,6 +28,14 @@ function* readCategory({ payload: data }) {
     yield put(readCategoryFulfilled(response));
   } else {
     yield put(readCategoryReject(response));
+  }
+}
+function* readDetailCategory({ payload: data }) {
+  const response = yield call(getMethod, data);
+  if (response.responseCode === general_constant.success_response_code) {
+    yield put(readDetailCategoryFulfilled(response));
+  } else {
+    yield put(readDetailCategoryReject(response));
   }
 }
 function* createCategory({ payload: data }) {
@@ -55,6 +66,9 @@ function* deleteCategory({ payload: data }) {
 export function* watchReadCategory() {
   yield takeLatest(READ_CATEGORY, readCategory);
 }
+export function* watchReadDetailCategory() {
+  yield takeLatest(READ_DETAIL_CATEGORY, readDetailCategory);
+}
 export function* watchCreateCategory() {
   yield takeLatest(CREATE_CATEGORY, createCategory);
 }
@@ -68,6 +82,7 @@ export function* watchDeleteCategory() {
 function* CategorySaga() {
   yield all([
     fork(watchReadCategory),
+    fork(watchReadDetailCategory),
     fork(watchCreateCategory),
     fork(watchUpdateCategory),
     fork(watchDeleteCategory),

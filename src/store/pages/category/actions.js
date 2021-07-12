@@ -2,6 +2,9 @@ import {
   READ_CATEGORY,
   READ_CATEGORY_REJECT,
   READ_CATEGORY_FULFILLED,
+  READ_DETAIL_CATEGORY,
+  READ_DETAIL_CATEGORY_REJECT,
+  READ_DETAIL_CATEGORY_FULFILLED,
   CREATE_CATEGORY,
   CREATE_CATEGORY_REJECT,
   CREATE_CATEGORY_FULFILLED,
@@ -34,6 +37,31 @@ export const readCategoryReject = (payload) => {
 export const readCategoryFulfilled = (data) => {
   return {
     type: READ_CATEGORY_FULFILLED,
+    payload: data,
+  };
+};
+
+// Read Detail Category
+export const readDetailCategory = (value) => {
+  const data = {
+    url: `/api/kategori/get-detail/${value}`,
+  };
+  return {
+    type: READ_DETAIL_CATEGORY,
+    payload: data,
+  };
+};
+
+export const readDetailCategoryReject = (payload) => {
+  return {
+    type: READ_DETAIL_CATEGORY_REJECT,
+    payload: payload,
+  };
+};
+
+export const readDetailCategoryFulfilled = (data) => {
+  return {
+    type: READ_DETAIL_CATEGORY_FULFILLED,
     payload: data,
   };
 };

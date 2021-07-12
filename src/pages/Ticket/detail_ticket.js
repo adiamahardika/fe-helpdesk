@@ -616,7 +616,7 @@ const DetailTicket = (props) => {
                                     list_category.map((value, index) => (
                                       <option
                                         key={index}
-                                        value={value && value.nama}
+                                        value={value && value.codeLevel}
                                         onChange={(event) => (
                                           setEditData({
                                             ...editData,

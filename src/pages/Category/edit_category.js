@@ -2,30 +2,42 @@ import React, { useState, useEffect } from "react";
 import { Container, Card, CardBody, FormGroup, Row, Col } from "reactstrap";
 import {
   readCategory,
+  readDetailCategory,
   updateCategory,
 } from "../../store/pages/category/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
+import { useLocation } from "react-router-dom";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
 import general_constant from "../../helpers/general_constant.json";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
+import queryString from "query-string";
 
 const EditCategory = (props) => {
   const message = props.message_category;
   const response_code = props.response_code_category;
   const list_category = props.list_category;
-  const editValue = props.location.editValue;
+  const detail_category = props.detail_category;
+  const parent_1 = props.parent_1;
+  const parent_2 = props.parent_2;
+  const parent_3 = props.parent_3;
   const permissions = JSON.parse(localStorage.getItem("permission"));
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
+  const { search } = useLocation();
+  const { code } = queryString.parse(search);
 
   const [data, setData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
+  const [mainValue, setMainValue] = useState(null);
+  const [subLevel1Value, setSubLevel1Value] = useState(null);
+  const [showSubLevel1, setShowSubLevel1] = useState(true);
+  const [showSubLevel2, setShowSubLevel2] = useState(true);
 
   const onChangeData = (event) => {
     setData({
@@ -111,17 +123,13 @@ const EditCategory = (props) => {
   };
 
   useEffect(() => {
-    if (editValue) {
-      props.readCategory({
-        size: 0,
-        page_no: 0,
-        sort_by: "codeLevel",
-        order_by: "asc",
-      });
-      setData(editValue);
-    } else {
-      history.push(routes.category);
-    }
+    props.readCategory({
+      size: 0,
+      page_no: 0,
+      sort_by: "codeLevel",
+      order_by: "asc",
+    });
+    props.readDetailCategory(code);
   }, []);
 
   return (
@@ -144,11 +152,11 @@ const EditCategory = (props) => {
                 <ButtonSubmitCreate />
               </div>
               <Row className="justify-content-center">
-                <Col md={6}>
+                <Col md={10}>
                   <AvForm>
                     {" "}
                     <Row>
-                      <Col md={6}>
+                      <Col md={4}>
                         <AvField
                           name="nama"
                           label="Name"
@@ -159,47 +167,160 @@ const EditCategory = (props) => {
                             required: { value: true },
                             maxLength: { value: 25 },
                           }}
-                          value={data && data.nama}
+                          value={detail_category && detail_category.nama}
                           onChange={onChangeData}
                         />
                       </Col>
-                      <Col md={6}>
+                    </Row>
+                    <Row>
+                      <Col>
                         <FormGroup className="select2-container">
                           <label className="control-label">Parent</label>
-                          <div>
-                            <select
-                              name="parent"
-                              className="form-control"
-                              defaultValue=""
-                              onChange={(event) => (
-                                setData({
-                                  ...data,
-                                  parent: event.target.value,
-                                }),
-                                setDirty()
-                              )}
-                            >
-                              <option
-                                value="0"
-                                onChange={(event) => (
-                                  setData({
-                                    ...data,
-                                    parent: event.target.value,
-                                  }),
-                                  setDirty()
-                                )}
-                                selected={data && data.parent === "0"}
-                              >
-                                Main
-                              </option>
-                              {list_category &&
-                                list_category.map((value, index) => (
+                          <Row className="mb-2">
+                            <Col md={4}>
+                              <div>
+                                <select
+                                  name="parent"
+                                  className="form-control"
+                                  defaultValue="0"
+                                  onChange={(event) => (
+                                    setData({
+                                      ...data,
+                                      parent: event.target.value,
+                                    }),
+                                    setMainValue(event.target.value),
+                                    event.target.value !== "0"
+                                      ? setShowSubLevel1(true)
+                                      : setShowSubLevel1(false),
+                                    setShowSubLevel2(false),
+                                    setDirty()
+                                  )}
+                                >
                                   <option
-                                    key={index}
-                                    value={value && value.codeLevel}
+                                    value="0"
+                                    onChange={(event) => (
+                                      setData({
+                                        ...data,
+                                        parent: event.target.value,
+                                      }),
+                                      setShowSubLevel1(false),
+                                      setShowSubLevel2(false),
+                                      setDirty()
+                                    )}
                                     selected={
-                                      data && data.parent === value.codeLevel
+                                      detail_category &&
+                                      detail_category.parent === "0"
                                     }
+                                  >
+                                    Main
+                                  </option>
+                                  {list_category &&
+                                    list_category.map(
+                                      (value, index) =>
+                                        value.parent === "0" && (
+                                          <option
+                                            key={index}
+                                            value={value && value.codeLevel}
+                                            onChange={(event) => (
+                                              setData({
+                                                ...data,
+                                                parent: event.target.value,
+                                              }),
+                                              setMainValue(event.target.value),
+                                              setShowSubLevel1(true),
+                                              setShowSubLevel2(false),
+                                              setDirty()
+                                            )}
+                                            selected={
+                                              parent_1 &&
+                                              parent_1.codeLevel ===
+                                                value.codeLevel
+                                            }
+                                          >
+                                            {value.nama}
+                                          </option>
+                                        )
+                                    )}
+                                </select>
+                              </div>
+                            </Col>
+                            {parent_2 && showSubLevel1 && (
+                              <Col md={4}>
+                                <div>
+                                  <select
+                                    name="parent"
+                                    className="form-control"
+                                    defaultValue={mainValue}
+                                    onChange={(event) => (
+                                      setData({
+                                        ...data,
+                                        parent: event.target.value,
+                                      }),
+                                      setSubLevel1Value(event.target.value),
+                                      event.target.value === mainValue
+                                        ? setShowSubLevel2(false)
+                                        : setShowSubLevel2(true),
+                                      setDirty()
+                                    )}
+                                  >
+                                    <option
+                                      value={mainValue}
+                                      onChange={(event) => (
+                                        setData({
+                                          ...data,
+                                          parent: event.target.value,
+                                        }),
+                                        setSubLevel1Value(event.target.value),
+                                        event.target.value === mainValue
+                                          ? setShowSubLevel2(false)
+                                          : setShowSubLevel2(true),
+                                        setDirty()
+                                      )}
+                                    >
+                                      -
+                                    </option>
+                                    {list_category &&
+                                      list_category.map(
+                                        (value, index) =>
+                                          parent_2 &&
+                                          parent_2.parent === value.parent && (
+                                            <option
+                                              key={index}
+                                              value={value && value.codeLevel}
+                                              onChange={(event) => (
+                                                setData({
+                                                  ...data,
+                                                  parent: event.target.value,
+                                                }),
+                                                setSubLevel1Value(
+                                                  event.target.value
+                                                ),
+                                                event.target.value === mainValue
+                                                  ? setShowSubLevel2(false)
+                                                  : setShowSubLevel2(true),
+                                                setDirty()
+                                              )}
+                                              selected={
+                                                parent_2 &&
+                                                parent_2.codeLevel ===
+                                                  value.codeLevel
+                                              }
+                                            >
+                                              {value.nama}
+                                            </option>
+                                          )
+                                      )}
+                                  </select>
+                                </div>
+                              </Col>
+                            )}
+                            {parent_3 && showSubLevel2 && (
+                              <Col md={4}>
+                                <div>
+                                  <select
+                                    name="parent"
+                                    className="form-control"
+                                    defaultValue={subLevel1Value}
                                     onChange={(event) => (
                                       setData({
                                         ...data,
@@ -208,11 +329,48 @@ const EditCategory = (props) => {
                                       setDirty()
                                     )}
                                   >
-                                    {value.codeLevel} | {value.nama}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
+                                    <option
+                                      value={subLevel1Value}
+                                      onChange={(event) => (
+                                        setData({
+                                          ...data,
+                                          parent: event.target.value,
+                                        }),
+                                        setDirty()
+                                      )}
+                                    >
+                                      -
+                                    </option>
+                                    {list_category &&
+                                      list_category.map(
+                                        (value, index) =>
+                                          parent_3 &&
+                                          parent_3.parent === value.parent && (
+                                            <option
+                                              key={index}
+                                              value={value && value.codeLevel}
+                                              onChange={(event) => (
+                                                setData({
+                                                  ...data,
+                                                  parent: event.target.value,
+                                                }),
+                                                setDirty()
+                                              )}
+                                              selected={
+                                                parent_3 &&
+                                                parent_3.codeLevel ===
+                                                  value.codeLevel
+                                              }
+                                            >
+                                              {value.nama}
+                                            </option>
+                                          )
+                                      )}
+                                  </select>
+                                </div>
+                              </Col>
+                            )}
+                          </Row>
                         </FormGroup>
                       </Col>
                     </Row>
@@ -230,10 +388,22 @@ const EditCategory = (props) => {
 };
 
 const mapStatetoProps = (state) => {
-  const { message_category, loading, response_code_category, list_category } =
-    state.Category;
+  const {
+    message_category,
+    loading,
+    response_code_category,
+    list_category,
+    detail_category,
+    parent_1,
+    parent_2,
+    parent_3,
+  } = state.Category;
   return {
     list_category,
+    detail_category,
+    parent_1,
+    parent_2,
+    parent_3,
     response_code_category,
     message_category,
     loading,
@@ -245,6 +415,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       readCategory,
       updateCategory,
+      readDetailCategory,
     },
     dispatch
   );

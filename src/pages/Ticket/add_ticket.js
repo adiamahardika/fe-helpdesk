@@ -63,6 +63,12 @@ const AddTicket = (props) => {
   const [customchk, setcustomchk] = useState(true);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
+  const [mainValue, setMainValue] = useState(null);
+  const [subLevel1Value, setSubLevel1Value] = useState(null);
+  const [subLevel2Value, setSubLevel2Value] = useState(null);
+  const [showSubLevel1, setShowSubLevel1] = useState(false);
+  const [showSubLevel2, setShowSubLevel2] = useState(false);
+  const [showSubLevel3, setShowSubLevel3] = useState(false);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -439,32 +445,200 @@ const AddTicket = (props) => {
                           </div>
                         </FormGroup>
                       </Col>
-                      <Col md={4}>
+                    </Row>
+                    <Row>
+                      <Col>
                         <FormGroup className="select2-container">
                           <label className="control-label">
                             Category <span style={{ color: "red" }}>*</span>
                           </label>
-                          <div>
-                            <select
-                              name="kategori"
-                              className="form-control"
-                              defaultValue="0"
-                              onChange={(event) => (
-                                setData({
-                                  ...data,
-                                  kategori: event.target.value,
-                                }),
-                                setDirty()
-                              )}
-                            >
-                              <option value="0" disabled>
-                                Select Category
-                              </option>
-                              {list_category &&
-                                list_category.map((value, index) => (
-                                  <option
-                                    key={index}
-                                    value={value && value.nama}
+                          <Row className="mb-2">
+                            <Col md={3}>
+                              <div>
+                                <select
+                                  name="kategori"
+                                  className="form-control"
+                                  defaultValue="0"
+                                  onChange={(event) => (
+                                    setData({
+                                      ...data,
+                                      kategori: event.target.value,
+                                    }),
+                                    setMainValue(event.target.value),
+                                    setShowSubLevel1(true),
+                                    setShowSubLevel2(false),
+                                    setShowSubLevel3(false),
+                                    setDirty()
+                                  )}
+                                >
+                                  <option value="0" disabled>
+                                    Select Category
+                                  </option>
+                                  {list_category &&
+                                    list_category.map(
+                                      (value, index) =>
+                                        value.parent === "0" && (
+                                          <option
+                                            key={index}
+                                            value={value && value.codeLevel}
+                                            onChange={(event) => (
+                                              setData({
+                                                ...data,
+                                                kategori: event.target.value,
+                                              }),
+                                              setMainValue(event.target.value),
+                                              setShowSubLevel1(true),
+                                              setShowSubLevel2(false),
+                                              setShowSubLevel3(false),
+                                              setDirty()
+                                            )}
+                                          >
+                                            {value.nama}
+                                          </option>
+                                        )
+                                    )}
+                                </select>
+                              </div>
+                            </Col>
+                            {showSubLevel1 && (
+                              <Col md={3}>
+                                <div>
+                                  <select
+                                    name="kategori"
+                                    className="form-control"
+                                    defaultValue={mainValue}
+                                    onChange={(event) => (
+                                      setData({
+                                        ...data,
+                                        kategori: event.target.value,
+                                      }),
+                                      setSubLevel1Value(event.target.value),
+                                      event.target.value === mainValue
+                                        ? setShowSubLevel2(false)
+                                        : setShowSubLevel2(true),
+                                      setShowSubLevel3(false),
+                                      setDirty()
+                                    )}
+                                  >
+                                    <option
+                                      value={mainValue}
+                                      onChange={(event) => (
+                                        setData({
+                                          ...data,
+                                          kategori: event.target.value,
+                                        }),
+                                        setSubLevel1Value(event.target.value),
+                                        event.target.value === mainValue
+                                          ? setShowSubLevel2(false)
+                                          : setShowSubLevel2(true),
+                                        setShowSubLevel3(false),
+                                        setDirty()
+                                      )}
+                                    >
+                                      -
+                                    </option>
+                                    {list_category &&
+                                      list_category.map(
+                                        (value, index) =>
+                                          mainValue === value.parent && (
+                                            <option
+                                              key={index}
+                                              value={value && value.codeLevel}
+                                              onChange={(event) => (
+                                                setData({
+                                                  ...data,
+                                                  kategori: event.target.value,
+                                                }),
+                                                setSubLevel1Value(
+                                                  event.target.value
+                                                ),
+                                                event.target.value === mainValue
+                                                  ? setShowSubLevel2(false)
+                                                  : setShowSubLevel2(true),
+                                                setShowSubLevel3(false),
+                                                setDirty()
+                                              )}
+                                            >
+                                              {value.nama}
+                                            </option>
+                                          )
+                                      )}
+                                  </select>
+                                </div>
+                              </Col>
+                            )}
+                            {showSubLevel2 && (
+                              <Col md={3}>
+                                <div>
+                                  <select
+                                    name="kategori"
+                                    className="form-control"
+                                    defaultValue={subLevel1Value}
+                                    onChange={(event) => (
+                                      setData({
+                                        ...data,
+                                        kategori: event.target.value,
+                                      }),
+                                      setSubLevel2Value(event.target.value),
+                                      event.target.value === subLevel1Value
+                                        ? setShowSubLevel3(false)
+                                        : setShowSubLevel3(true),
+                                      setDirty()
+                                    )}
+                                  >
+                                    <option
+                                      value={subLevel1Value}
+                                      onChange={(event) => (
+                                        setData({
+                                          ...data,
+                                          kategori: event.target.value,
+                                        }),
+                                        setSubLevel2Value(event.target.value),
+                                        event.target.value === subLevel1Value
+                                          ? setShowSubLevel3(false)
+                                          : setShowSubLevel3(true),
+                                        setDirty()
+                                      )}
+                                    >
+                                      -
+                                    </option>
+                                    {list_category &&
+                                      list_category.map(
+                                        (value, index) =>
+                                          subLevel1Value === value.parent && (
+                                            <option
+                                              key={index}
+                                              value={value && value.codeLevel}
+                                              onChange={(event) => (
+                                                setData({
+                                                  ...data,
+                                                  kategori: event.target.value,
+                                                }),
+                                                setSubLevel2Value(
+                                                  event.target.value
+                                                ),
+                                                event.target.value ===
+                                                subLevel1Value
+                                                  ? setShowSubLevel3(false)
+                                                  : setShowSubLevel3(true),
+                                                setDirty()
+                                              )}
+                                            >
+                                              {value.nama}
+                                            </option>
+                                          )
+                                      )}
+                                  </select>
+                                </div>
+                              </Col>
+                            )}
+                            {showSubLevel3 && (
+                              <Col md={3}>
+                                <div>
+                                  <select
+                                    name="kategori"
+                                    className="form-control"
+                                    defaultValue={subLevel2Value}
                                     onChange={(event) => (
                                       setData({
                                         ...data,
@@ -473,11 +647,42 @@ const AddTicket = (props) => {
                                       setDirty()
                                     )}
                                   >
-                                    {value.nama}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
+                                    <option
+                                      value={subLevel2Value}
+                                      onChange={(event) => (
+                                        setData({
+                                          ...data,
+                                          kategori: event.target.value,
+                                        }),
+                                        setDirty()
+                                      )}
+                                    >
+                                      -
+                                    </option>
+                                    {list_category &&
+                                      list_category.map(
+                                        (value, index) =>
+                                          subLevel2Value === value.parent && (
+                                            <option
+                                              key={index}
+                                              value={value && value.codeLevel}
+                                              onChange={(event) => (
+                                                setData({
+                                                  ...data,
+                                                  kategori: event.target.value,
+                                                }),
+                                                setDirty()
+                                              )}
+                                            >
+                                              {value.nama}
+                                            </option>
+                                          )
+                                      )}
+                                  </select>
+                                </div>
+                              </Col>
+                            )}
+                          </Row>
                         </FormGroup>
                       </Col>
                     </Row>
