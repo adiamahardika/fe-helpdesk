@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Card,
@@ -19,10 +19,11 @@ import { readCategory } from "../../store/pages/category/actions";
 import { readUser } from "../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { parseFullDate } from "../../helpers/index";
+import { parseDate, parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
+import { Link } from "react-router-dom";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -31,6 +32,8 @@ import routes from "../../helpers/routes.json";
 import queryString from "query-string";
 import Dropzone from "react-dropzone";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
+import { useReactToPrint } from "react-to-print";
+import { ComponentToPrint } from "../../helpers/generate_pdf";
 import "../../assets/css/pagination.css";
 
 const list_status = [
@@ -74,6 +77,7 @@ const DetailTicket = (props) => {
   const response_code = props.response_code_ticket;
   const username = localStorage.getItem("username");
   const history = useHistory();
+  const componentRef = useRef();
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
@@ -95,11 +99,15 @@ const DetailTicket = (props) => {
     document.body.classList.add("no_padding");
   };
 
-  const handleAcceptedFiles = (files, number) => {
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const handleAcceptedFiles = async (files, number) => {
     let icon = null;
+    let color = null;
     let fileType = null;
     let reader = new FileReader();
-    let today = new Date();
     let split = files[0].type.split("/");
     let fileName = files[0].name.split(".");
     let extensionCheck = false;
@@ -108,7 +116,7 @@ const DetailTicket = (props) => {
     if (files[0].size <= 2000000) {
       sizeCheck = true;
     }
-    switch (fileName[1]) {
+    switch (fileName[fileName.length - 1]) {
       case "gif":
         extensionCheck = true;
         break;
@@ -123,39 +131,58 @@ const DetailTicket = (props) => {
         break;
       case "zip":
         extensionCheck = true;
+        color = "#f46a6a";
+        icon = "bx bxs-file-archive";
         break;
       case "rar":
         extensionCheck = true;
+        color = "#f46a6a";
+        icon = "bx bxs-file-archive";
         break;
       case "csv":
         extensionCheck = true;
+        color = "#34c38f";
+        icon = "bx bxs-file";
         break;
       case "doc":
         extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-file-doc";
         break;
       case "docx":
         extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-file-doc";
         break;
       case "xls":
         extensionCheck = true;
+        color = "#34c38f";
+        icon = "bx bxs-file";
         break;
       case "xlsx":
         extensionCheck = true;
+        color = "#34c38f";
+        icon = "bx bxs-file";
         break;
       case "txt":
         extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-file-txt";
         break;
       case "pdf":
         extensionCheck = true;
+        color = "#f1b44c";
+        icon = "bx bxs-file-pdf";
         break;
 
       default:
         extensionCheck = false;
+        color = "#556ee6";
+        icon = "bx bxs-file";
     }
 
     if (extensionCheck && sizeCheck) {
       if (split[0] === "application") {
-        icon = "bx bxs-file";
         fileType = "file";
       } else if (split[0] === "image") {
         fileType = "image";
@@ -164,6 +191,7 @@ const DetailTicket = (props) => {
         preview: URL.createObjectURL(files[0]),
         formattedSize: formatBytes(files[0].size),
         icon: icon,
+        color: color,
         file: fileType,
       });
       reader.onload = () => {
@@ -174,24 +202,18 @@ const DetailTicket = (props) => {
             setReplyData({
               ...replyData,
               base64_1: base64[1],
-              base64FileName1:
-                ("0" + today.getHours()).slice(-2) +
-                ("0" + today.getMinutes()).slice(-2) +
-                ("0" + today.getSeconds()).slice(-2) +
-                "." +
-                fileName[fileName.length - 1],
+              base64FileName1: (parseDate(new Date()) + "-" + files[0].name)
+                .split(" ")
+                .join("_"),
             });
           } else {
             setSelectedFiles2(files[0]);
             setReplyData({
               ...replyData,
               base64_2: base64[1],
-              base64FileName2:
-                ("0" + today.getHours()).slice(-2) +
-                ("0" + today.getMinutes()).slice(-2) +
-                ("0" + today.getSeconds()).slice(-2) +
-                "." +
-                fileName[fileName.length - 1],
+              base64FileName2: (parseDate(new Date()) + "-" + files[0].name)
+                .split(" ")
+                .join("_"),
             });
           }
         }
@@ -322,7 +344,7 @@ const DetailTicket = (props) => {
     setCheckedSubmitAs(array);
     setReplyData({ ...replyData, status: value });
   };
-  console.log(replyData);
+
   const onSubmitUpdate = async () => {
     props.updateTicket(editData);
     props.readDetailTicket(ticketId);
@@ -478,6 +500,140 @@ const DetailTicket = (props) => {
         </span>
       );
     }
+  };
+  const FileIcon = (value) => {
+    const split = value && value.value.split(".");
+    const file_name = value && value.value.split("/");
+    let is_image = false;
+    let color = null;
+    let icon = null;
+    let file_type = null;
+
+    switch (split[split.length - 1]) {
+      case "pdf":
+        color = "#f1b44c";
+        icon = "bx bxs-file-pdf";
+        file_type = "data:application/pdf;base64,";
+        is_image = false;
+        break;
+      case "doc":
+        color = "#556ee6";
+        icon = "bx bxs-file-doc";
+        file_type = "data:application/msword;base64,";
+        is_image = false;
+        break;
+      case "docx":
+        color = "#556ee6";
+        icon = "bx bxs-file-doc";
+        file_type =
+          "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,";
+        is_image = false;
+        break;
+      case "xlsx":
+        color = "#34c38f";
+        icon = "bx bxs-file";
+        file_type =
+          "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
+        is_image = false;
+        break;
+      case "xls":
+        color = "#34c38f";
+        icon = "bx bxs-file";
+        file_type = "data:application/vnd.ms-excel;base64,";
+        is_image = false;
+        break;
+      case "csv":
+        color = "#34c38f";
+        icon = "bx bxs-file";
+        file_type = "data:application/vnd.ms-excel;base64,";
+        is_image = false;
+        break;
+      case "rar":
+        color = "#f46a6a";
+        icon = "bx bxs-file-archive";
+        file_type = "data:application/octet-stream;base64,";
+        is_image = false;
+        break;
+      case "zip":
+        color = "#f46a6a";
+        icon = "bx bxs-file-archive";
+        file_type = "data:application/zip;base64,";
+        is_image = false;
+        break;
+      case "txt":
+        color = "#556ee6";
+        icon = "bx bxs-file-txt";
+        file_type = "data:text/plain;base64,";
+        is_image = false;
+        break;
+      case "jpeg":
+        color = "#34c38f";
+        icon = "bx bxs-file-image";
+        file_type = "data:image/jpeg;base64,";
+        is_image = true;
+        break;
+      case "jpg":
+        color = "#34c38f";
+        icon = "bx bxs-file-image";
+        file_type = "data:image/jpeg;base64,";
+        is_image = true;
+        break;
+      case "png":
+        color = "#34c38f";
+        icon = "bx bxs-file-image";
+        file_type = "data:image/png;base64,";
+        is_image = true;
+        break;
+      case "gif":
+        color = "#34c38f";
+        icon = "bx bxs-file-image";
+        file_type = "data:image/gif;base64,";
+        is_image = true;
+        break;
+      default:
+        color = "#34c38f";
+        icon = "bx bxs-file";
+        file_type = "data:text/plain;base64,";
+        is_image = false;
+    }
+    return (
+      <a
+        href={file_type + value.base64}
+        download={file_name[file_name.length - 1]}
+        className="flex-column ml-3"
+        style={{ maxWidth: "125px" }}
+      >
+        {is_image ? (
+          <img
+            data-dz-thumbnail=""
+            className="rounded bg-light"
+            style={{
+              width: "100%",
+            }}
+            alt={file_name[file_name.length - 1]}
+            src={file_type + value.base64}
+          />
+        ) : (
+          <>
+            <span
+              style={{ color: color }}
+              className="d-flex justify-content-center"
+            >
+              <i className={`${icon} display-4 align-middle`}></i>
+            </span>
+            <div
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {file_name[file_name.length - 1]}
+            </div>
+          </>
+        )}
+      </a>
+    );
   };
 
   useEffect(() => {
@@ -860,9 +1016,28 @@ const DetailTicket = (props) => {
                       }}
                     >
                       {index === 0 && (
-                        <h4 className="mb-4">
-                          {detail_ticket && detail_ticket.judul}
-                        </h4>
+                        <Row className="mb-5">
+                          <Col>
+                            <h4>{detail_ticket && detail_ticket.judul}</h4>
+                          </Col>
+                          <Col md={6} className="justify-content-end d-flex">
+                            <span
+                              className="waves-effect text-right"
+                              onClick={handlePrint}
+                            >
+                              <i className="bx bxs-printer font-size-24 align-middle"></i>
+                            </span>
+                            <div style={{ display: "none" }}>
+                              <ComponentToPrint
+                                ref={componentRef}
+                                detail_ticket={detail_ticket && detail_ticket}
+                                list_reply_ticket={
+                                  list_reply_ticket && list_reply_ticket
+                                }
+                              />
+                            </div>
+                          </Col>
+                        </Row>
                       )}
 
                       <Row>
@@ -895,7 +1070,6 @@ const DetailTicket = (props) => {
                             </Col>
                             <div className="text-right">
                               {parseFullDate(value.tglDibuat)}
-                              <i className="bx bxs-printer font-size-24 align-middle ml-2"></i>
                             </div>
                           </Row>
                           <strong>Message :</strong>
@@ -903,12 +1077,18 @@ const DetailTicket = (props) => {
                             <Col>{value.isi}</Col>
                           </Row>
                           <Row className="justify-content-end">
-                            <span style={{ color: "#f1b44c" }}>
-                              <i className="display-4 bx bxs-file-pdf align-middle"></i>
-                            </span>
-                            <span style={{ color: "#556ee6" }}>
-                              <i className="display-4 bx bxs-file-doc align-middle"></i>
-                            </span>
+                            {value.urlAttachment1 !== "Not Found" && (
+                              <FileIcon
+                                value={value.attachment1}
+                                base64={value.urlAttachment1}
+                              />
+                            )}
+                            {value.urlAttachment2 !== "Not Found" && (
+                              <FileIcon
+                                value={value.attachment2}
+                                base64={value.urlAttachment2}
+                              />
+                            )}
                           </Row>
                         </Col>
                       </Row>
@@ -1006,15 +1186,24 @@ const DetailTicket = (props) => {
                                                 src={selectedFiles1.preview}
                                               />
                                             ) : (
-                                              <i
-                                                className={` bx ${
-                                                  selectedFiles1 &&
-                                                  selectedFiles1.icon
-                                                } align-middle`}
+                                              <span
                                                 style={{
-                                                  fontSize: "3.5rem",
+                                                  color: `${
+                                                    selectedFiles1 &&
+                                                    selectedFiles1.color
+                                                  }`,
                                                 }}
-                                              ></i>
+                                              >
+                                                <i
+                                                  className={` bx ${
+                                                    selectedFiles1 &&
+                                                    selectedFiles1.icon
+                                                  } align-middle`}
+                                                  style={{
+                                                    fontSize: "3.5rem",
+                                                  }}
+                                                ></i>
+                                              </span>
                                             )}
                                           </Col>
                                           <Col
@@ -1100,15 +1289,24 @@ const DetailTicket = (props) => {
                                                 src={selectedFiles2.preview}
                                               />
                                             ) : (
-                                              <i
-                                                className={` bx ${
-                                                  selectedFiles2 &&
-                                                  selectedFiles2.icon
-                                                } align-middle`}
+                                              <span
                                                 style={{
-                                                  fontSize: "3.5rem",
+                                                  color: `${
+                                                    selectedFiles2 &&
+                                                    selectedFiles2.color
+                                                  }`,
                                                 }}
-                                              ></i>
+                                              >
+                                                <i
+                                                  className={` bx ${
+                                                    selectedFiles2 &&
+                                                    selectedFiles2.icon
+                                                  } align-middle`}
+                                                  style={{
+                                                    fontSize: "3.5rem",
+                                                  }}
+                                                ></i>
+                                              </span>
                                             )}
                                           </Col>
                                           <Col
@@ -1317,8 +1515,8 @@ const DetailTicket = (props) => {
               <br />
               3. You may upload files ending with: <br />
               <strong>
-                .gif, .jpg, .png, .zip, .rar, .csv, .doc, .docx, .xls, .xlsx,
-                .txt, .pdf
+                .gif, .jpg, .jpeg, .png, .zip, .rar, .csv, .doc, .docx, .xls,
+                .xlsx, .txt, .pdf
               </strong>
             </div>
           </Modal>
