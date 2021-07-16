@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
+import { uid } from "uid";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -23,6 +24,7 @@ import general_constant from "../../helpers/general_constant.json";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import Dropzone from "react-dropzone";
+import { parseDate } from "../../helpers";
 
 const priority = [
   {
@@ -55,12 +57,13 @@ const AddTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
-  const [validEmail, setValidEmail] = useState(false);
-  const [optionColor, setOptionColor] = useState(null);
-  const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
+  const [optionColor, setOptionColor] = useState(null);
+  const [validEmail, setValidEmail] = useState(false);
+  const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [customchk, setcustomchk] = useState(true);
+  const [customchk2, setcustomchk2] = useState(true);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
   const [mainValue, setMainValue] = useState(null);
@@ -69,6 +72,7 @@ const AddTicket = (props) => {
   const [showSubLevel1, setShowSubLevel1] = useState(false);
   const [showSubLevel2, setShowSubLevel2] = useState(false);
   const [showSubLevel3, setShowSubLevel3] = useState(false);
+  const [ticketCode, setTicketCode] = useState(null);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -76,9 +80,9 @@ const AddTicket = (props) => {
 
   const handleAcceptedFiles = (files, number) => {
     let icon = null;
+    let color = null;
     let fileType = null;
     let reader = new FileReader();
-    let today = new Date();
     let split = files[0].type.split("/");
     let fileName = files[0].name.split(".");
     let extensionCheck = false;
@@ -87,7 +91,7 @@ const AddTicket = (props) => {
     if (files[0].size <= 2000000) {
       sizeCheck = true;
     }
-    switch (fileName[1]) {
+    switch (fileName[fileName.length - 1]) {
       case "gif":
         extensionCheck = true;
         break;
@@ -102,39 +106,58 @@ const AddTicket = (props) => {
         break;
       case "zip":
         extensionCheck = true;
+        color = "#f46a6a";
+        icon = "bx bxs-file-archive";
         break;
       case "rar":
         extensionCheck = true;
+        color = "#f46a6a";
+        icon = "bx bxs-file-archive";
         break;
       case "csv":
         extensionCheck = true;
+        color = "#34c38f";
+        icon = "bx bxs-file";
         break;
       case "doc":
         extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-file-doc";
         break;
       case "docx":
         extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-file-doc";
         break;
       case "xls":
         extensionCheck = true;
+        color = "#34c38f";
+        icon = "bx bxs-file";
         break;
       case "xlsx":
         extensionCheck = true;
+        color = "#34c38f";
+        icon = "bx bxs-file";
         break;
       case "txt":
         extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-file-txt";
         break;
       case "pdf":
         extensionCheck = true;
+        color = "#f1b44c";
+        icon = "bx bxs-file-pdf";
         break;
 
       default:
         extensionCheck = false;
+        color = "#556ee6";
+        icon = "bx bxs-file";
     }
 
     if (extensionCheck && sizeCheck) {
       if (split[0] === "application") {
-        icon = "bx bxs-file";
         fileType = "file";
       } else if (split[0] === "image") {
         fileType = "image";
@@ -143,6 +166,7 @@ const AddTicket = (props) => {
         preview: URL.createObjectURL(files[0]),
         formattedSize: formatBytes(files[0].size),
         icon: icon,
+        color: color,
         file: fileType,
       });
       reader.onload = () => {
@@ -153,24 +177,18 @@ const AddTicket = (props) => {
             setData({
               ...data,
               base64_1: base64[1],
-              base64FileName1:
-                ("0" + today.getHours()).slice(-2) +
-                ("0" + today.getMinutes()).slice(-2) +
-                ("0" + today.getSeconds()).slice(-2) +
-                "." +
-                fileName[fileName.length - 1],
+              base64FileName1: (parseDate(new Date()) + "-" + files[0].name)
+                .split(" ")
+                .join("_"),
             });
           } else {
             setSelectedFiles2(files[0]);
             setData({
               ...data,
               base64_2: base64[1],
-              base64FileName2:
-                ("0" + today.getHours()).slice(-2) +
-                ("0" + today.getMinutes()).slice(-2) +
-                ("0" + today.getSeconds()).slice(-2) +
-                "." +
-                fileName[fileName.length - 1],
+              base64FileName2: (parseDate(new Date()) + "-" + files[0].name)
+                .split(" ")
+                .join("_"),
             });
           }
         }
@@ -237,12 +255,14 @@ const AddTicket = (props) => {
   };
 
   const onSubmitCreate = async () => {
-    props.createTicket(data);
+    const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
+    setTicketCode(ticket_code);
+    props.createTicket({ ...data, ticketCode: ticket_code });
     setIsShowSweetAlert(true);
     setPristine();
   };
   const ButtonSubmitCreate = () => {
-    if (data && Object.keys(data).length >= 16 && validEmail) {
+    if (data && Object.keys(data).length >= 17 && validEmail) {
       return (
         <button
           type="button"
@@ -282,7 +302,11 @@ const AddTicket = (props) => {
             onConfirm={() => {
               setIsShowSweetAlert(false);
               setData(null);
-              history.push(routes.ticket);
+              if (customchk2) {
+                history.push(routes.detail_ticket + `?ticketId=${ticketCode}`);
+              } else {
+                history.push(routes.ticket);
+              }
             }}
           >
             Ticket has successfully created!
@@ -325,6 +349,7 @@ const AddTicket = (props) => {
       base64_1: "",
       base64FileName2: "",
       base64_2: "",
+      emailNotification: "true",
     });
     setOptionColor("#34c38f");
   }, []);
@@ -777,15 +802,24 @@ const AddTicket = (props) => {
                                             src={selectedFiles1.preview}
                                           />
                                         ) : (
-                                          <i
-                                            className={` bx ${
-                                              selectedFiles1 &&
-                                              selectedFiles1.icon
-                                            } align-middle`}
+                                          <span
                                             style={{
-                                              fontSize: "3.5rem",
+                                              color: `${
+                                                selectedFiles1 &&
+                                                selectedFiles1.color
+                                              }`,
                                             }}
-                                          ></i>
+                                          >
+                                            <i
+                                              className={` bx ${
+                                                selectedFiles1 &&
+                                                selectedFiles1.icon
+                                              } align-middle`}
+                                              style={{
+                                                fontSize: "3.5rem",
+                                              }}
+                                            ></i>
+                                          </span>
                                         )}
                                       </Col>
                                       <Col md={8} style={{ display: "grid" }}>
@@ -868,15 +902,24 @@ const AddTicket = (props) => {
                                             src={selectedFiles2.preview}
                                           />
                                         ) : (
-                                          <i
-                                            className={` bx ${
-                                              selectedFiles2 &&
-                                              selectedFiles2.icon
-                                            } align-middle`}
+                                          <span
                                             style={{
-                                              fontSize: "3.5rem",
+                                              color: `${
+                                                selectedFiles2 &&
+                                                selectedFiles2.color
+                                              }`,
                                             }}
-                                          ></i>
+                                          >
+                                            <i
+                                              className={` bx ${
+                                                selectedFiles2 &&
+                                                selectedFiles2.icon
+                                              } align-middle`}
+                                              style={{
+                                                fontSize: "3.5rem",
+                                              }}
+                                            ></i>
+                                          </span>
                                         )}
                                       </Col>
                                       <Col md={8} style={{ display: "grid" }}>
@@ -947,6 +990,10 @@ const AddTicket = (props) => {
                               className="custom-control-label"
                               onClick={() => {
                                 setcustomchk(!customchk);
+                                setData({
+                                  ...data,
+                                  emailNotification: (!customchk).toString(),
+                                });
                               }}
                             >
                               Send email notification to the customer
@@ -958,12 +1005,12 @@ const AddTicket = (props) => {
                               className="custom-control-input"
                               id="CustomCheck1"
                               onChange={() => false}
-                              checked={customchk}
+                              checked={customchk2}
                             />
                             <label
                               className="custom-control-label"
                               onClick={() => {
-                                setcustomchk(!customchk);
+                                setcustomchk2(!customchk2);
                               }}
                             >
                               Show the ticket after submission

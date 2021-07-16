@@ -19,7 +19,7 @@ const IdleTimerContainer = (props) => {
   };
   const logOut = () => {
     setModalIsOpen(!modalIsOpen);
-    history.push("/login");
+    window.location.assign("/login");
     clearTimeout(sessionTimeoutRef.current);
     localStorage.clear();
   };
