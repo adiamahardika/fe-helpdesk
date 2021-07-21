@@ -21,7 +21,7 @@ const Users = (props) => {
   const response_code = props.response_code_user;
   const total_pages_user = props.total_pages_user;
   const active_page_user = props.active_page_user;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
 
   const [deleteUser, setDeleteUser] = useState(false);
@@ -79,7 +79,7 @@ const Users = (props) => {
   };
   const EditButton = (value) => {
     let button = null;
-    if (value.value.username === localStorage.getItem("username")) {
+    if (value.value.username === sessionStorage.getItem("username")) {
       button = (
         <Link
           to={{
@@ -285,7 +285,7 @@ const Users = (props) => {
                                 {editUser && <EditButton value={value} />}
                                 {deleteUser &&
                                   value.username !==
-                                    localStorage.getItem("username") && (
+                                    sessionStorage.getItem("username") && (
                                     <button
                                       type="button"
                                       className="btn btn-danger waves-effect waves-light"

@@ -23,7 +23,7 @@ const Category = (props) => {
   const response_code = props.response_code_category;
   const total_pages_category = props.total_pages_category;
   const active_page_category = props.active_page_category;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
   let nil = 0;
 

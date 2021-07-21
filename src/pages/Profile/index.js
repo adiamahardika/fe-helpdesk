@@ -177,8 +177,8 @@ const Profile = (props) => {
               setIsShowUpdateUser(false);
               setConfirmNewPassword(null);
               props.readUserDetail(username);
-              localStorage.setItem("name", updateUserData.name);
-              localStorage.setItem("email", updateUserData.email);
+              sessionStorage.setItem("name", updateUserData.name);
+              sessionStorage.setItem("email", updateUserData.email);
               setUpdateUserData(null);
               setPristine();
               history.push(routes.profile + "?username=" + username);

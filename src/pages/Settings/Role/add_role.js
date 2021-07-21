@@ -18,7 +18,7 @@ const AddRole = (props) => {
   const message = props.message_role;
   const response_code = props.response_code_role;
   const option_permission = props.option_permission;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 

@@ -75,7 +75,7 @@ const DetailTicket = (props) => {
   const list_user = props.list_user;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
-  const username = localStorage.getItem("username");
+  const username = sessionStorage.getItem("username");
   const history = useHistory();
   const componentRef = useRef();
   const { search } = useLocation();

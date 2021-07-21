@@ -14,10 +14,14 @@ import {
   DELETE_CATEGORY,
   DELETE_CATEGORY_REJECT,
   DELETE_CATEGORY_FULFILLED,
+  CHECK_CATEGORY,
+  CHECK_CATEGORY_FULFILLED,
+  UNCHECK_CATEGORY,
 } from "./actionTypes";
 
 const INIT_STATE = {
   list_category: null,
+  list_checked_category: [],
   detail_category: null,
   parent_1: null,
   parent_2: null,
@@ -42,6 +46,11 @@ const Category = (state = INIT_STATE, action) => {
         loading: true,
       };
     case READ_CATEGORY_FULFILLED:
+      if (action.payload.content) {
+        action.payload.content.map(() => {
+          return state.list_checked_category.push(false);
+        });
+      }
       return {
         ...state,
         list_category: action.payload.content,
@@ -128,6 +137,29 @@ const Category = (state = INIT_STATE, action) => {
         response_code_category: action.payload.responseCode,
         message_category: action.payload.description,
         loading: false,
+      };
+    case CHECK_CATEGORY:
+      return {
+        ...state,
+      };
+    case CHECK_CATEGORY_FULFILLED:
+      let new_array = [];
+      if (action.payload !== "") {
+        new_array = [...state.list_checked_category];
+        new_array[action.payload] = !new_array[action.payload];
+      } else {
+        state.list_category.map(() => {
+          return new_array.push(false);
+        });
+      }
+      return {
+        ...state,
+        list_checked_category: new_array,
+      };
+    case UNCHECK_CATEGORY:
+      state.list_checked_category[action.payload.index] = false;
+      return {
+        ...state,
       };
     default:
       return state;

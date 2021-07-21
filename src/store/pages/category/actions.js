@@ -14,6 +14,9 @@ import {
   DELETE_CATEGORY,
   DELETE_CATEGORY_REJECT,
   DELETE_CATEGORY_FULFILLED,
+  CHECK_CATEGORY,
+  UNCHECK_CATEGORY,
+  CHECK_CATEGORY_FULFILLED,
 } from "./actionTypes";
 
 // Read Category
@@ -141,5 +144,25 @@ export const deleteCategoryFulfilled = (data) => {
   return {
     type: DELETE_CATEGORY_FULFILLED,
     payload: data,
+  };
+};
+
+export const checkCategory = (index) => {
+  return {
+    type: CHECK_CATEGORY,
+    payload: index,
+  };
+};
+export const checkCategoryFulfilled = (index) => {
+  return {
+    type: CHECK_CATEGORY_FULFILLED,
+    payload: index,
+  };
+};
+
+export const uncheckCategory = (index) => {
+  return {
+    type: UNCHECK_CATEGORY,
+    payload: index,
   };
 };

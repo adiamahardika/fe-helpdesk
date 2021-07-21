@@ -7,7 +7,7 @@ const Authmiddleware = ({ component: Component, layout: Layout }) => (
   <Route
     render={(props) => {
       // here you can apply condition
-      if (!localStorage.getItem("isAuth")) {
+      if (!sessionStorage.getItem("isAuth")) {
         return (
           <Redirect
             to={{ pathname: routes.login, state: { from: props.location } }}

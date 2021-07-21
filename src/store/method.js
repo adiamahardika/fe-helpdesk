@@ -7,11 +7,11 @@ export const getMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
     },
   });
   if (response.status === general_constant.unauthorized_status) {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.assign("/login");
   } else {
     return response.json();
@@ -24,12 +24,12 @@ export const postMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
     },
     body: JSON.stringify(data.body),
   });
   if (response.status === general_constant.unauthorized_status) {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.assign("/login");
   } else {
     return response.json();
@@ -42,12 +42,12 @@ export const putMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
     },
     body: JSON.stringify(data.body),
   });
   if (response.status === general_constant.unauthorized_status) {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.assign("/login");
   } else {
     return response.json();
@@ -60,7 +60,7 @@ export const deleteMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
     },
   });
   const responseGet = await fetch(process.env.REACT_APP_API + data.read_url, {
@@ -68,11 +68,11 @@ export const deleteMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
     },
   });
   if (response.status === general_constant.unauthorized_status) {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.assign("/login");
   } else if (
     response.json().responseCode === general_constant.success_response_code

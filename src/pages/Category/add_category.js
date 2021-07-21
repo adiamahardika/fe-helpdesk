@@ -20,7 +20,7 @@ const AddCategory = (props) => {
   const response_code = props.response_code_category;
   const loading = props.loading;
   const list_category = props.list_category;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 

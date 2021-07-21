@@ -18,7 +18,7 @@ const AddUser = (props) => {
   const response_code = props.response_code_user;
   const loading = props.loading;
   const list_role = props.list_role;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 

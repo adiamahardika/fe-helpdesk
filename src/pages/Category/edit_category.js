@@ -26,7 +26,7 @@ const EditCategory = (props) => {
   const parent_1 = props.parent_1;
   const parent_2 = props.parent_2;
   const parent_3 = props.parent_3;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
   const { search } = useLocation();

@@ -58,6 +58,27 @@ export const parseDate = (time) => {
   );
 };
 
+export const parseDateAndMonth = (time) => {
+  let date = new Date(time);
+  let monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  let monthIndex = date.getMonth();
+  let monthName = monthNames[monthIndex];
+  return monthName + " " + ("0" + date.getDate()).slice(-2);
+};
+
 export const parseToRupiah = (number) => {
   var rupiah = "";
   var numberrev = number.toString().split("").reverse().join("");

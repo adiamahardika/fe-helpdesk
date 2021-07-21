@@ -32,16 +32,16 @@ const Login = (props) => {
         .then((response) => response.json())
         .then((value) => {
           if (value.responseCode === general_constant.success_response_code) {
-            localStorage.setItem("accessToken", value.response.accessToken);
-            localStorage.setItem("username", value.response.username);
-            localStorage.setItem("name", value.response.name);
-            localStorage.setItem("email", value.response.email);
-            localStorage.setItem("role", value.response.roles);
-            localStorage.setItem(
+            sessionStorage.setItem("accessToken", value.response.accessToken);
+            sessionStorage.setItem("username", value.response.username);
+            sessionStorage.setItem("name", value.response.name);
+            sessionStorage.setItem("email", value.response.email);
+            sessionStorage.setItem("role", value.response.roles);
+            sessionStorage.setItem(
               "permission",
               JSON.stringify(value.response.role[0].listPermission)
             );
-            localStorage.setItem("isAuth", true);
+            sessionStorage.setItem("isAuth", true);
             history.push(routes.ticket);
           } else {
             setMessage(value.description);
@@ -53,7 +53,7 @@ const Login = (props) => {
     }
   };
   useEffect(() => {
-    localStorage.clear();
+    sessionStorage.clear();
     props.readCaptcha();
   }, []);
 

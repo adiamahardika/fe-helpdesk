@@ -27,7 +27,7 @@ const Role = (props) => {
   const message = props.message_role;
   const response_code = props.response_code_role;
   const list_role = props.list_role;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
 
   const [addRole, setAddRole] = useState(false);

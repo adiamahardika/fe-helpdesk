@@ -20,13 +20,13 @@ function* loginUser({ payload: { user, history } }) {
           else if(process.env.REACT_APP_DEFAULTAUTH === "jwt")
           {  
              const response = yield call(postJwtLogin, '/post-jwt-login', {email: user.email, password: user.password});
-             localStorage.setItem("authUser", JSON.stringify(response));
+             sessionStorage.setItem("authUser", JSON.stringify(response));
              yield put(loginSuccess(response));
           }
           else if(process.env.REACT_APP_DEFAULTAUTH === "fake")
           {
              const response = yield call(postFakeLogin, '/post-fake-login', {email: user.email, password: user.password});
-             localStorage.setItem("authUser", JSON.stringify(response));
+             sessionStorage.setItem("authUser", JSON.stringify(response));
              yield put(loginSuccess(response));
           }
          history.push('/dashboard');
@@ -38,7 +38,7 @@ function* loginUser({ payload: { user, history } }) {
 
 function* logoutUser({ payload: { history } }) {
     try {
-         localStorage.removeItem("authUser");
+         sessionStorage.removeItem("authUser");
 
          if(process.env.REACT_APP_DEFAULTAUTH === 'firebase')
          {

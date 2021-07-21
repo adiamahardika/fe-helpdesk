@@ -6,6 +6,7 @@ import {
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
+  CHECK_CATEGORY,
 } from "./actionTypes";
 import {
   readCategoryReject,
@@ -18,6 +19,7 @@ import {
   updateCategoryFulfilled,
   deleteCategoryReject,
   deleteCategoryFulfilled,
+  checkCategoryFulfilled,
 } from "./actions";
 import { getMethod, postMethod, putMethod, deleteMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
@@ -62,6 +64,9 @@ function* deleteCategory({ payload: data }) {
     yield put(deleteCategoryReject(response));
   }
 }
+function* checkCategories({ payload: index }) {
+  yield put(checkCategoryFulfilled(index));
+}
 
 export function* watchReadCategory() {
   yield takeLatest(READ_CATEGORY, readCategory);
@@ -78,6 +83,9 @@ export function* watchUpdateCategory() {
 export function* watchDeleteCategory() {
   yield takeLatest(DELETE_CATEGORY, deleteCategory);
 }
+export function* watchCheckCategories() {
+  yield takeLatest(CHECK_CATEGORY, checkCategories);
+}
 
 function* CategorySaga() {
   yield all([
@@ -86,6 +94,7 @@ function* CategorySaga() {
     fork(watchCreateCategory),
     fork(watchUpdateCategory),
     fork(watchDeleteCategory),
+    fork(watchCheckCategories),
   ]);
 }
 

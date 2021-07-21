@@ -51,8 +51,8 @@ const AddTicket = (props) => {
   const loading = props.loading;
   const list_category = props.list_category;
   const list_user = props.list_user;
-  const permissions = JSON.parse(localStorage.getItem("permission"));
-  const username = localStorage.getItem("username");
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const username = sessionStorage.getItem("username");
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 

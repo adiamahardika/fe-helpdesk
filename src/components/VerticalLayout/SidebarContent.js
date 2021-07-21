@@ -10,7 +10,7 @@ import { withNamespaces } from "react-i18next";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import routes from "../../helpers/routes.json";
 const SidebarContent = (props) => {
-  const permissions = JSON.parse(localStorage.getItem("permission"));
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const [isViewUsers, setIsViewUsers] = useState(true);
   const [isViewRoles, setIsViewRoles] = useState(true);
   const [isViewCategory, setIsViewCategory] = useState(true);
