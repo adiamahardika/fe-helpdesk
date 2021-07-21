@@ -54,6 +54,14 @@ const priority = [
     color: "#9400d3",
   },
 ];
+const status = [
+  { name: "New", color: "#f46a6a" },
+  { name: "Waiting Reply", color: "#f1b44c" },
+  { name: "Replied", color: "#556ee6" },
+  { name: "In Progress", color: "#34c38f" },
+  { name: "Resolved", color: "#34c38f" },
+  { name: "On Hold", color: "#343a40" },
+];
 
 const Ticket = (props) => {
   const list_ticket = props.list_ticket;
@@ -64,6 +72,7 @@ const Ticket = (props) => {
   const total_pages_ticket = props.total_pages_ticket;
   const active_page_ticket = props.active_page_ticket;
   const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const username = sessionStorage.getItem("username");
   const history = useHistory();
 
   const [modalDetail, setModalDetail] = useState(false);
@@ -72,6 +81,7 @@ const Ticket = (props) => {
 
   const [data, setData] = useState({
     assignTo: "",
+    usernamePembuat: "",
     category: [],
     pageNo: 0,
     pageSize: 10,
@@ -257,51 +267,73 @@ const Ticket = (props) => {
                   </Button>
                 </Link>
                 <div className="mail-list mt-4">
-                  <Link to="email-inbox" className="active">
+                  <Link
+                    to="#"
+                    className={data.usernamePembuat === "" && "active"}
+                    onClick={() => (
+                      props.readTicket({ ...data, usernamePembuat: "" }),
+                      setData({ ...data, usernamePembuat: "" })
+                    )}
+                  >
                     <i className="mdi mdi-email-outline mr-2"></i> Inbox{" "}
-                    <span className="ml-1 float-right">(18)</span>
                   </Link>
-                  <Link to="#">
-                    <i className="mdi mdi-star-outline mr-2"></i>Starred
-                  </Link>
-                  <Link to="#">
-                    <i className="mdi mdi-diamond-stone mr-2"></i>Important
-                  </Link>
-                  <Link to="#">
-                    <i className="mdi mdi-file-outline mr-2"></i>Draft
-                  </Link>
-                  <Link to="#">
+                  <Link
+                    to="#"
+                    className={data.usernamePembuat === username && "active"}
+                    onClick={() => (
+                      props.readTicket({ ...data, usernamePembuat: username }),
+                      setData({ ...data, usernamePembuat: username })
+                    )}
+                  >
                     <i className="mdi mdi-email-check-outline mr-2"></i>Sent
-                    Mail
-                  </Link>
-                  <Link to="#">
-                    <i className="mdi mdi-trash-can-outline mr-2"></i>Trash
+                    Ticket
                   </Link>
                 </div>
 
-                <h6 className="mt-4">Labels</h6>
+                <h6 className="mt-4">Status</h6>
 
                 <div className="mail-list mt-1">
-                  <Link to="#">
-                    <span className="mdi mdi-arrow-right-drop-circle text-info float-right"></span>
-                    Theme Support
+                  <Link
+                    to="#"
+                    onClick={() => (
+                      props.readTicket({ ...data, status: "" }),
+                      setData({ ...data, status: "" })
+                    )}
+                  >
+                    <span
+                      className="mdi mdi-arrow-right-drop-circle float-right"
+                      style={{ color: "#556ee6" }}
+                    ></span>
+                    <span
+                      style={{
+                        fontWeight: data.status === "" ? "bold" : "normal",
+                      }}
+                    >
+                      All
+                    </span>
                   </Link>
-                  <Link to="#">
-                    <span className="mdi mdi-arrow-right-drop-circle text-warning float-right"></span>
-                    Freelance
-                  </Link>
-                  <Link to="#">
-                    <span className="mdi mdi-arrow-right-drop-circle text-primary float-right"></span>
-                    Social
-                  </Link>
-                  <Link to="#">
-                    <span className="mdi mdi-arrow-right-drop-circle text-danger float-right"></span>
-                    Friends
-                  </Link>
-                  <Link to="#">
-                    <span className="mdi mdi-arrow-right-drop-circle text-success float-right"></span>
-                    Family
-                  </Link>
+                  {status.map((value) => (
+                    <Link
+                      to="#"
+                      onClick={() => (
+                        props.readTicket({ ...data, status: value.name }),
+                        setData({ ...data, status: value.name })
+                      )}
+                    >
+                      <span
+                        className="mdi mdi-arrow-right-drop-circle float-right"
+                        style={{ color: value.color }}
+                      ></span>
+                      <span
+                        style={{
+                          fontWeight:
+                            data.status === value.name ? "bold" : "normal",
+                        }}
+                      >
+                        {value.name}
+                      </span>
+                    </Link>
+                  ))}
                 </div>
               </Card>
             </Col>
