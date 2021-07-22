@@ -312,9 +312,10 @@ const Ticket = (props) => {
                       All
                     </span>
                   </Link>
-                  {status.map((value) => (
+                  {status.map((value, index) => (
                     <Link
                       to="#"
+                      key={index}
                       onClick={() => (
                         props.readTicket({ ...data, status: value.name }),
                         setData({ ...data, status: value.name })

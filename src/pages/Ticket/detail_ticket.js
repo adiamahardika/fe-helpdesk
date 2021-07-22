@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Card,
@@ -23,7 +23,6 @@ import { parseDate, parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
-import { Link } from "react-router-dom";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -32,8 +31,6 @@ import routes from "../../helpers/routes.json";
 import queryString from "query-string";
 import Dropzone from "react-dropzone";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
-import { useReactToPrint } from "react-to-print";
-import { ComponentToPrint } from "../../helpers/generate_pdf";
 import "../../assets/css/pagination.css";
 
 const list_status = [
@@ -77,7 +74,6 @@ const DetailTicket = (props) => {
   const response_code = props.response_code_ticket;
   const username = sessionStorage.getItem("username");
   const history = useHistory();
-  const componentRef = useRef();
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
@@ -99,10 +95,6 @@ const DetailTicket = (props) => {
     document.body.classList.add("no_padding");
   };
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
   const handleAcceptedFiles = async (files, number) => {
     let icon = null;
     let color = null;
@@ -117,9 +109,6 @@ const DetailTicket = (props) => {
       sizeCheck = true;
     }
     switch (fileName[fileName.length - 1]) {
-      case "gif":
-        extensionCheck = true;
-        break;
       case "jpg":
         extensionCheck = true;
         break;
@@ -235,6 +224,13 @@ const DetailTicket = (props) => {
   const onShowEdit = () => {
     setShowEditTicket(true);
     setEditData(detail_ticket);
+    props.readCategory({
+      size: 0,
+      page_no: 0,
+      sort_by: "nama",
+      order_by: "asc",
+    });
+    props.readUser({ size: 1000, page_no: 0, search: "*" });
     if (detail_ticket) {
       switch (detail_ticket.status) {
         case "New":
@@ -584,12 +580,6 @@ const DetailTicket = (props) => {
         file_type = "data:image/png;base64,";
         is_image = true;
         break;
-      case "gif":
-        color = "#34c38f";
-        icon = "bx bxs-file-image";
-        file_type = "data:image/gif;base64,";
-        is_image = true;
-        break;
       default:
         color = "#34c38f";
         icon = "bx bxs-file";
@@ -638,13 +628,7 @@ const DetailTicket = (props) => {
 
   useEffect(() => {
     props.readDetailTicket(ticketId);
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "nama",
-      order_by: "asc",
-    });
-    props.readUser({ size: 1000, page_no: 0, search: "*" });
+
     setReplyData({
       kodeTicket: ticketId,
       usernamePengirim: username,
@@ -713,7 +697,7 @@ const DetailTicket = (props) => {
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Replyd On</strong>
+                      <strong>Reply On</strong>
                       {detail_ticket && parseFullDate(detail_ticket.tglDibuat)}
                     </Col>
                   </Row>
@@ -739,7 +723,7 @@ const DetailTicket = (props) => {
                       paddingTop: "4px",
                     }}
                   >
-                    <Row className="align-items-center">
+                    <Row className="align-items-center d-print-none">
                       <Col className="d-flex justify-content-end align-items-center">
                         <span
                           className="btn-link waves-effect text-right"
@@ -1000,47 +984,39 @@ const DetailTicket = (props) => {
             </Col>
             <Col md={9}>
               <Card className="pr-2 pl-2">
-                {list_reply_ticket &&
-                  list_reply_ticket.map((value, index) => (
-                    <CardBody
-                      key={index}
-                      style={{
-                        borderBottomColor: "#cfcfcf",
-                        borderBottomStyle: `${
-                          index === list_reply_ticket.length - 1
-                            ? `none`
-                            : `solid`
-                        }`,
-                        borderBottomWidth: "1px",
-                        paddingBottom: "1rem",
-                      }}
+                <CardBody>
+                  <Row className="mb-3">
+                    <Col>
+                      <h4>{detail_ticket && detail_ticket.judul}</h4>
+                    </Col>
+                    <Col
+                      md={1}
+                      className="justify-content-end d-flex d-print-none"
                     >
-                      {index === 0 && (
-                        <Row className="mb-5">
-                          <Col>
-                            <h4>{detail_ticket && detail_ticket.judul}</h4>
-                          </Col>
-                          <Col md={6} className="justify-content-end d-flex">
-                            <span
-                              className="waves-effect text-right"
-                              onClick={handlePrint}
-                            >
-                              <i className="bx bxs-printer font-size-24 align-middle"></i>
-                            </span>
-                            <div style={{ display: "none" }}>
-                              <ComponentToPrint
-                                ref={componentRef}
-                                detail_ticket={detail_ticket && detail_ticket}
-                                list_reply_ticket={
-                                  list_reply_ticket && list_reply_ticket
-                                }
-                              />
-                            </div>
-                          </Col>
-                        </Row>
-                      )}
-
-                      <Row>
+                      <span
+                        className="waves-effect text-right"
+                        onClick={() => window.print()}
+                      >
+                        <i className="bx bxs-printer font-size-24 align-middle"></i>
+                      </span>
+                    </Col>
+                  </Row>
+                  {list_reply_ticket &&
+                    list_reply_ticket.map((value, index) => (
+                      <Row
+                        key={index}
+                        style={{
+                          borderBottomColor: "#cfcfcf",
+                          borderBottomStyle: `${
+                            index === list_reply_ticket.length - 1
+                              ? `none`
+                              : `solid`
+                          }`,
+                          borderBottomWidth: "1px",
+                          paddingBottom: "1rem",
+                          marginTop: "1rem",
+                        }}
+                      >
                         <Col md={1}>
                           <div className="avatar-sm mx-auto mb-4">
                             <span
@@ -1068,13 +1044,18 @@ const DetailTicket = (props) => {
                               <strong>From : </strong>
                               <h6>{value.usernamePengirim}</h6>
                             </Col>
-                            <div className="text-right">
+                            <div
+                              className="text-right"
+                              style={{ fontSize: "12px" }}
+                            >
                               {parseFullDate(value.tglDibuat)}
                             </div>
                           </Row>
                           <strong>Message :</strong>
                           <Row>
-                            <Col>{value.isi}</Col>
+                            <Col style={{ whiteSpace: "pre-line" }}>
+                              {value.isi}
+                            </Col>
                           </Row>
                           <Row className="justify-content-end">
                             {value.urlAttachment1 !== "Not Found" && (
@@ -1092,10 +1073,10 @@ const DetailTicket = (props) => {
                           </Row>
                         </Col>
                       </Row>
-                    </CardBody>
-                  ))}
+                    ))}
+                </CardBody>
               </Card>
-              <Card>
+              <Card className="d-print-none">
                 <CardBody>
                   <CardTitle>
                     <i className="font-size-24 bx bxs-share align-middle"></i>{" "}
@@ -1515,8 +1496,8 @@ const DetailTicket = (props) => {
               <br />
               3. You may upload files ending with: <br />
               <strong>
-                .gif, .jpg, .jpeg, .png, .zip, .rar, .csv, .doc, .docx, .xls,
-                .xlsx, .txt, .pdf
+                .jpg, .jpeg, .png, .zip, .rar, .csv, .doc, .docx, .xls, .xlsx,
+                .txt, .pdf
               </strong>
             </div>
           </Modal>
@@ -1545,7 +1526,6 @@ const mapStatetoProps = (state) => {
     list_reply_ticket,
     response_code_ticket,
     message_ticket,
-
     loading,
   };
 };

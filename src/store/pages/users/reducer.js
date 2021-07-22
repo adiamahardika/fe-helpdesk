@@ -44,7 +44,7 @@ const User = (state = INIT_STATE, action) => {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case READ_USER_FULFILLED:
       return {
@@ -66,7 +66,7 @@ const User = (state = INIT_STATE, action) => {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case READ_USER_DETAIL_FULFILLED:
       return {
@@ -86,7 +86,7 @@ const User = (state = INIT_STATE, action) => {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case CREATE_USER_FULFILLED:
       return {
@@ -105,7 +105,7 @@ const User = (state = INIT_STATE, action) => {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case UPDATE_USER_FULFILLED:
       return {
@@ -124,7 +124,7 @@ const User = (state = INIT_STATE, action) => {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case UPDATE_USER_PROFILE_FULFILLED:
       return {
@@ -143,7 +143,7 @@ const User = (state = INIT_STATE, action) => {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case DELETE_USER_FULFILLED:
       return {
@@ -163,14 +163,14 @@ const User = (state = INIT_STATE, action) => {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case RESET_PASSWORD_FULFILLED:
       return {
         ...state,
         response_code_user: action.payload.responseCode,
         message_user: action.payload.description,
-        loading: true,
+        loading: false,
       };
     default:
       return state;

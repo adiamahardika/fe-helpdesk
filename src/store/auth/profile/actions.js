@@ -1,7 +1,6 @@
 import { PROFILE_ERROR,PROFILE_SUCCESS,EDIT_PROFILE } from './actionTypes';
 
 export const editProfile = (user) => {
-    console.log(user);
     return {
         type: EDIT_PROFILE,
         payload: { user }

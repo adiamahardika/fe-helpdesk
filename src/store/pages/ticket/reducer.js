@@ -33,14 +33,14 @@ const Ticket = (state = INIT_STATE, action) => {
     case READ_TICKET:
       return {
         ...state,
-        lading: true,
+        loading: true,
       };
     case READ_TICKET_REJECT:
       return {
         ...state,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case READ_TICKET_FULFILLED:
       return {
@@ -50,7 +50,7 @@ const Ticket = (state = INIT_STATE, action) => {
         message_ticket: action.payload.description,
         active_page_ticket: action.payload.page,
         total_pages_ticket: action.payload.totalPages,
-        loading: true,
+        loading: false,
       };
     case CREATE_TICKET:
       return {
@@ -62,14 +62,14 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case CREATE_TICKET_FULFILLED:
       return {
         ...state,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
 
     case READ_DETAIL_TICKET:
@@ -82,7 +82,7 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case READ_DETAIL_TICKET_FULFILLED:
       return {
@@ -91,7 +91,7 @@ const Ticket = (state = INIT_STATE, action) => {
         list_reply_ticket: action.payload.listReplyTicket,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
 
     case UPDATE_TICKET:
@@ -104,7 +104,7 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case UPDATE_TICKET_FULFILLED:
       return {
@@ -113,7 +113,7 @@ const Ticket = (state = INIT_STATE, action) => {
         list_reply_ticket: action.payload.listReplyTicket,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
 
     case REPLY_TICKET:
@@ -126,7 +126,7 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
     case REPLY_TICKET_FULFILLED:
       return {
@@ -135,7 +135,7 @@ const Ticket = (state = INIT_STATE, action) => {
         list_reply_ticket: action.payload.listReplyTicket,
         response_code_ticket: action.payload.responseCode,
         message_ticket: action.payload.description,
-        loading: true,
+        loading: false,
       };
     default:
       return state;
