@@ -310,34 +310,32 @@ const Role = (props) => {
                         <div className="mb-2">
                           <div className="p-1" id="headingOne">
                             <h6 className="m-0 font-14">
-                              <span
+                              <Row
                                 onClick={() => handleAccordion(index)}
                                 style={{ cursor: "pointer" }}
-                                className="text-dark has-arrow"
+                                className="text-dark has-arrow align-content-center"
                               >
-                                <Row className="align-content-center">
-                                  <Col md={1}>
-                                    <IsPermisiionIcon
-                                      code={value.code}
-                                    ></IsPermisiionIcon>
-                                  </Col>
-                                  <Col md={1} className="pr-0">
-                                    {value.code}
-                                  </Col>
-                                  <Col md={8} className="justify-content-start">
-                                    {value.name}
-                                  </Col>
-                                  <Col md={1}>
-                                    <i
-                                      className={`bx ${
-                                        accordion && accordion[index].isOpen
-                                          ? `bx-chevron-up`
-                                          : `bx-chevron-down`
-                                      }  font-size-16 align-middle`}
-                                    ></i>
-                                  </Col>
-                                </Row>
-                              </span>
+                                <Col md={2}>
+                                  <IsPermisiionIcon
+                                    code={value.code}
+                                  ></IsPermisiionIcon>
+                                </Col>
+                                <Col md={2} className="pr-0">
+                                  {value.code}
+                                </Col>
+                                <Col md={6} className="justify-content-start">
+                                  {value.name}
+                                </Col>
+                                <Col md={2}>
+                                  <i
+                                    className={`bx ${
+                                      accordion && accordion[index].isOpen
+                                        ? `bx-chevron-up`
+                                        : `bx-chevron-down`
+                                    }  font-size-16 align-middle`}
+                                  ></i>
+                                </Col>
+                              </Row>
                             </h6>
                           </div>
 
@@ -373,21 +371,26 @@ const Role = (props) => {
                                           }}
                                         >
                                           <Row className="align-content-center">
-                                            <Col md={1}>
+                                            <Col md={2}>
                                               <IsPermisiionIcon
                                                 code={sub_level_1_value.code}
                                               ></IsPermisiionIcon>
                                             </Col>
-                                            <Col md={1}>
+                                            <Col md={2}>
                                               {sub_level_1_value.code}
                                             </Col>
                                             <Col
+                                              md={
+                                                sub_level_1_value.sub_level_2
+                                                  ? 6
+                                                  : 8
+                                              }
                                               className="justify-content-start"
                                             >
                                               {sub_level_1_value.name}
                                             </Col>
                                             {sub_level_1_value.sub_level_2 && (
-                                              <Col md={1}>
+                                              <Col md={2}>
                                                 <i
                                                   className={`bx ${
                                                     accordion &&
@@ -422,7 +425,7 @@ const Role = (props) => {
                                                 className="align-content-center pl-3"
                                                 key={sub_level_2_index}
                                               >
-                                                <Col md={1}>
+                                                <Col md={2}>
                                                   <IsPermisiionIcon
                                                     code={
                                                       sub_level_2_value.code
