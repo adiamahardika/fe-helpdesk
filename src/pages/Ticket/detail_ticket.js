@@ -692,7 +692,8 @@ const DetailTicket = (props) => {
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Replies</strong>0
+                      <strong>Replies</strong>{" "}
+                      {list_reply_ticket && list_reply_ticket.length - 1}
                     </Col>
                   </Row>
                   <Row className="align-items-center mb-2">
