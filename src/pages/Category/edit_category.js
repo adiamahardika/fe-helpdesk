@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, FormGroup, Row, Col } from "reactstrap";
+import {
+  Container,
+  Card,
+  CardBody,
+  FormGroup,
+  Row,
+  Col,
+  Modal,
+} from "reactstrap";
 import {
   readCategory,
   readDetailCategory,
   updateCategory,
+  deleteCategory,
 } from "../../store/pages/category/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -38,6 +47,13 @@ const EditCategory = (props) => {
   const [subLevel1Value, setSubLevel1Value] = useState(null);
   const [showSubLevel1, setShowSubLevel1] = useState(true);
   const [showSubLevel2, setShowSubLevel2] = useState(true);
+  const [isEdit, setIsEdit] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+
+  const removeBodyCss = () => {
+    document.body.classList.add("no_padding");
+  };
 
   const onChangeData = (event) => {
     setData({
@@ -47,27 +63,40 @@ const EditCategory = (props) => {
     setDirty();
   };
 
-  const onSubmitCreate = async () => {
+  const onSubmit = async () => {
     delete data.updateAt;
     props.updateCategory(data);
     setIsShowSweetAlert(true);
     setPristine();
   };
-  const ButtonSubmitCreate = () => {
+  const ButtonSubmit = () => {
     if (
       data &&
       Object.keys(data).length >= 3 &&
-      Object.values(data).every((value) => value !== "")
+      Object.values(data).every((value) => value !== "") &&
+      isEdit
     ) {
       return (
         <button
           type="button"
-          className="btn btn-primary waves-effect waves-light"
+          className="btn btn-primary waves-effect waves-light d-flex align-items-center"
           onClick={() => {
-            onSubmitCreate();
+            onSubmit();
           }}
         >
-          <i className="bx bx bx-save font-size-16 align-middle mr-2"></i>
+          <i className="bx bx-save font-size-16 align-middle mr-2"></i>
+          Save
+        </button>
+      );
+    } else if (isEdit) {
+      return (
+        <button
+          type="button"
+          className="btn btn-primary waves-effect waves-light d-flex align-items-center"
+          disabled
+          style={{ cursor: "default" }}
+        >
+          <i className="bx bx-save font-size-16 align-middle mr-2"></i>
           Save
         </button>
       );
@@ -75,12 +104,18 @@ const EditCategory = (props) => {
       return (
         <button
           type="button"
-          className="btn btn-primary waves-effect waves-light"
-          disabled
-          style={{ cursor: "default" }}
+          className="btn btn-primary waves-effect waves-light d-flex align-items-center"
+          onClick={() => {
+            setIsEdit(true);
+            setData(detail_category);
+            parent_1 && setMainValue(parent_1.codeLevel);
+            parent_2 && setSubLevel1Value(parent_2.codeLevel);
+            parent_2 && setShowSubLevel1(true);
+            parent_3 && setShowSubLevel2(true);
+          }}
         >
-          <i className="bx bx bx-save font-size-16 align-middle mr-2"></i>
-          Save
+          <i className="bx bx-edit font-size-16 align-middle mr-2"></i>
+          Edit
         </button>
       );
     }
@@ -144,12 +179,37 @@ const EditCategory = (props) => {
                 style={{
                   display: "grid",
                   justifyItems: "flex-end",
-                  gridTemplateColumns: "1fr",
+                  gridTemplateColumns: "1fr max-content",
                   columnGap: "8px",
                 }}
               >
-                {" "}
-                <ButtonSubmitCreate />
+                {isEdit ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary waves-effect waves-light d-flex align-items-center"
+                    style={{ minWidth: "max-content" }}
+                    onClick={() => {
+                      setIsEdit(false);
+                    }}
+                  >
+                    <i className="bx bx-x font-size-16 align-middle mr-2"></i>
+                    Cancel
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-danger waves-effect waves-light d-flex align-items-center"
+                    style={{ minWidth: "max-content" }}
+                    onClick={() => {
+                      setSelectedData(detail_category.id);
+                      setModalDelete(!modalDelete);
+                    }}
+                  >
+                    <i className="bx bx-trash font-size-16 align-middle mr-2"></i>
+                    Delete
+                  </button>
+                )}
+                <ButtonSubmit />
               </div>
               <Row className="justify-content-center">
                 <Col md={10}>
@@ -168,6 +228,11 @@ const EditCategory = (props) => {
                             maxLength: { value: 25 },
                           }}
                           value={detail_category && detail_category.nama}
+                          style={{
+                            backgroundColor:
+                              isEdit === false ? "#ced4da" : "#ffffff",
+                          }}
+                          disabled={isEdit === false}
                           onChange={onChangeData}
                         />
                       </Col>
@@ -195,6 +260,11 @@ const EditCategory = (props) => {
                                     setShowSubLevel2(false),
                                     setDirty()
                                   )}
+                                  style={{
+                                    backgroundColor:
+                                      isEdit === false ? "#ced4da" : "#ffffff",
+                                  }}
+                                  disabled={isEdit === false}
                                 >
                                   <option
                                     value="0"
@@ -262,6 +332,13 @@ const EditCategory = (props) => {
                                         : setShowSubLevel2(true),
                                       setDirty()
                                     )}
+                                    style={{
+                                      backgroundColor:
+                                        isEdit === false
+                                          ? "#ced4da"
+                                          : "#ffffff",
+                                    }}
+                                    disabled={isEdit === false}
                                   >
                                     <option
                                       value={mainValue}
@@ -277,13 +354,12 @@ const EditCategory = (props) => {
                                         setDirty()
                                       )}
                                     >
-                                      -
+                                      {isEdit ? "-" : parent_2.nama}
                                     </option>
                                     {list_category &&
                                       list_category.map(
                                         (value, index) =>
-                                          parent_2 &&
-                                          parent_2.parent === value.parent && (
+                                          mainValue === value.parent && (
                                             <option
                                               key={index}
                                               value={value && value.codeLevel}
@@ -328,6 +404,13 @@ const EditCategory = (props) => {
                                       }),
                                       setDirty()
                                     )}
+                                    style={{
+                                      backgroundColor:
+                                        isEdit === false
+                                          ? "#ced4da"
+                                          : "#ffffff",
+                                    }}
+                                    disabled={isEdit === false}
                                   >
                                     <option
                                       value={subLevel1Value}
@@ -339,13 +422,12 @@ const EditCategory = (props) => {
                                         setDirty()
                                       )}
                                     >
-                                      -
+                                      {isEdit ? "-" : parent_3.nama}
                                     </option>
                                     {list_category &&
                                       list_category.map(
                                         (value, index) =>
-                                          parent_3 &&
-                                          parent_3.parent === value.parent && (
+                                          subLevel1Value === value.parent && (
                                             <option
                                               key={index}
                                               value={value && value.codeLevel}
@@ -379,6 +461,64 @@ const EditCategory = (props) => {
               </Row>
             </CardBody>
           </Card>
+
+          {/* Modal Delete */}
+          <Modal
+            isOpen={modalDelete}
+            toggle={() => {
+              setModalDelete(!modalDelete);
+              removeBodyCss();
+              setSelectedData(null);
+            }}
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Delete Category
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalDelete(false);
+                  setSelectedData(null);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Are you sure want to delete this category?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalDelete(!modalDelete);
+                  removeBodyCss();
+                  setSelectedData(null);
+                }}
+                className="btn btn-secondary waves-effect"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger waves-effect waves-light"
+                onClick={() => {
+                  setIsShowSweetAlert(true);
+                  props.deleteCategory({ ...data, id: selectedData.id });
+                  setModalDelete(!modalDelete);
+                  removeBodyCss();
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </Modal>
+
           {Prompt}
           <ShowSweetAlert />
         </Container>
@@ -415,6 +555,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       readCategory,
       updateCategory,
+      deleteCategory,
       readDetailCategory,
     },
     dispatch

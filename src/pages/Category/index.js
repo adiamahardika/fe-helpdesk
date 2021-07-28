@@ -77,10 +77,6 @@ const Category = (props) => {
     }
     return value;
   };
-  const handlePageClick = (value) => {
-    props.readCategory({ ...data, page_no: value.selected });
-    setData({ ...data, page_no: value.selected });
-  };
 
   useEffect(() => {
     props.readCategory(data);
@@ -94,89 +90,7 @@ const Category = (props) => {
           <Card>
             <CardBody>
               <Row className="mb-3 d-flex align-items-end">
-                <Col md="10">
-                  <Row className="d-flex align-items-end">
-                    <Col md="2">
-                      <div className="form-group mb-0">
-                        <label>Show Data</label>
-                        <div>
-                          <select
-                            className="form-control"
-                            defaultValue={10}
-                            onChange={(event) => (
-                              setData({
-                                ...data,
-                                size: parseInt(event.target.value),
-                                page_no: 0,
-                              }),
-                              props.readCategory({
-                                ...data,
-                                size: parseInt(event.target.value),
-                                page_no: 0,
-                              })
-                            )}
-                          >
-                            <option value={10}>10</option>
-                            <option value={25}>25</option>
-                            <option value={50}>50</option>
-                            <option value={100}>100</option>
-                          </select>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col md="2">
-                      <div className="form-group mb-0">
-                        <label>Sort By</label>
-                        <div>
-                          <select
-                            className="form-control"
-                            defaultValue="nama"
-                            onChange={(event) => (
-                              setData({
-                                ...data,
-                                sort_by: event.target.value,
-                              }),
-                              props.readCategory({
-                                ...data,
-                                sort_by: event.target.value,
-                              })
-                            )}
-                          >
-                            <option value="nama">Name</option>
-                            <option value="codeLevel">Code Level</option>
-                            <option value="parent">Parent</option>
-                            <option value="updateAt">Last Update</option>
-                          </select>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col md="2">
-                      <div className="form-group mb-0">
-                        <label>Sort By</label>
-                        <div>
-                          <select
-                            className="form-control"
-                            defaultValue="asc"
-                            onChange={(event) => (
-                              setData({
-                                ...data,
-                                order_by: event.target.value,
-                              }),
-                              props.readCategory({
-                                ...data,
-                                order_by: event.target.value,
-                              })
-                            )}
-                          >
-                            <option value="asc">ASC</option>
-                            <option value="desc">DESC</option>
-                          </select>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col md="2" className="d-flex justify-content-end">
+                <Col className="d-flex justify-content-end">
                   <Link to={routes.add_category}>
                     <button
                       type="button"
@@ -188,223 +102,78 @@ const Category = (props) => {
                   </Link>
                 </Col>
               </Row>
-              {/* <Row className="justify-content-center">
-                <Col md={10}>
-                  <div className="table-responsive">
-                    <Table className="table table-centered table-striped">
-                      <thead>
-                        <tr>
-                          <th scope="col">No</th>
-                          <th scope="col">Name</th>
-                          <th scope="col">Code Level</th>
-                          <th scope="col">Parent</th>
-                          <th scope="col">Last Update</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {list_category &&
-                          list_category.map((value, index) => {
-                            return (
-                              console.log(value.codeLevel.split(".").length),
-                              (
-                                <tr key={value.id}>
-                                  <th scope="row">
-                                    <div>{index + 1}</div>
-                                  </th>
-                                  <td>{value.nama}</td>
-                                  <td>{value.codeLevel}</td>
-                                  <td>{value.parent}</td>
-                                  <td>{parseFullDate(value.updateAt)}</td>
-                                  <td>
-                                    <div
-                                      style={{
-                                        display: "grid",
-                                        rowGap: "8px",
-                                        gridAutoFlow: "column",
-                                        gridAutoColumns: "max-content",
-                                        columnGap: "4px",
-                                      }}
-                                    >
-                                      <Link
-                                        to={{
-                                          pathname: routes.edit_category,
-                                          search: `?code=${value.codeLevel}`,
-                                        }}
-                                      >
-                                        <button
-                                          type="button"
-                                          className="btn btn-primary waves-effect waves-light"
-                                          style={{ minWidth: "max-content" }}
-                                        >
-                                          <i className="bx bx-edit font-size-16 align-middle"></i>
-                                        </button>
-                                      </Link>
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger waves-effect waves-light"
-                                        style={{ minWidth: "max-content" }}
-                                        onClick={() => {
-                                          setSelectedData(value);
-                                          setModalDelete(!modalDelete);
-                                        }}
-                                      >
-                                        <i className="bx bx-trash font-size-16 align-middle"></i>
-                                      </button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              )
-                            );
-                          })}
-                      </tbody>
-                    </Table>
-                    {list_category && list_category.length <= 0 && (
-                      <div style={{ textAlign: "center" }}>No Data</div>
-                    )}
-                  </div>
-                  <Row className="d-flex align-items-end">
-                    <ReactPaginate
-                      previousLabel={"previous"}
-                      nextLabel={"next"}
-                      breakLabel={"..."}
-                      breakClassName={"break-me"}
-                      pageCount={total_pages_category}
-                      marginPagesDisplayed={1}
-                      pageRangeDisplayed={5}
-                      forcePage={active_page_category}
-                      onPageChange={handlePageClick}
-                      containerClassName={"pagination"}
-                      subContainerClassName={"pages pagination"}
-                      activeClassName={"active"}
-                    />
-                  </Row>
-                </Col>
-              </Row> */}
               <Row>
                 <Col>
                   <ol
                     className="sub-menu"
                     aria-expanded="true"
-                    style={{ listStyle: "upper-alpha" }}
+                    style={{
+                      listStyle: "upper-alpha",
+                      fontSize: "20px",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(2,1fr)",
+                      columnGap: "32px",
+                    }}
                   >
                     {list_category &&
                       list_category.map(
                         (value) =>
                           value.parent === "0" && (
-                            <>
-                              <li>
-                                <div className="custom-checkbox mb-3 d-flex">
-                                  <label className="mr-4">{value.nama}</label>
-                                  <div
-                                    style={{
-                                      display: "grid",
-                                      rowGap: "8px",
-                                      gridAutoFlow: "column",
-                                      gridAutoColumns: "max-content",
-                                      columnGap: "8px",
+                            <div>
+                              <li
+                                style={{
+                                  borderBottomColor: "#cfcfcf",
+                                  borderBottomStyle: "solid",
+                                  borderBottomWidth: "0.5px",
+                                  marginBottom: "8px",
+                                }}
+                              >
+                                <div className="custom-checkbox d-flex">
+                                  <Link
+                                    to={{
+                                      pathname: routes.edit_category,
+                                      search: `?code=${value.codeLevel}`,
                                     }}
+                                    style={{ color: "#343a40" }}
+                                    className=" waves-effect text-right mr-4 hovering-zoom"
                                   >
-                                    <Link
-                                      to={{
-                                        pathname: routes.edit_category,
-                                        search: `?code=${value.codeLevel}`,
-                                      }}
-                                      className="btn-link waves-effect text-right"
-                                    >
-                                      <span
-                                        style={{
-                                          color: "#556ee6",
-                                        }}
-                                        className="mr-1"
-                                      >
-                                        <i className="bx bx-edit font-size-16 align-middle"></i>
-                                      </span>
-                                      Edit
-                                    </Link>
-                                    <span
-                                      className="btn-link waves-effect text-right"
-                                      onClick={() => {
-                                        setSelectedData(value);
-                                        setModalDelete(!modalDelete);
-                                      }}
-                                    >
-                                      <span
-                                        style={{
-                                          color: "#f46a6a",
-                                        }}
-                                        className="mr-1"
-                                      >
-                                        <i className="bx bx-trash font-size-16 align-middle"></i>
-                                      </span>
-                                      Delete
-                                    </span>
-                                  </div>
+                                    {value.nama}
+                                  </Link>
                                 </div>
                               </li>
                               <ol
                                 className="sub-menu"
                                 aria-expanded="true"
-                                style={{ listStyleType: "number" }}
+                                style={{
+                                  listStyleType: "number",
+                                  fontSize: "16px",
+                                }}
                               >
                                 {list_category &&
                                   list_category.map(
                                     (sl1_value, sl1_index) =>
                                       sl1_value.parent === value.codeLevel && (
                                         <>
-                                          <li>
-                                            <div className="d-flex custom-checkbox mb-3">
-                                              <label className="mr-4">
-                                                {sl1_value.nama}
-                                              </label>
-                                              <div
-                                                style={{
-                                                  display: "grid",
-                                                  rowGap: "8px",
-                                                  gridAutoFlow: "column",
-                                                  gridAutoColumns:
-                                                    "max-content",
-                                                  columnGap: "8px",
+                                          <li
+                                            style={{
+                                              borderBottomColor: "#cfcfcf",
+                                              borderBottomStyle: "solid",
+                                              borderBottomWidth: "0.5px",
+                                              marginBottom: "8px",
+                                            }}
+                                          >
+                                            <div className="d-flex custom-checkbox ">
+                                              <Link
+                                                to={{
+                                                  pathname:
+                                                    routes.edit_category,
+                                                  search: `?code=${sl1_value.codeLevel}`,
                                                 }}
+                                                style={{ color: "#343a40" }}
+                                                className=" waves-effect text-right mr-4"
                                               >
-                                                <Link
-                                                  to={{
-                                                    pathname:
-                                                      routes.edit_category,
-                                                    search: `?code=${sl1_value.codeLevel}`,
-                                                  }}
-                                                  className="btn-link waves-effect text-right"
-                                                >
-                                                  <span
-                                                    style={{
-                                                      color: "#556ee6",
-                                                    }}
-                                                    className="mr-1"
-                                                  >
-                                                    <i className="bx bx-edit font-size-16 align-middle"></i>
-                                                  </span>
-                                                  Edit
-                                                </Link>
-                                                <span
-                                                  className="btn-link waves-effect text-right"
-                                                  onClick={() => {
-                                                    setSelectedData(value);
-                                                    setModalDelete(
-                                                      !modalDelete
-                                                    );
-                                                  }}
-                                                >
-                                                  <span
-                                                    style={{
-                                                      color: "#f46a6a",
-                                                    }}
-                                                    className="mr-1"
-                                                  >
-                                                    <i className="bx bx-trash font-size-16 align-middle"></i>
-                                                  </span>
-                                                  Delete
-                                                </span>
-                                              </div>
+                                                {sl1_value.nama}
+                                              </Link>
                                             </div>
                                           </li>
                                           <ol
@@ -412,6 +181,7 @@ const Category = (props) => {
                                             aria-expanded="true"
                                             style={{
                                               listStyleType: "upper-alpha",
+                                              fontSize: "14px",
                                             }}
                                           >
                                             {list_category &&
@@ -420,64 +190,31 @@ const Category = (props) => {
                                                   sl2_value.parent ===
                                                     sl1_value.codeLevel && (
                                                     <>
-                                                      <li>
-                                                        <div className="d-flex custom-checkbox mb-3">
-                                                          <label className="mr-4">
-                                                            {sl2_value.nama}
-                                                          </label>
-                                                          <div
-                                                            style={{
-                                                              display: "grid",
-                                                              rowGap: "8px",
-                                                              gridAutoFlow:
-                                                                "column",
-                                                              gridAutoColumns:
-                                                                "max-content",
-                                                              columnGap: "8px",
+                                                      <li
+                                                        style={{
+                                                          borderBottomColor:
+                                                            "#cfcfcf",
+                                                          borderBottomStyle:
+                                                            "solid",
+                                                          borderBottomWidth:
+                                                            "0.5px",
+                                                          marginBottom: "8px",
+                                                        }}
+                                                      >
+                                                        <div className="d-flex custom-checkbox ">
+                                                          <Link
+                                                            to={{
+                                                              pathname:
+                                                                routes.edit_category,
+                                                              search: `?code=${sl2_value.codeLevel}`,
                                                             }}
+                                                            style={{
+                                                              color: "#343a40",
+                                                            }}
+                                                            className=" waves-effect text-right mr-4"
                                                           >
-                                                            <Link
-                                                              to={{
-                                                                pathname:
-                                                                  routes.edit_category,
-                                                                search: `?code=${sl2_value.codeLevel}`,
-                                                              }}
-                                                              className="btn-link waves-effect text-right"
-                                                            >
-                                                              <span
-                                                                style={{
-                                                                  color:
-                                                                    "#556ee6",
-                                                                }}
-                                                                className="mr-1"
-                                                              >
-                                                                <i className="bx bx-edit font-size-16 align-middle"></i>
-                                                              </span>
-                                                              Edit
-                                                            </Link>
-                                                            <span
-                                                              className="btn-link waves-effect text-right"
-                                                              onClick={() => {
-                                                                setSelectedData(
-                                                                  value
-                                                                );
-                                                                setModalDelete(
-                                                                  !modalDelete
-                                                                );
-                                                              }}
-                                                            >
-                                                              <span
-                                                                style={{
-                                                                  color:
-                                                                    "#f46a6a",
-                                                                }}
-                                                                className="mr-1"
-                                                              >
-                                                                <i className="bx bx-trash font-size-16 align-middle"></i>
-                                                              </span>
-                                                              Delete
-                                                            </span>
-                                                          </div>
+                                                            {sl2_value.nama}
+                                                          </Link>
                                                         </div>
                                                       </li>
                                                       <ol
@@ -486,6 +223,7 @@ const Category = (props) => {
                                                         style={{
                                                           listStyleType:
                                                             "number",
+                                                          fontSize: "12px",
                                                         }}
                                                       >
                                                         {list_category &&
@@ -493,69 +231,35 @@ const Category = (props) => {
                                                             (sl3_value) =>
                                                               sl3_value.parent ===
                                                                 sl2_value.codeLevel && (
-                                                                <li>
-                                                                  <div className="d-flex custom-checkbox mb-3">
-                                                                    <label className="mr-4">
+                                                                <li
+                                                                  style={{
+                                                                    borderBottomColor:
+                                                                      "#cfcfcf",
+                                                                    borderBottomStyle:
+                                                                      "solid",
+                                                                    borderBottomWidth:
+                                                                      "0.5px",
+                                                                    marginBottom:
+                                                                      "8px",
+                                                                  }}
+                                                                >
+                                                                  <div className="d-flex custom-checkbox ">
+                                                                    <Link
+                                                                      to={{
+                                                                        pathname:
+                                                                          routes.edit_category,
+                                                                        search: `?code=${sl3_value.codeLevel}`,
+                                                                      }}
+                                                                      style={{
+                                                                        color:
+                                                                          "#343a40",
+                                                                      }}
+                                                                      className=" waves-effect text-right mr-4"
+                                                                    >
                                                                       {
                                                                         sl3_value.nama
                                                                       }
-                                                                    </label>
-                                                                    <div
-                                                                      style={{
-                                                                        display:
-                                                                          "grid",
-                                                                        rowGap:
-                                                                          "8px",
-                                                                        gridAutoFlow:
-                                                                          "column",
-                                                                        gridAutoColumns:
-                                                                          "max-content",
-                                                                        columnGap:
-                                                                          "8px",
-                                                                      }}
-                                                                    >
-                                                                      <Link
-                                                                        to={{
-                                                                          pathname:
-                                                                            routes.edit_category,
-                                                                          search: `?code=${sl3_value.codeLevel}`,
-                                                                        }}
-                                                                        className="btn-link waves-effect text-right"
-                                                                      >
-                                                                        <span
-                                                                          style={{
-                                                                            color:
-                                                                              "#556ee6",
-                                                                          }}
-                                                                          className="mr-1"
-                                                                        >
-                                                                          <i className="bx bx-edit font-size-16 align-middle"></i>
-                                                                        </span>
-                                                                        Edit
-                                                                      </Link>
-                                                                      <span
-                                                                        className="btn-link waves-effect text-right"
-                                                                        onClick={() => {
-                                                                          setSelectedData(
-                                                                            value
-                                                                          );
-                                                                          setModalDelete(
-                                                                            !modalDelete
-                                                                          );
-                                                                        }}
-                                                                      >
-                                                                        <span
-                                                                          style={{
-                                                                            color:
-                                                                              "#f46a6a",
-                                                                          }}
-                                                                          className="mr-1"
-                                                                        >
-                                                                          <i className="bx bx-trash font-size-16 align-middle"></i>
-                                                                        </span>
-                                                                        Delete
-                                                                      </span>
-                                                                    </div>
+                                                                    </Link>
                                                                   </div>
                                                                 </li>
                                                               )
@@ -569,7 +273,7 @@ const Category = (props) => {
                                       )
                                   )}
                               </ol>
-                            </>
+                            </div>
                           )
                       )}
                   </ol>

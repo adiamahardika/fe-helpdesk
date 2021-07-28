@@ -28,7 +28,6 @@ const AddCategory = (props) => {
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [mainValue, setMainValue] = useState(null);
   const [subLevel1Value, setSubLevel1Value] = useState(null);
-  const [subLevel2Value, setSubLevel2Value] = useState(null);
   const [showSubLevel1, setShowSubLevel1] = useState(false);
   const [showSubLevel2, setShowSubLevel2] = useState(false);
   const [showSubLevel3, setShowSubLevel3] = useState(false);
