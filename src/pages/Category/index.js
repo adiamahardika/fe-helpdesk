@@ -16,6 +16,7 @@ import ReactPaginate from "react-paginate";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import "../../assets/css/pagination.css";
+import "../../assets/css/style.css";
 
 const Category = (props) => {
   const list_category = props.list_category;
@@ -105,11 +106,12 @@ const Category = (props) => {
               <Row>
                 <Col>
                   <ol
-                    className="sub-menu"
+                    className="sub-menu "
                     aria-expanded="true"
                     style={{
                       listStyle: "upper-alpha",
-                      fontSize: "20px",
+                      fontSize: "24px",
+                      fontWeight: "600",
                       display: "grid",
                       gridTemplateColumns: "repeat(2,1fr)",
                       columnGap: "32px",
@@ -128,14 +130,19 @@ const Category = (props) => {
                                   marginBottom: "8px",
                                 }}
                               >
-                                <div className="custom-checkbox d-flex">
+                                <div
+                                  className="custom-checkbox d-flex hover-text"
+                                  style={{ width: "max-content" }}
+                                >
                                   <Link
                                     to={{
                                       pathname: routes.edit_category,
                                       search: `?code=${value.codeLevel}`,
                                     }}
-                                    style={{ color: "#343a40" }}
-                                    className=" waves-effect text-right mr-4 hovering-zoom"
+                                    style={{
+                                      color: "#343a40",
+                                    }}
+                                    className=" waves-effect text-right"
                                   >
                                     {value.nama}
                                   </Link>
@@ -146,7 +153,8 @@ const Category = (props) => {
                                 aria-expanded="true"
                                 style={{
                                   listStyleType: "number",
-                                  fontSize: "16px",
+                                  fontSize: "20px",
+                                  fontWeight: "500",
                                 }}
                               >
                                 {list_category &&
@@ -162,7 +170,10 @@ const Category = (props) => {
                                               marginBottom: "8px",
                                             }}
                                           >
-                                            <div className="d-flex custom-checkbox ">
+                                            <div
+                                              className="d-flex custom-checkbox hover-text"
+                                              style={{ width: "max-content" }}
+                                            >
                                               <Link
                                                 to={{
                                                   pathname:
@@ -170,7 +181,7 @@ const Category = (props) => {
                                                   search: `?code=${sl1_value.codeLevel}`,
                                                 }}
                                                 style={{ color: "#343a40" }}
-                                                className=" waves-effect text-right mr-4"
+                                                className=" waves-effect text-right "
                                               >
                                                 {sl1_value.nama}
                                               </Link>
@@ -181,7 +192,8 @@ const Category = (props) => {
                                             aria-expanded="true"
                                             style={{
                                               listStyleType: "upper-alpha",
-                                              fontSize: "14px",
+                                              fontSize: "18px",
+                                              fontWeight: "500",
                                             }}
                                           >
                                             {list_category &&
@@ -201,7 +213,13 @@ const Category = (props) => {
                                                           marginBottom: "8px",
                                                         }}
                                                       >
-                                                        <div className="d-flex custom-checkbox ">
+                                                        <div
+                                                          className="d-flex custom-checkbox hover-text"
+                                                          style={{
+                                                            width:
+                                                              "max-content",
+                                                          }}
+                                                        >
                                                           <Link
                                                             to={{
                                                               pathname:
@@ -211,7 +229,7 @@ const Category = (props) => {
                                                             style={{
                                                               color: "#343a40",
                                                             }}
-                                                            className=" waves-effect text-right mr-4"
+                                                            className=" waves-effect text-right "
                                                           >
                                                             {sl2_value.nama}
                                                           </Link>
@@ -223,7 +241,8 @@ const Category = (props) => {
                                                         style={{
                                                           listStyleType:
                                                             "number",
-                                                          fontSize: "12px",
+                                                          fontSize: "16px",
+                                                          fontWeight: "400",
                                                         }}
                                                       >
                                                         {list_category &&
@@ -243,7 +262,13 @@ const Category = (props) => {
                                                                       "8px",
                                                                   }}
                                                                 >
-                                                                  <div className="d-flex custom-checkbox ">
+                                                                  <div
+                                                                    className="d-flex custom-checkbox hover-text"
+                                                                    style={{
+                                                                      width:
+                                                                        "max-content",
+                                                                    }}
+                                                                  >
                                                                     <Link
                                                                       to={{
                                                                         pathname:
@@ -254,7 +279,7 @@ const Category = (props) => {
                                                                         color:
                                                                           "#343a40",
                                                                       }}
-                                                                      className=" waves-effect text-right mr-4"
+                                                                      className=" waves-effect text-right "
                                                                     >
                                                                       {
                                                                         sl3_value.nama
