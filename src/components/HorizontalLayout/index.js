@@ -47,7 +47,7 @@ class Layout extends Component {
     let currentage = title.charAt(1).toUpperCase() + title.slice(2);
 
     document.title =
-      currentage + " | Skote - Responsive Bootstrap 4 Admin Dashboard";
+      currentage + " | Myg Ticketing";
 
     this.props.changeLayout('horizontal');
     if (this.props.topbarTheme) {

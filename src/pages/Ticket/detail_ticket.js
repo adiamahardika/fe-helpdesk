@@ -223,14 +223,14 @@ const DetailTicket = (props) => {
   };
   const onShowEdit = () => {
     setShowEditTicket(true);
-    setEditData(detail_ticket);
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "nama",
-      order_by: "asc",
+    setEditData({
+      kategori: detail_ticket.kategori,
+      prioritas: detail_ticket.prioritas,
+      status: detail_ticket.status,
+      assignedTo: detail_ticket.assignedTo,
+      kodeTicket: detail_ticket.kodeTicket,
     });
-    props.readUser({ size: 1000, page_no: 0, search: "*" });
+
     if (detail_ticket) {
       switch (detail_ticket.status) {
         case "New":
@@ -340,17 +340,15 @@ const DetailTicket = (props) => {
     setCheckedSubmitAs(array);
     setReplyData({ ...replyData, status: value });
   };
-
+  console.log(editData);
   const onSubmitUpdate = async () => {
     props.updateTicket(editData);
-    props.readDetailTicket(ticketId);
     setIsShowSweetAlert(true);
     setShowEditTicket(false);
     setPristine();
   };
   const onSubmitReply = async () => {
     props.replyTicket(replyData);
-    props.readDetailTicket(ticketId);
     setReplyData({
       kodeTicket: ticketId,
       usernamePengirim: username,
@@ -628,7 +626,13 @@ const DetailTicket = (props) => {
 
   useEffect(() => {
     props.readDetailTicket(ticketId);
-
+    props.readCategory({
+      size: 0,
+      page_no: 0,
+      sort_by: "nama",
+      order_by: "asc",
+    });
+    props.readUser({ size: 1000, page_no: 0, search: "*" });
     setReplyData({
       kodeTicket: ticketId,
       usernamePengirim: username,
@@ -735,239 +739,205 @@ const DetailTicket = (props) => {
                         </span>
                       </Col>
                     </Row>
-                    {showEditTicket ? (
-                      <>
-                        <Row>
-                          <Col>
-                            <FormGroup className="select2-container">
-                              <label className="control-label">Category</label>
-                              <div>
-                                <select
-                                  name="kategori"
-                                  className="form-control"
-                                  onChange={(event) => (
-                                    setEditData({
-                                      ...editData,
-                                      kategori: event.target.value,
-                                    }),
-                                    setDirty()
-                                  )}
-                                >
-                                  {list_category &&
-                                    list_category.map((value, index) => (
-                                      <option
-                                        key={index}
-                                        value={value && value.codeLevel}
-                                        onChange={(event) => (
-                                          setEditData({
-                                            ...editData,
-                                            kategori: event.target.value,
-                                          }),
-                                          setDirty()
-                                        )}
-                                        selected={
-                                          detail_ticket &&
-                                          detail_ticket.kategori === value.nama
-                                        }
-                                      >
-                                        {value.nama}
-                                      </option>
-                                    ))}
-                                </select>
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <FormGroup className="select2-container">
-                              <label className="control-label">Status</label>
-                              <div>
-                                <select
-                                  name="kategori"
-                                  className="form-control"
+                    <Row>
+                      <Col>
+                        <FormGroup className="select2-container">
+                          <label className="control-label">Category</label>
+                          <div>
+                            <select
+                              name="kategori"
+                              className="form-control"
+                              onChange={(event) => (
+                                setEditData({
+                                  ...editData,
+                                  kategori: event.target.value,
+                                }),
+                                setDirty()
+                              )}
+                              style={{
+                                backgroundColor:
+                                  showEditTicket === false
+                                    ? "#ced4da"
+                                    : "#ffffff",
+                              }}
+                              disabled={showEditTicket === false}
+                            >
+                              {list_category &&
+                                list_category.map((value, index) => (
+                                  <option
+                                    key={index}
+                                    value={value && value.codeLevel}
+                                    onChange={(event) => (
+                                      setEditData({
+                                        ...editData,
+                                        kategori: event.target.value,
+                                      }),
+                                      setDirty()
+                                    )}
+                                    selected={
+                                      detail_ticket &&
+                                      detail_ticket.kategori === value.codeLevel
+                                    }
+                                  >
+                                    {value.nama}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FormGroup className="select2-container">
+                          <label className="control-label">Status</label>
+                          <div>
+                            <select
+                              name="kategori"
+                              className="form-control"
+                              onChange={(event) =>
+                                onChangeStatus(event.target.value)
+                              }
+                              style={{
+                                color: statusColor,
+                                fontWeight: "bold",
+                                backgroundColor:
+                                  showEditTicket === false
+                                    ? "#ced4da"
+                                    : "#ffffff",
+                              }}
+                              disabled={showEditTicket === false}
+                            >
+                              {list_status.map((value, index) => (
+                                <option
+                                  key={index}
+                                  value={value && value.nama}
                                   onChange={(event) =>
                                     onChangeStatus(event.target.value)
                                   }
                                   style={{
-                                    color: statusColor,
+                                    color: value.color,
                                     fontWeight: "bold",
                                   }}
+                                  selected={
+                                    detail_ticket &&
+                                    detail_ticket.status === value.name
+                                  }
                                 >
-                                  {list_status.map((value, index) => (
-                                    <option
-                                      key={index}
-                                      value={value && value.nama}
-                                      onChange={(event) =>
-                                        onChangeStatus(event.target.value)
-                                      }
-                                      style={{
-                                        color: value.color,
-                                        fontWeight: "bold",
-                                      }}
-                                      selected={
-                                        detail_ticket &&
-                                        detail_ticket.status === value.name
-                                      }
-                                    >
-                                      {value.name}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <FormGroup className="select2-container">
-                              <label className="control-label">Priority</label>
-                              <div>
-                                <select
-                                  name="priority"
-                                  className="form-control"
+                                  {value.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FormGroup className="select2-container">
+                          <label className="control-label">Priority</label>
+                          <div>
+                            <select
+                              name="priority"
+                              className="form-control"
+                              onChange={(event) =>
+                                onChangePriority(event.target.value)
+                              }
+                              style={{
+                                color: priorityColor,
+                                fontWeight: "bold",
+                                backgroundColor:
+                                  showEditTicket === false
+                                    ? "#ced4da"
+                                    : "#ffffff",
+                              }}
+                              disabled={showEditTicket === false}
+                            >
+                              {list_priority.map((value, index) => (
+                                <option
+                                  key={index}
+                                  value={value.name}
                                   onChange={(event) =>
                                     onChangePriority(event.target.value)
                                   }
                                   style={{
-                                    color: priorityColor,
+                                    color: value.color,
                                     fontWeight: "bold",
                                   }}
-                                >
-                                  {list_priority.map((value, index) => (
-                                    <option
-                                      key={index}
-                                      value={value.name}
-                                      onChange={(event) =>
-                                        onChangePriority(event.target.value)
-                                      }
-                                      style={{
-                                        color: value.color,
-                                        fontWeight: "bold",
-                                      }}
-                                      selected={
-                                        detail_ticket &&
-                                        detail_ticket.prioritas === value.name
-                                      }
-                                    >
-                                      {value.name}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            {" "}
-                            <FormGroup className="select2-container">
-                              <label className="control-label">Assign To</label>
-                              <div>
-                                <select
-                                  name="assignedTo"
-                                  className="form-control"
-                                  defaultValue="Unassigned"
-                                  onChange={(event) =>
-                                    setEditData({
-                                      ...editData,
-                                      assignedTo: event.target.value,
-                                    })
+                                  selected={
+                                    detail_ticket &&
+                                    detail_ticket.prioritas === value.name
                                   }
                                 >
+                                  {value.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        {" "}
+                        <FormGroup className="select2-container">
+                          <label className="control-label">Assign To</label>
+                          <div>
+                            <select
+                              name="assignedTo"
+                              className="form-control"
+                              defaultValue="Unassigned"
+                              onChange={(event) =>
+                                setEditData({
+                                  ...editData,
+                                  assignedTo: event.target.value,
+                                })
+                              }
+                              style={{
+                                backgroundColor:
+                                  showEditTicket === false
+                                    ? "#ced4da"
+                                    : "#ffffff",
+                              }}
+                              disabled={showEditTicket === false}
+                            >
+                              <option
+                                value="Unassigned"
+                                selected={
+                                  detail_ticket &&
+                                  detail_ticket.assignedTo === "Unassigned"
+                                }
+                              >
+                                Unassigned
+                              </option>
+                              {list_user &&
+                                list_user.map((value, index) => (
                                   <option
-                                    value="Unassigned"
+                                    key={index}
+                                    value={value.name}
+                                    onChange={(event) =>
+                                      setReplyData({
+                                        ...replyData,
+                                        assignedTo: event.target.value,
+                                      })
+                                    }
                                     selected={
                                       detail_ticket &&
-                                      detail_ticket.assignedTo === "Unassigned"
+                                      detail_ticket.assignedTo === value.name
                                     }
                                   >
-                                    Unassigned
+                                    {value.name}
                                   </option>
-                                  {list_user &&
-                                    list_user.map((value, index) => (
-                                      <option
-                                        key={index}
-                                        value={value.name}
-                                        onChange={(event) =>
-                                          setReplyData({
-                                            ...replyData,
-                                            assignedTo: event.target.value,
-                                          })
-                                        }
-                                        selected={
-                                          detail_ticket &&
-                                          detail_ticket.assignedTo ===
-                                            value.name
-                                        }
-                                      >
-                                        {value.name}
-                                      </option>
-                                    ))}
-                                </select>
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      </>
-                    ) : (
-                      <>
-                        <Row className="align-items-center mb-2">
-                          <Col
-                            className="d-flex"
-                            style={{ flexFlow: "column" }}
-                          >
-                            <strong>Category</strong>
-                            {detail_ticket && detail_ticket.kategori}
-                          </Col>
-                        </Row>
-                        <Row className="align-items-center mb-2">
-                          <Col
-                            className="d-flex"
-                            style={{ flexFlow: "column" }}
-                          >
-                            <strong>Status</strong>
-                            <StatusLabel
-                              value={detail_ticket && detail_ticket.status}
-                            />
-                          </Col>
-                        </Row>
-                        <Row className="align-items-center mb-2">
-                          <Col
-                            className="d-flex"
-                            style={{ flexFlow: "column" }}
-                          >
-                            <strong>Priority</strong>
-                            <PriorityLabel
-                              value={detail_ticket && detail_ticket.prioritas}
-                            />
-                          </Col>
-                        </Row>
-                        <Row className={`align-items-center`}>
-                          <Col
-                            className="d-flex"
-                            style={{ flexFlow: "column" }}
-                          >
-                            <strong>Assign To</strong>
-                            {detail_ticket && detail_ticket.assignedTo}
-                          </Col>
-                        </Row>
-                      </>
-                    )}
+                                ))}
+                            </select>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
 
                     {showEditTicket && (
                       <Row>
                         <Col className="d-flex justify-content-end">
-                          <Button
-                            color="primary"
-                            outline
-                            className="waves-effect waves-light"
-                            onClick={() => setShowEditTicket(false)}
-                          >
-                            Cancel
-                          </Button>
-                        </Col>
-                        <Col className="d-flex justify-content-start">
                           <button
                             type="button"
                             className="btn btn-primary waves-effect waves-light"
