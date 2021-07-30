@@ -340,7 +340,6 @@ const DetailTicket = (props) => {
     setCheckedSubmitAs(array);
     setReplyData({ ...replyData, status: value });
   };
-  console.log(editData);
   const onSubmitUpdate = async () => {
     props.updateTicket(editData);
     setIsShowSweetAlert(true);
@@ -731,7 +730,7 @@ const DetailTicket = (props) => {
                     <Row className="align-items-center d-print-none">
                       <Col className="d-flex justify-content-end align-items-center">
                         <span
-                          className="btn-link waves-effect text-right"
+                          className="btn-link waves-effect text-right d-flex align-items-center"
                           onClick={() => onShowEdit()}
                         >
                           Edit

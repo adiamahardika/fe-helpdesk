@@ -438,10 +438,10 @@ const Ticket = (props) => {
                                 }}
                               >
                                 <option value="tglDiperbarui,DESC">
-                                  Date (Desc)
+                                  Update Date (Desc)
                                 </option>
                                 <option value="tglDiperbarui,ASC">
-                                  Date (Asc)
+                                  Update Date (Asc)
                                 </option>
                                 <option value="judul,ASC">Subject (Asc)</option>
                               </select>
