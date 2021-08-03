@@ -80,7 +80,7 @@ const Ticket = (props) => {
   const [category, setCategory] = useState(false);
 
   const [data, setData] = useState({
-    assignTo: "",
+    assignedTo: "",
     usernamePembuat: "",
     category: [],
     pageNo: 0,
@@ -110,13 +110,13 @@ const Ticket = (props) => {
     let array = data.category;
     if (value !== "") {
       let findIndex = array.findIndex(
-        (newValue) => newValue === value.codeLevel
+        (newValue) => newValue === value.id.toString()
       );
 
       if (findIndex >= 0) {
         array.splice(findIndex, 1);
       } else if (list_checked_category[index] === false) {
-        array.push(value.codeLevel);
+        array.push(value.id.toString());
       }
       props.checkCategory(index);
     } else {

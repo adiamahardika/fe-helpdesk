@@ -57,6 +57,7 @@ const AddTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
+  console.log(data)
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
   const [optionColor, setOptionColor] = useState(null);
@@ -342,7 +343,7 @@ const AddTicket = (props) => {
       totalWaktu: "00:00:00",
       status: "New",
       prioritas: "Low",
-      assignTo: "Unassigned",
+      assignedTo: "Unassigned",
       userPembuat: username,
       userPengirim: username,
       base64FileName1: "",
@@ -487,9 +488,13 @@ const AddTicket = (props) => {
                                   onChange={(event) => (
                                     setData({
                                       ...data,
-                                      kategori: event.target.value,
+                                      kategori: JSON.parse(
+                                        event.target.value
+                                      ).id.toString(),
                                     }),
-                                    setMainValue(event.target.value),
+                                    setMainValue(
+                                      JSON.parse(event.target.value).codeLevel
+                                    ),
                                     setShowSubLevel1(true),
                                     setShowSubLevel2(false),
                                     setShowSubLevel3(false),
@@ -505,13 +510,20 @@ const AddTicket = (props) => {
                                         value.parent === "0" && (
                                           <option
                                             key={index}
-                                            value={value && value.codeLevel}
+                                            value={
+                                              value && JSON.stringify(value)
+                                            }
                                             onChange={(event) => (
                                               setData({
                                                 ...data,
-                                                kategori: event.target.value,
+                                                kategori: JSON.parse(
+                                                  event.target.value
+                                                ).id.toString(),
                                               }),
-                                              setMainValue(event.target.value),
+                                              setMainValue(
+                                                JSON.parse(event.target.value)
+                                                  .codeLevel
+                                              ),
                                               setShowSubLevel1(true),
                                               setShowSubLevel2(false),
                                               setShowSubLevel3(false),
@@ -535,9 +547,13 @@ const AddTicket = (props) => {
                                     onChange={(event) => (
                                       setData({
                                         ...data,
-                                        kategori: event.target.value,
+                                        kategori: JSON.parse(
+                                          event.target.value
+                                        ).id.toString(),
                                       }),
-                                      setSubLevel1Value(event.target.value),
+                                      setSubLevel1Value(
+                                        JSON.parse(event.target.value).codeLevel
+                                      ),
                                       event.target.value === mainValue
                                         ? setShowSubLevel2(false)
                                         : setShowSubLevel2(true),
@@ -550,9 +566,14 @@ const AddTicket = (props) => {
                                       onChange={(event) => (
                                         setData({
                                           ...data,
-                                          kategori: event.target.value,
+                                          kategori: JSON.parse(
+                                            event.target.value
+                                          ).id.toString(),
                                         }),
-                                        setSubLevel1Value(event.target.value),
+                                        setSubLevel1Value(
+                                          JSON.parse(event.target.value)
+                                            .codeLevel
+                                        ),
                                         event.target.value === mainValue
                                           ? setShowSubLevel2(false)
                                           : setShowSubLevel2(true),
@@ -568,11 +589,15 @@ const AddTicket = (props) => {
                                           mainValue === value.parent && (
                                             <option
                                               key={index}
-                                              value={value && value.codeLevel}
+                                              value={
+                                                value && JSON.stringify(value)
+                                              }
                                               onChange={(event) => (
                                                 setData({
                                                   ...data,
-                                                  kategori: event.target.value,
+                                                  kategori: JSON.parse(
+                                                    event.target.value
+                                                  ).id.toString(),
                                                 }),
                                                 setSubLevel1Value(
                                                   event.target.value
@@ -602,9 +627,13 @@ const AddTicket = (props) => {
                                     onChange={(event) => (
                                       setData({
                                         ...data,
-                                        kategori: event.target.value,
+                                        kategori: JSON.parse(
+                                          event.target.value
+                                        ).id.toString(),
                                       }),
-                                      setSubLevel2Value(event.target.value),
+                                      setSubLevel2Value(
+                                        JSON.parse(event.target.value).codeLevel
+                                      ),
                                       event.target.value === subLevel1Value
                                         ? setShowSubLevel3(false)
                                         : setShowSubLevel3(true),
@@ -616,9 +645,14 @@ const AddTicket = (props) => {
                                       onChange={(event) => (
                                         setData({
                                           ...data,
-                                          kategori: event.target.value,
+                                          kategori: JSON.parse(
+                                            event.target.value
+                                          ).id.toString(),
                                         }),
-                                        setSubLevel2Value(event.target.value),
+                                        setSubLevel2Value(
+                                          JSON.parse(event.target.value)
+                                            .codeLevel
+                                        ),
                                         event.target.value === subLevel1Value
                                           ? setShowSubLevel3(false)
                                           : setShowSubLevel3(true),
@@ -633,11 +667,15 @@ const AddTicket = (props) => {
                                           subLevel1Value === value.parent && (
                                             <option
                                               key={index}
-                                              value={value && value.codeLevel}
+                                              value={
+                                                value && JSON.stringify(value)
+                                              }
                                               onChange={(event) => (
                                                 setData({
                                                   ...data,
-                                                  kategori: event.target.value,
+                                                  kategori: JSON.parse(
+                                                    event.target.value
+                                                  ).id.toString(),
                                                 }),
                                                 setSubLevel2Value(
                                                   event.target.value
@@ -667,7 +705,9 @@ const AddTicket = (props) => {
                                     onChange={(event) => (
                                       setData({
                                         ...data,
-                                        kategori: event.target.value,
+                                        kategori: JSON.parse(
+                                          event.target.value
+                                        ).id.toString(),
                                       }),
                                       setDirty()
                                     )}
@@ -677,7 +717,9 @@ const AddTicket = (props) => {
                                       onChange={(event) => (
                                         setData({
                                           ...data,
-                                          kategori: event.target.value,
+                                          kategori: JSON.parse(
+                                            event.target.value
+                                          ).id.toString(),
                                         }),
                                         setDirty()
                                       )}
@@ -690,11 +732,15 @@ const AddTicket = (props) => {
                                           subLevel2Value === value.parent && (
                                             <option
                                               key={index}
-                                              value={value && value.codeLevel}
+                                              value={
+                                                value && JSON.stringify(value)
+                                              }
                                               onChange={(event) => (
                                                 setData({
                                                   ...data,
-                                                  kategori: event.target.value,
+                                                  kategori: JSON.parse(
+                                                    event.target.value
+                                                  ).id.toString(),
                                                 }),
                                                 setDirty()
                                               )}
@@ -1035,13 +1081,13 @@ const AddTicket = (props) => {
                             <Col>
                               <div>
                                 <select
-                                  name="assignTo"
+                                  name="assignedTo"
                                   className="form-control"
                                   defaultValue="Unassigned"
                                   onChange={(event) =>
                                     setData({
                                       ...data,
-                                      assignTo: event.target.value,
+                                      assignedTo: event.target.value,
                                     })
                                   }
                                 >
@@ -1054,7 +1100,7 @@ const AddTicket = (props) => {
                                         onChange={(event) =>
                                           setData({
                                             ...data,
-                                            assignTo: event.target.value,
+                                            assignedTo: event.target.value,
                                           })
                                         }
                                       >

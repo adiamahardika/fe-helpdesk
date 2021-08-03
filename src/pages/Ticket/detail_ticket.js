@@ -765,7 +765,7 @@ const DetailTicket = (props) => {
                                 list_category.map((value, index) => (
                                   <option
                                     key={index}
-                                    value={value && value.codeLevel}
+                                    value={value && value.id.toString()}
                                     onChange={(event) => (
                                       setEditData({
                                         ...editData,
@@ -775,7 +775,7 @@ const DetailTicket = (props) => {
                                     )}
                                     selected={
                                       detail_ticket &&
-                                      detail_ticket.kategori === value.codeLevel
+                                      detail_ticket.kategori === value.id.toString()
                                     }
                                   >
                                     {value.nama}
