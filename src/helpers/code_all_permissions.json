@@ -1,6 +1,8 @@
 {
-  "dashboard": "1",
-  "view_dashboard": "1.1",
+  "ticket": "1",
+  "view_ticket": "1.1",
+  "detail_ticket": "1.2",
+  "add_ticket": "1.3",
   "settings": "2",
   "users": "2.1",
   "view_users": "2.1.1",

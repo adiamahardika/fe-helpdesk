@@ -73,6 +73,7 @@ const DetailTicket = (props) => {
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const username = sessionStorage.getItem("username");
+  const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);
@@ -624,24 +625,31 @@ const DetailTicket = (props) => {
   };
 
   useEffect(() => {
-    props.readDetailTicket(ticketId);
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "nama",
-      order_by: "asc",
-    });
-    props.readUser({ size: 1000, page_no: 0, search: "*" });
-    setReplyData({
-      kodeTicket: ticketId,
-      usernamePengirim: username,
-      status: "Replied",
-      base64FileName1: "",
-      base64_1: "",
-      base64FileName2: "",
-      base64_2: "",
-    });
-    setCheckedSubmitAs([true, false, false, false]);
+    let detailTicket = permissions.find(
+      (value) => value.code === code_all_permissions.detail_ticket
+    );
+    if (detailTicket) {
+      props.readDetailTicket(ticketId);
+      props.readCategory({
+        size: 0,
+        page_no: 0,
+        sort_by: "nama",
+        order_by: "asc",
+      });
+      props.readUser({ size: 1000, page_no: 0, search: "*" });
+      setReplyData({
+        kodeTicket: ticketId,
+        usernamePengirim: username,
+        status: "Replied",
+        base64FileName1: "",
+        base64_1: "",
+        base64FileName2: "",
+        base64_2: "",
+      });
+      setCheckedSubmitAs([true, false, false, false]);
+    } else {
+      history.push(routes.ticket);
+    }
   }, []);
   return (
     <React.Fragment>
@@ -775,7 +783,8 @@ const DetailTicket = (props) => {
                                     )}
                                     selected={
                                       detail_ticket &&
-                                      detail_ticket.kategori === value.id.toString()
+                                      detail_ticket.kategori ===
+                                        value.id.toString()
                                     }
                                   >
                                     {value.nama}

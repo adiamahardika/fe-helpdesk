@@ -6,6 +6,14 @@
       {
         "name": "View Ticket",
         "code": "1.1"
+      },
+      {
+        "name": "Detail Ticket",
+        "code": "1.2"
+      },
+      {
+        "name": "Add Ticket",
+        "code": "1.3"
       }
     ]
   },

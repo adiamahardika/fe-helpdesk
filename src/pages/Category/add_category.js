@@ -115,13 +115,20 @@ const AddCategory = (props) => {
   };
 
   useEffect(() => {
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "nama",
-      order_by: "asc",
-    });
-    setData({ parent: "0" });
+    let addCategory = permissions.find(
+      (value) => value.code === code_all_permissions.add_category
+    );
+    if (addCategory) {
+      props.readCategory({
+        size: 0,
+        page_no: 0,
+        sort_by: "nama",
+        order_by: "asc",
+      });
+      setData({ parent: "0" });
+    } else {
+      history.push(routes.ticket);
+    }
   }, []);
 
   return (

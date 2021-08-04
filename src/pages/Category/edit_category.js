@@ -50,7 +50,9 @@ const EditCategory = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
-  const [alertMessage, setAlertMessage] = useState(null)
+  const [alertMessage, setAlertMessage] = useState(null);
+  const [isEditCategory, setIsEditCategory] = useState(false);
+  const [isDeleteCategory, setIsDeleteCategory] = useState(false);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -68,7 +70,7 @@ const EditCategory = (props) => {
     delete data.updateAt;
     props.updateCategory(data);
     setIsShowSweetAlert(true);
-    setAlertMessage("edited")
+    setAlertMessage("edited");
     setPristine();
   };
   const ButtonSubmit = () => {
@@ -160,20 +162,36 @@ const EditCategory = (props) => {
   };
 
   useEffect(() => {
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "codeLevel",
-      order_by: "asc",
-    });
-    props.readDetailCategory(code);
+    let viewCategory = permissions.find(
+      (value) => value.code === code_all_permissions.view_category
+    );
+    let editCategory = permissions.find(
+      (value) => value.code === code_all_permissions.edit_category
+    );
+    let deleteCategory = permissions.find(
+      (value) => value.code === code_all_permissions.delete_category
+    );
+    if (viewCategory) {
+      props.readCategory({
+        size: 0,
+        page_no: 0,
+        sort_by: "codeLevel",
+        order_by: "asc",
+      });
+      props.readDetailCategory(code);
+
+      editCategory && setIsEditCategory(true);
+      deleteCategory && setIsDeleteCategory(true);
+    } else {
+      history.push(routes.ticket);
+    }
   }, []);
 
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title={"Category"} breadcrumbItem={"Edit Category"} />
+          <Breadcrumbs title={"Category"} breadcrumbItem={"Detail Category"} />
           <Card>
             <CardBody>
               <div
@@ -198,20 +216,22 @@ const EditCategory = (props) => {
                     Cancel
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    className="btn btn-danger waves-effect waves-light d-flex align-items-center"
-                    style={{ minWidth: "max-content" }}
-                    onClick={() => {
-                      setSelectedData(detail_category.id);
-                      setModalDelete(!modalDelete);
-                    }}
-                  >
-                    <i className="bx bx-trash font-size-16 align-middle mr-2"></i>
-                    Delete
-                  </button>
+                  isDeleteCategory && (
+                    <button
+                      type="button"
+                      className="btn btn-danger waves-effect waves-light d-flex align-items-center"
+                      style={{ minWidth: "max-content" }}
+                      onClick={() => {
+                        setSelectedData(detail_category.id);
+                        setModalDelete(!modalDelete);
+                      }}
+                    >
+                      <i className="bx bx-trash font-size-16 align-middle mr-2"></i>
+                      Delete
+                    </button>
+                  )
                 )}
-                <ButtonSubmit />
+                {isEditCategory && <ButtonSubmit />}
               </div>
               <Row className="justify-content-center">
                 <Col md={10}>
@@ -519,7 +539,7 @@ const EditCategory = (props) => {
                     id: selectedData,
                   });
                   setModalDelete(!modalDelete);
-                  setAlertMessage("deleted")
+                  setAlertMessage("deleted");
                   removeBodyCss();
                 }}
               >

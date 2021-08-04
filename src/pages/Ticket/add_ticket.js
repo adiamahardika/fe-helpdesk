@@ -48,7 +48,6 @@ const priority = [
 const AddTicket = (props) => {
   let message = props.message_ticket;
   let response_code = props.response_code_ticket;
-  const loading = props.loading;
   const list_category = props.list_category;
   const list_user = props.list_user;
   const permissions = JSON.parse(sessionStorage.getItem("permission"));
@@ -57,7 +56,6 @@ const AddTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
-  console.log(data)
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
   const [optionColor, setOptionColor] = useState(null);
@@ -332,27 +330,34 @@ const AddTicket = (props) => {
   };
 
   useEffect(() => {
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "nama",
-      order_by: "asc",
-    });
-    props.readUser({ size: 1000, page_no: 0, search: "*" });
-    setData({
-      totalWaktu: "00:00:00",
-      status: "New",
-      prioritas: "Low",
-      assignedTo: "Unassigned",
-      userPembuat: username,
-      userPengirim: username,
-      base64FileName1: "",
-      base64_1: "",
-      base64FileName2: "",
-      base64_2: "",
-      emailNotification: "true",
-    });
-    setOptionColor("#34c38f");
+    let addTicket = permissions.find(
+      (value) => value.code === code_all_permissions.add_ticket
+    );
+    if (addTicket) {
+      props.readCategory({
+        size: 0,
+        page_no: 0,
+        sort_by: "nama",
+        order_by: "asc",
+      });
+      props.readUser({ size: 1000, page_no: 0, search: "*" });
+      setData({
+        totalWaktu: "00:00:00",
+        status: "New",
+        prioritas: "Low",
+        assignedTo: "Unassigned",
+        userPembuat: username,
+        userPengirim: username,
+        base64FileName1: "",
+        base64_1: "",
+        base64FileName2: "",
+        base64_2: "",
+        emailNotification: "true",
+      });
+      setOptionColor("#34c38f");
+    } else {
+      history.push(routes.ticket);
+    }
   }, []);
 
   return (

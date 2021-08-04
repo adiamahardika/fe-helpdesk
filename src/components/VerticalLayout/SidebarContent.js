@@ -11,6 +11,7 @@ import code_all_permissions from "../../helpers/code_all_permissions.json";
 import routes from "../../helpers/routes.json";
 const SidebarContent = (props) => {
   const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const [isViewTicket, setIsViewTicket] = useState(true);
   const [isViewUsers, setIsViewUsers] = useState(true);
   const [isViewRoles, setIsViewRoles] = useState(true);
   const [isViewCategory, setIsViewCategory] = useState(true);
@@ -26,10 +27,14 @@ const SidebarContent = (props) => {
     let viewCategory = permissions.find(
       (value) => value.code === code_all_permissions.view_category
     );
+    let viewTicket = permissions.find(
+      (value) => value.code === code_all_permissions.view_ticket
+    );
 
     viewUsers ? setIsViewUsers(true) : setIsViewUsers(false);
     viewRoles ? setIsViewRoles(true) : setIsViewRoles(false);
     viewCategory ? setIsViewCategory(true) : setIsViewCategory(false);
+    viewTicket ? setIsViewTicket(true) : setIsViewTicket(false);
 
     var pathName = props.location.pathname;
     const initMenu = () => {
@@ -77,17 +82,46 @@ const SidebarContent = (props) => {
     return false;
   }
 
+  const SettingsMenu = () => {
+    if (isViewRoles || isViewUsers) {
+      return (
+        <li>
+          <Link to="/#" className="has-arrow waves-effect">
+            <i className="bx bxs-cog"></i>
+            <span>{props.t("Settings")}</span>
+          </Link>
+          <ul className="sub-menu" aria-expanded="false">
+            {isViewUsers && (
+              <li>
+                <Link to={routes.users}>{props.t("Users")}</Link>
+              </li>
+            )}
+            {isViewRoles && (
+              <li>
+                <Link to={routes.role}>{props.t("Role")}</Link>
+              </li>
+            )}
+          </ul>
+        </li>
+      )
+    } else {
+      return <></>
+    }
+  };
+
   return (
     <React.Fragment>
       <div id="sidebar-menu">
         <ul className="metismenu list-unstyled" id="side-menu">
-          <li>
-            <Link to={routes.ticket} className="waves-effect">
-              <i className="fas fa-ticket-alt"></i>
-              <span>{props.t("Ticket")}</span>
-            </Link>
-          </li>
-          {isViewUsers && (
+          {isViewTicket && (
+            <li>
+              <Link to={routes.ticket} className="waves-effect">
+                <i className="fas fa-ticket-alt"></i>
+                <span>{props.t("Ticket")}</span>
+              </Link>
+            </li>
+          )}
+          {isViewCategory && (
             <li>
               <Link to={routes.category} className="waves-effect">
                 <i className="bx bx-list-ul"></i>
@@ -95,24 +129,7 @@ const SidebarContent = (props) => {
               </Link>
             </li>
           )}
-          <li>
-            <Link to="/#" className="has-arrow waves-effect">
-              <i className="bx bxs-cog"></i>
-              <span>{props.t("Settings")}</span>
-            </Link>
-            <ul className="sub-menu" aria-expanded="false">
-              {isViewUsers && (
-                <li>
-                  <Link to={routes.users}>{props.t("Users")}</Link>
-                </li>
-              )}
-              {isViewRoles && (
-                <li>
-                  <Link to={routes.role}>{props.t("Role")}</Link>
-                </li>
-              )}
-            </ul>
-          </li>
+          <SettingsMenu />
         </ul>
       </div>
     </React.Fragment>

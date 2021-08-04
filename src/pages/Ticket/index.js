@@ -62,6 +62,23 @@ const status = [
   { name: "Resolved", color: "#34c38f" },
   { name: "On Hold", color: "#343a40" },
 ];
+const sortItem = [
+  {
+    name: "Last Update",
+    sort_by: "tglDiperbarui",
+    sort_type: "DESC",
+  },
+  {
+    name: "Last Update",
+    sort_by: "tglDiperbarui",
+    sort_type: "ASC",
+  },
+  {
+    name: "Subject",
+    sort_by: "judul",
+    sort_type: "ASC",
+  },
+];
 
 const Ticket = (props) => {
   const list_ticket = props.list_ticket;
@@ -78,6 +95,9 @@ const Ticket = (props) => {
   const [modalDetail, setModalDetail] = useState(false);
   const [activeTabJustify, setactiveTabJustify] = useState("");
   const [category, setCategory] = useState(false);
+  const [showSort, setShowSort] = useState(false);
+  const [isAddTicket, setIsAddTicket] = useState(false);
+  const [isDetailTicket, setIsDetailTicket] = useState(false);
 
   const [data, setData] = useState({
     assignedTo: "",
@@ -239,13 +259,29 @@ const Ticket = (props) => {
   };
 
   useEffect(() => {
-    props.readTicket(data);
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "nama",
-      order_by: "asc",
-    });
+    let viewTicket = permissions.find(
+      (value) => value.code === code_all_permissions.view_ticket
+    );
+    let detailTicket = permissions.find(
+      (value) => value.code === code_all_permissions.detail_ticket
+    );
+    let addTicket = permissions.find(
+      (value) => value.code === code_all_permissions.add_ticket
+    );
+    if (viewTicket) {
+      props.readTicket(data);
+      props.readCategory({
+        size: 0,
+        page_no: 0,
+        sort_by: "nama",
+        order_by: "asc",
+      });
+
+      detailTicket && setIsDetailTicket(true);
+      addTicket && setIsAddTicket(true);
+    } else {
+      history.push(routes.login);
+    }
   }, []);
   return (
     <React.Fragment>
@@ -255,17 +291,19 @@ const Ticket = (props) => {
           <Row>
             <Col md={3}>
               <Card className="email-leftbar">
-                <Link to={routes.add_ticket}>
-                  <Button
-                    type="button"
-                    color="primary"
-                    className="waves-effect waves-light"
-                    block
-                  >
-                    <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
-                    New
-                  </Button>
-                </Link>
+                {isAddTicket && (
+                  <Link to={routes.add_ticket}>
+                    <Button
+                      type="button"
+                      color="primary"
+                      className="waves-effect waves-light"
+                      block
+                    >
+                      <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
+                      New
+                    </Button>
+                  </Link>
+                )}
                 <div className="mail-list mt-4">
                   <Link
                     to="#"
@@ -344,7 +382,7 @@ const Ticket = (props) => {
                   <Row className="mb-3 d-flex align-items-end">
                     <Col>
                       <Row className="d-flex align-items-end">
-                        <Col md="2">
+                        <Col md={4}>
                           <Dropdown
                             isOpen={category}
                             toggle={() => {
@@ -352,12 +390,23 @@ const Ticket = (props) => {
                             }}
                             className="btn-group mr-2 mb-2 mb-sm-0"
                           >
-                            <DropdownToggle className="btn btn-primary waves-light waves-effect dropdown-toggle">
-                              Category
+                            <DropdownToggle
+                              className="btn btn-primary waves-light waves-effect dropdown-toggle"
+                              style={{
+                                backgroundColor: "#556ee6",
+                                border: "none",
+                              }}
+                            >
+                              <i className="bx bx-filter-alt font-size-16 align-middle"></i>
                               <i className="mdi mdi-chevron-down ml-1"></i>
                             </DropdownToggle>
                             <DropdownMenu>
                               <Row>
+                                <Col className="d-flex align-items-center ml-3">
+                                  <h6 style={{ fontWeight: "600" }}>
+                                    Filter by Category
+                                  </h6>
+                                </Col>
                                 <Col className="d-flex justify-content-end align-items-center mr-3">
                                   <span
                                     className="btn-link waves-effect text-right mr-3"
@@ -415,41 +464,46 @@ const Ticket = (props) => {
                               </div>
                             </DropdownMenu>
                           </Dropdown>
-                        </Col>
-                        <Col md="3">
-                          <div className="form-group mb-0">
-                            <label>Sort By</label>
-                            <div>
-                              <select
-                                className="form-control"
-                                defaultValue={10}
-                                onChange={(event) => {
-                                  let split = event.target.value.split(",");
-                                  setData({
-                                    ...data,
-                                    sortBy: split[0],
-                                    sortType: split[1],
-                                  });
-                                  props.readTicket({
-                                    ...data,
-                                    sortBy: split[0],
-                                    sortType: split[1],
-                                  });
-                                }}
-                              >
-                                <option value="tglDiperbarui,DESC">
-                                  Update Date (Desc)
-                                </option>
-                                <option value="tglDiperbarui,ASC">
-                                  Update Date (Asc)
-                                </option>
-                                <option value="judul,ASC">Subject (Asc)</option>
-                              </select>
-                            </div>
-                          </div>
+                          <Dropdown
+                            isOpen={showSort}
+                            toggle={() => {
+                              setShowSort(!showSort);
+                            }}
+                            className="btn-group mr-2 mb-2 mb-sm-0"
+                          >
+                            <DropdownToggle
+                              className="btn btn-primary waves-light waves-effect dropdown-toggle"
+                              tag="i"
+                            >
+                              <i className="bx bx-sort"></i>{" "}
+                              <i className="mdi mdi-chevron-down ml-1"></i>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                              {sortItem.map((value, index) => (
+                                <DropdownItem
+                                  to="#"
+                                  key={index}
+                                  onClick={(event) => {
+                                    setData({
+                                      ...data,
+                                      sortBy: value.sort_by,
+                                      sortType: value.sort_type,
+                                    });
+                                    props.readTicket({
+                                      ...data,
+                                      sortBy: value.sort_by,
+                                      sortType: value.sort_type,
+                                    });
+                                  }}
+                                >
+                                  {value.name} ({value.sort_type})
+                                </DropdownItem>
+                              ))}
+                            </DropdownMenu>
+                          </Dropdown>
                         </Col>
                         <Col
-                          md={7}
+                          md={8}
                           className="d-flex flex-row justify-content-end align-items-end"
                         >
                           <div className="form-group mb-0">
@@ -606,21 +660,23 @@ const Ticket = (props) => {
                                     >
                                       <i className="bx bx-show-alt font-size-16 align-middle"></i>
                                     </button>
-                                    <Link
-                                      to={{
-                                        pathname: routes.detail_ticket,
-                                        search: `?ticketId=${value.kodeTicket}`,
-                                        detailValue: value.kodeTicket,
-                                      }}
-                                    >
-                                      <button
-                                        type="button"
-                                        className="btn btn-primary waves-effect waves-light"
-                                        style={{ minWidth: "max-content" }}
+                                    {isDetailTicket && (
+                                      <Link
+                                        to={{
+                                          pathname: routes.detail_ticket,
+                                          search: `?ticketId=${value.kodeTicket}`,
+                                          detailValue: value.kodeTicket,
+                                        }}
                                       >
-                                        <i className="bx bxs-detail font-size-16 align-middle"></i>
-                                      </button>
-                                    </Link>
+                                        <button
+                                          type="button"
+                                          className="btn btn-primary waves-effect waves-light"
+                                          style={{ minWidth: "max-content" }}
+                                        >
+                                          <i className="bx bxs-detail font-size-16 align-middle"></i>
+                                        </button>
+                                      </Link>
+                                    )}
                                   </div>
                                 </td>
                               </tr>

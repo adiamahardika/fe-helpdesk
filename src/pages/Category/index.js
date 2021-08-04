@@ -26,7 +26,6 @@ const Category = (props) => {
   const active_page_category = props.active_page_category;
   const permissions = JSON.parse(sessionStorage.getItem("permission"));
   const history = useHistory();
-  let nil = 0;
 
   const [data, setData] = useState({
     size: 0,
@@ -36,8 +35,8 @@ const Category = (props) => {
   });
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
-
   const [modalDelete, setModalDelete] = useState(false);
+  const [isAddCategory, setIsAddCategory] = useState(false);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -80,7 +79,19 @@ const Category = (props) => {
   };
 
   useEffect(() => {
-    props.readCategory(data);
+    let viewCategory = permissions.find(
+      (value) => value.code === code_all_permissions.view_category
+    );
+    let addCategory = permissions.find(
+      (value) => value.code === code_all_permissions.add_category
+    );
+    if (viewCategory) {
+      props.readCategory(data);
+
+      addCategory && setIsAddCategory(true);
+    } else {
+      history.push(routes.ticket);
+    }
   }, []);
 
   return (
@@ -92,15 +103,17 @@ const Category = (props) => {
             <CardBody>
               <Row className="mb-3 d-flex align-items-end">
                 <Col className="d-flex justify-content-end">
-                  <Link to={routes.add_category}>
-                    <button
-                      type="button"
-                      className="btn btn-primary waves-effect waves-light"
-                    >
-                      <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
-                      New
-                    </button>
-                  </Link>
+                  {isAddCategory && (
+                    <Link to={routes.add_category}>
+                      <button
+                        type="button"
+                        className="btn btn-primary waves-effect waves-light"
+                      >
+                        <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
+                        New
+                      </button>
+                    </Link>
+                  )}
                 </Col>
               </Row>
               <Row>
