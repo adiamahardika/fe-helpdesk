@@ -50,6 +50,7 @@ const EditCategory = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null)
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -67,6 +68,7 @@ const EditCategory = (props) => {
     delete data.updateAt;
     props.updateCategory(data);
     setIsShowSweetAlert(true);
+    setAlertMessage("edited")
     setPristine();
   };
   const ButtonSubmit = () => {
@@ -136,7 +138,7 @@ const EditCategory = (props) => {
               history.push(routes.category);
             }}
           >
-            Category has successfully edited!
+            Category has successfully {alertMessage}!
           </SweetAlert>
         );
       } else {
@@ -509,8 +511,15 @@ const EditCategory = (props) => {
                 className="btn btn-danger waves-effect waves-light"
                 onClick={() => {
                   setIsShowSweetAlert(true);
-                  props.deleteCategory({ ...data, id: selectedData.id });
+                  props.deleteCategory({
+                    size: 0,
+                    page_no: 0,
+                    sort_by: "nama",
+                    order_by: "asc",
+                    id: selectedData,
+                  });
                   setModalDelete(!modalDelete);
+                  setAlertMessage("deleted")
                   removeBodyCss();
                 }}
               >
