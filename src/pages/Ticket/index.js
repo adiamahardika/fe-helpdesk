@@ -464,7 +464,7 @@ const Ticket = (props) => {
                               </div>
                             </DropdownMenu>
                           </Dropdown>
-                          <Dropdown
+                          {/* <Dropdown
                             isOpen={showSort}
                             toggle={() => {
                               setShowSort(!showSort);
@@ -500,7 +500,7 @@ const Ticket = (props) => {
                                 </DropdownItem>
                               ))}
                             </DropdownMenu>
-                          </Dropdown>
+                          </Dropdown> */}
                         </Col>
                         <Col
                           md={8}

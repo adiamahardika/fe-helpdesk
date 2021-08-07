@@ -944,7 +944,7 @@ const DetailTicket = (props) => {
                     </Row>
 
                     {showEditTicket && (
-                      <Row>
+                      <Row className="d-print-none">
                         <Col className="d-flex justify-content-end">
                           <button
                             type="button"
