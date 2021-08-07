@@ -76,7 +76,7 @@ const EditCategory = (props) => {
   const ButtonSubmit = () => {
     if (
       data &&
-      Object.keys(data).length >= 3 &&
+      Object.keys(data).length >= 5 &&
       Object.values(data).every((value) => value !== "") &&
       isEdit
     ) {
@@ -474,6 +474,96 @@ const EditCategory = (props) => {
                                 </div>
                               </Col>
                             )}
+                          </Row>
+                          <Row>
+                            <Col md={5}>
+                              <AvField
+                                name="additionalInput1"
+                                label="Additional Question 1"
+                                type="text"
+                                validate={{
+                                  maxLength: { value: 50 },
+                                }}
+                                value={
+                                  detail_category &&
+                                  detail_category.additionalInput1
+                                }
+                                style={{
+                                  backgroundColor:
+                                    isEdit === false ? "#ced4da" : "#ffffff",
+                                }}
+                                disabled={isEdit === false}
+                                onChange={(event) =>
+                                  setData({
+                                    ...data,
+                                    additionalInput1:
+                                      event.target.value === ""
+                                        ? "-"
+                                        : event.target.value,
+                                  })
+                                }
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col md={5}>
+                              <AvField
+                                name="additionalInput2"
+                                label="Additional Question 2"
+                                type="text"
+                                validate={{
+                                  maxLength: { value: 50 },
+                                }}
+                                value={
+                                  detail_category &&
+                                  detail_category.additionalInput2
+                                }
+                                style={{
+                                  backgroundColor:
+                                    isEdit === false ? "#ced4da" : "#ffffff",
+                                }}
+                                disabled={isEdit === false}
+                                onChange={(event) =>
+                                  setData({
+                                    ...data,
+                                    additionalInput2:
+                                      event.target.value === ""
+                                        ? "-"
+                                        : event.target.value,
+                                  })
+                                }
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col md={5}>
+                              <AvField
+                                name="additionalInput3"
+                                label="Additional Question 3"
+                                type="text"
+                                validate={{
+                                  maxLength: { value: 50 },
+                                }}
+                                value={
+                                  detail_category &&
+                                  detail_category.additionalInput3
+                                }
+                                style={{
+                                  backgroundColor:
+                                    isEdit === false ? "#ced4da" : "#ffffff",
+                                }}
+                                disabled={isEdit === false}
+                                onChange={(event) =>
+                                  setData({
+                                    ...data,
+                                    additionalInput3:
+                                      event.target.value === ""
+                                        ? "-"
+                                        : event.target.value,
+                                  })
+                                }
+                              />
+                            </Col>
                           </Row>
                         </FormGroup>
                       </Col>

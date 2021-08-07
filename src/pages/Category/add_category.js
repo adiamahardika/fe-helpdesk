@@ -48,7 +48,7 @@ const AddCategory = (props) => {
   const ButtonSubmitCreate = () => {
     if (
       data &&
-      Object.keys(data).length >= 2 &&
+      Object.keys(data).length >= 5 &&
       Object.values(data).every((value) => value !== "")
     ) {
       return (
@@ -125,7 +125,12 @@ const AddCategory = (props) => {
         sort_by: "nama",
         order_by: "asc",
       });
-      setData({ parent: "0" });
+      setData({
+        parent: "0",
+        additionalInput1: "-",
+        additionalInput2: "-",
+        additionalInput3: "-",
+      });
     } else {
       history.push(routes.ticket);
     }
@@ -352,6 +357,69 @@ const AddCategory = (props) => {
                                 </div>
                               </Col>
                             )}
+                          </Row>
+                          <Row>
+                            <Col md={5}>
+                              <AvField
+                                name="additionalInput1"
+                                label="Additional Question 1"
+                                type="text"
+                                validate={{
+                                  maxLength: { value: 50 },
+                                }}
+                                onChange={(event) =>
+                                  setData({
+                                    ...data,
+                                    additionalInput1:
+                                      event.target.value === ""
+                                        ? "-"
+                                        : event.target.value,
+                                  })
+                                }
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col md={5}>
+                              <AvField
+                                name="additionalInput2"
+                                label="Additional Question 2"
+                                type="text"
+                                validate={{
+                                  maxLength: { value: 50 },
+                                }}
+                                onChange={(event) =>
+                                  setData({
+                                    ...data,
+                                    additionalInput2:
+                                      event.target.value === ""
+                                        ? "-"
+                                        : event.target.value,
+                                  })
+                                }
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col md={5}>
+                              <AvField
+                                name="additionalInput3"
+                                label="Additional Question 3"
+                                type="text"
+                                validate={{
+                                  maxLength: { value: 50 },
+                                }}
+                                onChange={(event) =>
+                                  setData({
+                                    ...data,
+                                    additionalInput3:
+                                      event.target.value === ""
+                                        ? "-"
+                                        : event.target.value,
+                                  })
+                                }
+                              />
+                            </Col>
                           </Row>
                         </FormGroup>
                       </Col>
