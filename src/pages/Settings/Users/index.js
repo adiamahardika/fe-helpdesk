@@ -247,7 +247,6 @@ const Users = (props) => {
                       <th scope="col">Name</th>
                       <th scope="col">Username</th>
                       <th scope="col">Email</th>
-                      <th scope="col">NIK</th>
                       <th scope="col">Roles</th>
                       <th scope="col">Gender</th>
                       <th scope="col">Create At</th>
@@ -266,7 +265,6 @@ const Users = (props) => {
                             <td>{value.name}</td>
                             <td>{value.username}</td>
                             <td>{value.email}</td>
-                            <td>{value.nik}</td>
                             <td>
                               {value.roles.map((rolesValue, index) => {
                                 return (

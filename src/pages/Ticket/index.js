@@ -96,7 +96,6 @@ const Ticket = (props) => {
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
-  console.log(permissions);
 
   const username = sessionStorage.getItem("username");
   const history = useHistory();
@@ -322,7 +321,7 @@ const Ticket = (props) => {
                       setData({ ...data, usernamePembuat: "" })
                     )}
                   >
-                    <i className="mdi mdi-email-outline mr-2"></i> Inbox{" "}
+                    <i className="mdi mdi-email-outline mr-2"></i> All Ticket{" "}
                   </Link>
                   <Link
                     to="#"
@@ -332,7 +331,7 @@ const Ticket = (props) => {
                       setData({ ...data, usernamePembuat: username })
                     )}
                   >
-                    <i className="mdi mdi-email-check-outline mr-2"></i>Sent
+                    <i className="mdi mdi-email-check-outline mr-2"></i>My
                     Ticket
                   </Link>
                 </div>
@@ -400,7 +399,7 @@ const Ticket = (props) => {
                             className="btn-group mr-2 mb-2 mb-sm-0"
                           >
                             <DropdownToggle
-                              className="btn btn-primary waves-light waves-effect dropdown-toggle"
+                              className="btn btn-primary waves-light waves-effect dropdown-toggle d-flex align-items-center"
                               style={{
                                 backgroundColor: "#556ee6",
                                 border: "none",
@@ -540,7 +539,7 @@ const Ticket = (props) => {
                           <div className="ml-2">
                             <button
                               type="button"
-                              className="btn btn-primary waves-effect waves-light d-flex"
+                              className="btn btn-primary waves-effect waves-light d-flex align-items-center"
                               onClick={() => {
                                 props.readTicket(data);
                               }}
@@ -647,7 +646,7 @@ const Ticket = (props) => {
                                       display: "block",
                                     }}
                                   >
-                                    {parseDateAndMonth(value.tglDiperbarui)}
+                                    {parseFullDate(value.tglDiperbarui)}
                                   </span>
                                 </td>
                                 <td>
@@ -837,16 +836,6 @@ const Ticket = (props) => {
                       <StatusLabel
                         value={selectedData && selectedData.status}
                       />
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Replies</th>
-                      <td>0</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Replies Staff</th>
-                      <td>0</td>
                       <td></td>
                     </tr>
                     <tr>
