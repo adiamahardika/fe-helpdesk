@@ -14,6 +14,18 @@
       {
         "name": "Add Ticket",
         "code": "1.3"
+      },
+      {
+        "name": "View All Ticket",
+        "code": "1.4"
+      },
+      {
+        "name": "View Sent Ticket",
+        "code": "1.5"
+      },
+      {
+        "name": "View Assigned to Me Ticket",
+        "code": "1.6"
       }
     ]
   },

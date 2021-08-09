@@ -106,19 +106,13 @@ const Ticket = (props) => {
   const [showSort, setShowSort] = useState(false);
   const [isAddTicket, setIsAddTicket] = useState(false);
   const [isDetailTicket, setIsDetailTicket] = useState(false);
+  const [isViewAllTicket, setIsViewAllTicket] = useState(false);
+  const [isViewSentTicket, setIsViewSentTicket] = useState(false);
+  const [isViewAssignedToMeTicket, setIsViewAssignedToMeTicket] =
+    useState(false);
+  const [activeTicketSideNav, setActiveTicketSideNav] = useState("");
 
-  const [data, setData] = useState({
-    assignedTo: "",
-    usernamePembuat: "",
-    category: [],
-    pageNo: 0,
-    pageSize: 10,
-    priority: "",
-    search: "",
-    sortBy: "tglDiperbarui",
-    sortType: "desc",
-    status: "",
-  });
+  const [data, setData] = useState(null);
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
 
@@ -276,17 +270,42 @@ const Ticket = (props) => {
     let addTicket = permissions.find(
       (value) => value.code === code_all_permissions.add_ticket
     );
+    let viewAllTicket = permissions.find(
+      (value) => value.code === code_all_permissions.view_all_ticket
+    );
+    let viewSentTicket = permissions.find(
+      (value) => value.code === code_all_permissions.view_sent_ticket
+    );
+    let viewAssignedToMeTicket = permissions.find(
+      (value) => value.code === code_all_permissions.view_assigned_to_me_ticket
+    );
     if (viewTicket) {
-      props.readTicket(data);
+      let item = {
+        assignedTo: "",
+        usernamePembuat: "",
+        category: [],
+        pageNo: 0,
+        pageSize: 10,
+        priority: "",
+        search: "",
+        sortBy: "tglDiperbarui",
+        sortType: "desc",
+        status: "",
+      };
+      props.readTicket(item);
       props.readCategory({
         size: 0,
         page_no: 0,
         sort_by: "nama",
         order_by: "asc",
       });
+      setData(item);
 
       detailTicket && setIsDetailTicket(true);
       addTicket && setIsAddTicket(true);
+      viewAllTicket && setIsViewAllTicket(true);
+      viewSentTicket && setIsViewSentTicket(true);
+      viewAssignedToMeTicket && setIsViewAssignedToMeTicket(true);
     } else {
       history.push(routes.login);
     }
@@ -313,27 +332,81 @@ const Ticket = (props) => {
                   </Link>
                 )}
                 <div className="mail-list mt-4">
-                  <Link
-                    to="#"
-                    className={data.usernamePembuat === "" && "active"}
-                    onClick={() => (
-                      props.readTicket({ ...data, usernamePembuat: "" }),
-                      setData({ ...data, usernamePembuat: "" })
-                    )}
-                  >
-                    <i className="mdi mdi-email-outline mr-2"></i> All Ticket{" "}
-                  </Link>
-                  <Link
-                    to="#"
-                    className={data.usernamePembuat === username && "active"}
-                    onClick={() => (
-                      props.readTicket({ ...data, usernamePembuat: username }),
-                      setData({ ...data, usernamePembuat: username })
-                    )}
-                  >
-                    <i className="mdi mdi-email-check-outline mr-2"></i>My
-                    Ticket
-                  </Link>
+                  {isViewAllTicket && (
+                    <Link
+                      to="#"
+                      className={
+                        (activeTicketSideNav === "" && "active") +
+                        " d-flex align-items-center"
+                      }
+                      onClick={() => (
+                        props.readTicket({
+                          ...data,
+                          usernamePembuat: "",
+                          assignedTo: "",
+                        }),
+                        setData({
+                          ...data,
+                          usernamePembuat: "",
+                          assignedTo: "",
+                        }),
+                        setActiveTicketSideNav("")
+                      )}
+                    >
+                      <i className="mdi mdi-email-outline mr-2 font-size-16"></i>{" "}
+                      All Ticket{" "}
+                    </Link>
+                  )}
+                  {isViewSentTicket && (
+                    <Link
+                      to="#"
+                      className={
+                        (activeTicketSideNav === "sent_ticket" && "active") +
+                        " d-flex align-items-center"
+                      }
+                      onClick={() => (
+                        props.readTicket({
+                          ...data,
+                          usernamePembuat: username,
+                          assignedTo: "",
+                        }),
+                        setData({
+                          ...data,
+                          usernamePembuat: username,
+                          assignedTo: "",
+                        }),
+                        setActiveTicketSideNav("sent_ticket")
+                      )}
+                    >
+                      <i className="bx bx-mail-send mr-2 font-size-16"></i>Sent
+                      Ticket
+                    </Link>
+                  )}
+                  {isViewAssignedToMeTicket && (
+                    <Link
+                      to="#"
+                      className={
+                        (activeTicketSideNav === "assigned_to_me" && "active") +
+                        " d-flex align-items-center"
+                      }
+                      onClick={() => (
+                        props.readTicket({
+                          ...data,
+                          usernamePembuat: "",
+                          assignedTo: username,
+                        }),
+                        setData({
+                          ...data,
+                          usernamePembuat: "",
+                          assignedTo: username,
+                        }),
+                        setActiveTicketSideNav("assigned_to_me")
+                      )}
+                    >
+                      <i className="mdi mdi-email-receive mr-2 font-size-16"></i>
+                      Assigned To Me
+                    </Link>
+                  )}
                 </div>
 
                 <h6 className="mt-4">Status</h6>
@@ -352,7 +425,8 @@ const Ticket = (props) => {
                     ></span>
                     <span
                       style={{
-                        fontWeight: data.status === "" ? "bold" : "normal",
+                        fontWeight:
+                          data && data.status === "" ? "bold" : "normal",
                       }}
                     >
                       All
@@ -374,7 +448,9 @@ const Ticket = (props) => {
                       <span
                         style={{
                           fontWeight:
-                            data.status === value.name ? "bold" : "normal",
+                            data && data.status === value.name
+                              ? "bold"
+                              : "normal",
                         }}
                       >
                         {value.name}
