@@ -710,7 +710,12 @@ const DetailTicket = (props) => {
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
                       <strong>Reply On</strong>
-                      {detail_ticket && parseFullDate(detail_ticket.tglDibuat)}
+                      {detail_ticket &&
+                        parseFullDate(
+                          list_reply_ticket &&
+                            list_reply_ticket[list_reply_ticket.length - 1]
+                              .tglDibuat
+                        )}
                     </Col>
                   </Row>
                   <Row className="align-items-center mb-2">
