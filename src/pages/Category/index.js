@@ -15,8 +15,10 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import ReactPaginate from "react-paginate";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
+import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
 import "../../assets/css/style.css";
+require("dotenv").config();
 
 const Category = (props) => {
   const list_category = props.list_category;
@@ -24,7 +26,12 @@ const Category = (props) => {
   const response_code = props.response_code_category;
   const total_pages_category = props.total_pages_category;
   const active_page_category = props.active_page_category;
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const history = useHistory();
 
   const [data, setData] = useState({

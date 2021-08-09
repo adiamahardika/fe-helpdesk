@@ -25,6 +25,8 @@ import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import Dropzone from "react-dropzone";
 import { parseDate } from "../../helpers";
+import CryptoJS from "crypto-js";
+require("dotenv").config();
 
 const priority = [
   {
@@ -50,7 +52,12 @@ const AddTicket = (props) => {
   let response_code = props.response_code_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const username = sessionStorage.getItem("username");
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();

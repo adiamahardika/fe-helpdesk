@@ -20,13 +20,20 @@ import code_all_permissions from "../../../helpers/code_all_permissions.json";
 import general_constant from "../../../helpers/general_constant.json";
 import UnsavedChangesWarning from "../../../helpers/unsaved_changes_warning";
 import routes from "../../../helpers/routes.json";
+import CryptoJS from "crypto-js";
+require("dotenv").config();
 
 const EditUser = (props) => {
   const message = props.message_user;
   const response_code = props.response_code_user;
   const editUserValue = props.location.editUserValue;
   const option_role = props.option_role;
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 

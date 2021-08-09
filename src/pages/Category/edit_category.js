@@ -26,6 +26,8 @@ import general_constant from "../../helpers/general_constant.json";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import queryString from "query-string";
+import CryptoJS from "crypto-js";
+require("dotenv").config();
 
 const EditCategory = (props) => {
   const message = props.message_category;

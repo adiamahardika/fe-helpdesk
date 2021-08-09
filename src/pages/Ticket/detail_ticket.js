@@ -31,7 +31,9 @@ import routes from "../../helpers/routes.json";
 import queryString from "query-string";
 import Dropzone from "react-dropzone";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
+import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
+require("dotenv").config();
 
 const list_status = [
   { name: "New", color: "#f46a6a" },
@@ -73,7 +75,12 @@ const DetailTicket = (props) => {
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const username = sessionStorage.getItem("username");
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const history = useHistory();
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);

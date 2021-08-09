@@ -9,6 +9,7 @@ import logo from "../../assets/images/mygrapari.png";
 import login2 from "../../assets/images/login-image.svg";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
+import CryptoJS from "crypto-js";
 require("dotenv").config();
 
 const Login = (props) => {
@@ -35,11 +36,13 @@ const Login = (props) => {
             sessionStorage.setItem("accessToken", value.response.accessToken);
             sessionStorage.setItem("username", value.response.username);
             sessionStorage.setItem("name", value.response.name);
-            sessionStorage.setItem("email", value.response.email);
             sessionStorage.setItem("role", value.response.roles);
             sessionStorage.setItem(
               "permission",
-              JSON.stringify(value.response.role[0].listPermission)
+              CryptoJS.AES.encrypt(
+                JSON.stringify(value.response.role[0].listPermission),
+                `${process.env.ENCRYPT_KEY}`
+              )
             );
             sessionStorage.setItem("isAuth", true);
             history.push(routes.ticket);

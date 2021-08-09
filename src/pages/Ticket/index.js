@@ -34,7 +34,9 @@ import ReactPaginate from "react-paginate";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import classnames from "classnames";
+import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
+require("dotenv").config();
 
 const priority = [
   {
@@ -88,7 +90,14 @@ const Ticket = (props) => {
   const response_code = props.response_code_ticket;
   const total_pages_ticket = props.total_pages_ticket;
   const active_page_ticket = props.active_page_ticket;
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );
+  console.log(permissions);
+
   const username = sessionStorage.getItem("username");
   const history = useHistory();
 

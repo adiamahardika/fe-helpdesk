@@ -13,12 +13,19 @@ import general_constant from "../../../helpers/general_constant.json";
 import SweetAlert from "react-bootstrap-sweetalert";
 import UnsavedChangesWarning from "../../../helpers/unsaved_changes_warning";
 import routes from "../../../helpers/routes.json";
+import CryptoJS from "crypto-js";
+require("dotenv").config();
 
 const AddRole = (props) => {
   const message = props.message_role;
   const response_code = props.response_code_role;
   const option_permission = props.option_permission;
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 

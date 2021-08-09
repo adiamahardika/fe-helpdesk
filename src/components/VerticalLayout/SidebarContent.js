@@ -9,8 +9,16 @@ import { Link } from "react-router-dom";
 import { withNamespaces } from "react-i18next";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import routes from "../../helpers/routes.json";
+import CryptoJS from "crypto-js";
+require("dotenv").config();
+
 const SidebarContent = (props) => {
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const [isViewTicket, setIsViewTicket] = useState(true);
   const [isViewUsers, setIsViewUsers] = useState(true);
   const [isViewRoles, setIsViewRoles] = useState(true);

@@ -22,12 +22,19 @@ import list_all_permission from "../../../helpers/list_all_permission.json";
 import SweetAlert from "react-bootstrap-sweetalert";
 import general_constant from "../../../helpers/general_constant.json";
 import routes from "../../../helpers/routes.json";
+import CryptoJS from "crypto-js";
+require("dotenv").config();
 
 const Role = (props) => {
   const message = props.message_role;
   const response_code = props.response_code_role;
   const list_role = props.list_role;
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const history = useHistory();
 
   const [addRole, setAddRole] = useState(false);

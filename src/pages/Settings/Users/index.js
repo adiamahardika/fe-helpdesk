@@ -13,7 +13,9 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import ReactPaginate from "react-paginate";
 import general_constant from "../../../helpers/general_constant.json";
 import routes from "../../../helpers/routes.json";
+import CryptoJS from "crypto-js";
 import "../../../assets/css/pagination.css";
+require("dotenv").config();
 
 const Users = (props) => {
   const list_user = props.list_user;
@@ -21,7 +23,12 @@ const Users = (props) => {
   const response_code = props.response_code_user;
   const total_pages_user = props.total_pages_user;
   const active_page_user = props.active_page_user;
-  const permissions = JSON.parse(sessionStorage.getItem("permission"));
+  const permissions = JSON.parse(
+    CryptoJS.AES.decrypt(
+      sessionStorage.getItem("permission"),
+      `${process.env.ENCRYPT_KEY}`
+    ).toString(CryptoJS.enc.Utf8)
+  );;
   const history = useHistory();
 
   const [deleteUser, setDeleteUser] = useState(false);
