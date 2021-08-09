@@ -33,7 +33,7 @@ const EditUser = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
@@ -42,7 +42,6 @@ const EditUser = (props) => {
 
   const [selectedData, setSelectedData] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
-  const [validNik, setValidNik] = useState(true);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [sweetAlertType, setSweeAlertType] = useState(null);
   const [editUserRole, setEditUserRole] = useState(null);
@@ -69,19 +68,6 @@ const EditUser = (props) => {
       setValidEmail(true);
     } else {
       setValidEmail(false);
-    }
-  };
-  const onValidateNik = (nik) => {
-    let regex = /^[0-9]+$/;
-    setSelectedData({
-      ...selectedData,
-      nik: nik,
-    });
-    setDirty();
-    if (regex.test(nik) === true && nik.length === 16) {
-      setValidNik(true);
-    } else {
-      setValidNik(false);
     }
   };
 
@@ -118,8 +104,7 @@ const EditUser = (props) => {
     if (
       selectedData &&
       Object.values(selectedData).every((value) => value !== "") &&
-      validEmail === true &&
-      validNik === true
+      validEmail === true
     ) {
       return (
         <button
@@ -246,140 +231,110 @@ const EditUser = (props) => {
                 <ButtonSubmitUpdate />
               </div>
               <AvForm>
-                <Row>
-                  <Col md={6}>
-                    <AvField
-                      style={{ backgroundColor: "#ced4da" }}
-                      name="username"
-                      label="Username"
-                      value={selectedData && selectedData.username}
-                      disabled
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <AvField
-                      name="name"
-                      label="Name"
-                      placeholder="ex: Admin"
-                      type="text"
-                      errorMessage="Type name"
-                      validate={{
-                        required: { value: true },
-                        maxLength: { value: 16 },
-                      }}
-                      value={selectedData && selectedData.name}
-                      onChange={onChangeSelectedData}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={6}>
-                    <AvField
-                      name="nik"
-                      label="NIK"
-                      placeholder="ex: 3175000000000"
-                      type="text"
-                      errorMessage="Length of NIK must be 16 character"
-                      validate={{
-                        required: { value: true },
-                        maxLength: { value: 16 },
-                        minLength: { value: 16 },
-                        pattern: { value: "^[0-9]+$" },
-                      }}
-                      value={selectedData && selectedData.nik}
-                      onChange={(event) => onValidateNik(event.target.value)}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <AvField
-                      name="email"
-                      label="Email"
-                      placeholder="ex: admin@mail.com"
-                      type="email"
-                      errorMessage="Type valid email"
-                      validate={{
-                        required: { value: true },
-                        maxLength: { value: 40 },
-                      }}
-                      value={selectedData && selectedData.email}
-                      onChange={(event) => onValidateEmail(event.target.value)}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={6}>
-                    <FormGroup className="select2-container">
-                      <label className="control-label">Gender</label>
-                      <div>
-                        <select
-                          name="gender"
-                          className="form-control"
-                          defaultValue={selectedData && selectedData.gender}
-                          onChange={(event) => (
-                            setSelectedData({
-                              ...selectedData,
-                              gender: event.target.value,
-                            }),
-                            setDirty()
-                          )}
-                        >
-                          <option value="default" disabled>
-                            Select Gender
-                          </option>
-                          <option
-                            value="L"
-                            onChange={(event) => (
-                              setSelectedData({
-                                ...selectedData,
-                                gender: event.target.value,
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            Laki - laki
-                          </option>
-                          <option
-                            value="P"
-                            onChange={(event) => (
-                              setSelectedData({
-                                ...selectedData,
-                                gender: event.target.value,
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            Perempuan
-                          </option>
-                        </select>
-                      </div>
-                    </FormGroup>
-                  </Col>
-                  <Col md={6}>
-                    {editUserRole && (
-                      <FormGroup className="select2-container">
-                        <label className="control-label">Role</label>
-                        <div>
-                          <select
-                            name="role"
-                            className="form-control"
-                            defaultValue={
-                              selectedData && selectedData.roles[0].name
-                            }
-                            onChange={(event) => (
-                              setSelectedData({
-                                ...selectedData,
-                                role: [event.target.value],
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            <option value="" disabled>
-                              Select Role
-                            </option>
-                            {option_role.map((value, index) => (
+                <Row className="justify-content-center">
+                  <Col md={8}>
+                    <Row>
+                      <Col md={6}>
+                        <AvField
+                          style={{ backgroundColor: "#ced4da" }}
+                          name="username"
+                          label="Username"
+                          value={selectedData && selectedData.username}
+                          disabled
+                        />
+                      </Col>
+                      <Col md={6}>
+                        <AvField
+                          name="name"
+                          label="Name"
+                          placeholder="ex: Admin"
+                          type="text"
+                          errorMessage="Type name"
+                          validate={{
+                            required: { value: true },
+                            maxLength: { value: 16 },
+                          }}
+                          value={selectedData && selectedData.name}
+                          onChange={onChangeSelectedData}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={6}>
+                        <AvField
+                          name="email"
+                          label="Email"
+                          placeholder="ex: admin@mail.com"
+                          type="email"
+                          errorMessage="Type valid email"
+                          validate={{
+                            required: { value: true },
+                            maxLength: { value: 40 },
+                          }}
+                          value={selectedData && selectedData.email}
+                          onChange={(event) =>
+                            onValidateEmail(event.target.value)
+                          }
+                        />
+                      </Col>
+                      <Col md={3}>
+                        <FormGroup className="select2-container">
+                          <label className="control-label">Gender</label>
+                          <div>
+                            <select
+                              name="gender"
+                              className="form-control"
+                              defaultValue={selectedData && selectedData.gender}
+                              onChange={(event) => (
+                                setSelectedData({
+                                  ...selectedData,
+                                  gender: event.target.value,
+                                }),
+                                setDirty()
+                              )}
+                            >
+                              <option value="default" disabled>
+                                Select Gender
+                              </option>
                               <option
-                                key={index}
-                                value={value && value.value}
+                                value="L"
+                                onChange={(event) => (
+                                  setSelectedData({
+                                    ...selectedData,
+                                    gender: event.target.value,
+                                  }),
+                                  setDirty()
+                                )}
+                              >
+                                Laki - laki
+                              </option>
+                              <option
+                                value="P"
+                                onChange={(event) => (
+                                  setSelectedData({
+                                    ...selectedData,
+                                    gender: event.target.value,
+                                  }),
+                                  setDirty()
+                                )}
+                              >
+                                Perempuan
+                              </option>
+                            </select>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                      <Col md={3}>
+                        {editUserRole && (
+                          <FormGroup className="select2-container">
+                            <label className="control-label">Role</label>
+                            <div>
+                              <select
+                                name="role"
+                                className="form-control"
+                                defaultValue={
+                                  selectedData && selectedData.roles[0].name
+                                }
                                 onChange={(event) => (
                                   setSelectedData({
                                     ...selectedData,
@@ -388,13 +343,30 @@ const EditUser = (props) => {
                                   setDirty()
                                 )}
                               >
-                                {value.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </FormGroup>
-                    )}
+                                <option value="" disabled>
+                                  Select Role
+                                </option>
+                                {option_role.map((value, index) => (
+                                  <option
+                                    key={index}
+                                    value={value && value.value}
+                                    onChange={(event) => (
+                                      setSelectedData({
+                                        ...selectedData,
+                                        role: [event.target.value],
+                                      }),
+                                      setDirty()
+                                    )}
+                                  >
+                                    {value.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </FormGroup>
+                        )}
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
               </AvForm>

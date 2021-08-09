@@ -38,7 +38,6 @@ const Profile = (props) => {
 
   const [updateUserData, setUpdateUserData] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
-  const [validNik, setValidNik] = useState(true);
   const [validOldPassword, setValidOldPassword] = useState(false);
   const [validNewPassword, setValidNewPassword] = useState(false);
   const [confirmNewPassword, setConfirmNewPassword] = useState(null);
@@ -69,19 +68,6 @@ const Profile = (props) => {
       setValidEmail(true);
     } else {
       setValidEmail(false);
-    }
-  };
-  const onValidateNik = (nik) => {
-    let regex = /^[0-9]+$/;
-    setUpdateUserData({
-      ...updateUserData,
-      nik: nik,
-    });
-    setDirty();
-    if (regex.test(nik) === true) {
-      setValidNik(true);
-    } else {
-      setValidNik(false);
     }
   };
   const onValidateNewPassword = (value) => {
@@ -249,8 +235,7 @@ const Profile = (props) => {
       updateUserData &&
       Object.keys(updateUserData).length >= 7 &&
       Object.values(updateUserData).every((value) => value !== "") &&
-      validEmail === true &&
-      validNik === true
+      validEmail === true
     ) {
       return (
         <button
@@ -337,21 +322,6 @@ const Profile = (props) => {
                     onChange={onChangeUpdateUserData}
                   />
                   <AvField
-                    name="nik"
-                    label="NIK"
-                    placeholder="ex: 3175000000000"
-                    type="text"
-                    errorMessage="Length of NIK must be 16 character"
-                    validate={{
-                      required: { value: true },
-                      maxLength: { value: 16 },
-                      minLength: { value: 16 },
-                      pattern: { value: "^[0-9]+$" },
-                    }}
-                    value={updateUserData && updateUserData.nik}
-                    onChange={(event) => onValidateNik(event.target.value)}
-                  />
-                  <AvField
                     name="email"
                     label="Email"
                     placeholder="ex: admin@mail.com"
@@ -422,11 +392,6 @@ const Profile = (props) => {
                       <tr>
                         <th>Name</th>
                         <td>{user_detail && user_detail.name}</td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <th>NIK</th>
-                        <td>{user_detail && user_detail.nik}</td>
                         <td></td>
                       </tr>
                       <tr>

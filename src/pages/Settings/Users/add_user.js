@@ -25,13 +25,12 @@ const AddUser = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
   const [validEmail, setValidEmail] = useState(false);
-  const [validNik, setValidNik] = useState(false);
   const [validUsername, setValidUsername] = useState(false);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [password, setPassword] = useState(null);
@@ -55,19 +54,6 @@ const AddUser = (props) => {
       setValidEmail(true);
     } else {
       setValidEmail(false);
-    }
-  };
-  const onValidateNik = (nik) => {
-    let regex = /^[0-9]+$/;
-    setData({
-      ...data,
-      nik: nik,
-    });
-    setDirty();
-    if (regex.test(nik) === true && nik.length === 16) {
-      setValidNik(true);
-    } else {
-      setValidNik(false);
     }
   };
   const onValidateUsername = (username) => {
@@ -98,10 +84,9 @@ const AddUser = (props) => {
   const ButtonSubmitCreate = () => {
     if (
       data &&
-      Object.keys(data).length >= 6 &&
+      Object.keys(data).length >= 5 &&
       Object.values(data).every((value) => value !== "") &&
       validEmail === true &&
-      validNik === true &&
       validUsername === true
     ) {
       return (
@@ -205,159 +190,147 @@ const AddUser = (props) => {
                 <ButtonSubmitCreate />
               </div>
               <AvForm>
-                <Row>
-                  <Col md={6}>
-                    <AvField
-                      name="username"
-                      label="Username"
-                      placeholder="ex: admin"
-                      type="text"
-                      errorMessage="Username cannot contain special character and whitespace"
-                      validate={{
-                        required: { value: true },
-                        maxLength: { value: 16 },
-                        pattern: { value: "^[A-Za-z0-9]+S*$" },
-                      }}
-                      onChange={(event) =>
-                        onValidateUsername(event.target.value)
-                      }
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <AvField
-                      name="name"
-                      label="Name"
-                      placeholder="ex: Admin"
-                      type="text"
-                      errorMessage="Enter Name"
-                      validate={{
-                        required: { value: true },
-                        maxLength: { value: 16 },
-                      }}
-                      onChange={onChangeData}
-                    />
-                  </Col>
-                </Row>{" "}
-                <Row>
-                  <Col md={6}>
-                    <AvField
-                      name="nik"
-                      label="NIK"
-                      placeholder="ex: 3175000000000123"
-                      type="text"
-                      errorMessage="Length of NIK must be 16 character"
-                      validate={{
-                        required: { value: true },
-                        maxLength: { value: 16 },
-                        minLength: { value: 16 },
-                        pattern: { value: "^[0-9]+$" },
-                      }}
-                      onChange={(event) => onValidateNik(event.target.value)}
-                    />
-                  </Col>
-                  <Col md={6}>
-                    <AvField
-                      name="email"
-                      label="Email"
-                      placeholder="ex: admin@mail.com"
-                      type="email"
-                      errorMessage="Enter valid Email"
-                      validate={{
-                        required: { value: true },
-                        maxLength: { value: 40 },
-                      }}
-                      onChange={(event) => onValidateEmail(event.target.value)}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={6}>
-                    <FormGroup className="select2-container">
-                      <label className="control-label">Gender</label>
-                      <div>
-                        <select
-                          name="gender"
-                          className="form-control"
-                          defaultValue=""
-                          onChange={(event) => (
-                            setData({
-                              ...data,
-                              gender: event.target.value,
-                            }),
-                            setDirty()
-                          )}
-                        >
-                          <option value="" disabled>
-                            Select Gender
-                          </option>
-                          <option
-                            value="L"
-                            onChange={(event) => (
-                              setData({
-                                ...data,
-                                gender: event.target.value,
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            Laki - laki
-                          </option>
-                          <option
-                            value="P"
-                            onChange={(event) => (
-                              setData({
-                                ...data,
-                                gender: event.target.value,
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            Perempuan
-                          </option>
-                        </select>
-                      </div>
-                    </FormGroup>
-                  </Col>
-                  <Col md={6}>
-                    {editUserRole && (
-                      <FormGroup className="select2-container">
-                        <label className="control-label">Role</label>
-                        <div>
-                          <select
-                            name="role"
-                            className="form-control"
-                            defaultValue=""
-                            onChange={(event) => (
-                              setData({
-                                ...data,
-                                role: event.target.value,
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            <option value="" disabled>
-                              Select Role
-                            </option>
-                            {list_role &&
-                              list_role.map((value, index) => (
-                                <option
-                                  key={index}
-                                  value={value && value.name}
-                                  onChange={(event) => (
-                                    setData({
-                                      ...data,
-                                      role: event.target.value,
-                                    }),
-                                    setDirty()
-                                  )}
-                                >
-                                  {value.name}
+                <Row className="justify-content-center">
+                  <Col md={8}>
+                    <Row>
+                      <Col md={6}>
+                        <AvField
+                          name="username"
+                          label="Username"
+                          placeholder="ex: admin"
+                          type="text"
+                          errorMessage="Username cannot contain special character and whitespace"
+                          validate={{
+                            required: { value: true },
+                            maxLength: { value: 16 },
+                            pattern: { value: "^[A-Za-z0-9]+S*$" },
+                          }}
+                          onChange={(event) =>
+                            onValidateUsername(event.target.value)
+                          }
+                        />
+                      </Col>
+                      <Col md={6}>
+                        <AvField
+                          name="name"
+                          label="Name"
+                          placeholder="ex: Admin"
+                          type="text"
+                          errorMessage="Enter Name"
+                          validate={{
+                            required: { value: true },
+                            maxLength: { value: 16 },
+                          }}
+                          onChange={onChangeData}
+                        />
+                      </Col>
+                    </Row>{" "}
+                    <Row>
+                      <Col md={6}>
+                        <AvField
+                          name="email"
+                          label="Email"
+                          placeholder="ex: admin@mail.com"
+                          type="email"
+                          errorMessage="Enter valid Email"
+                          validate={{
+                            required: { value: true },
+                            maxLength: { value: 40 },
+                          }}
+                          onChange={(event) =>
+                            onValidateEmail(event.target.value)
+                          }
+                        />
+                      </Col>
+                      <Col md={3}>
+                        <FormGroup className="select2-container">
+                          <label className="control-label">Gender</label>
+                          <div>
+                            <select
+                              name="gender"
+                              className="form-control"
+                              defaultValue=""
+                              onChange={(event) => (
+                                setData({
+                                  ...data,
+                                  gender: event.target.value,
+                                }),
+                                setDirty()
+                              )}
+                            >
+                              <option value="" disabled>
+                                Select Gender
+                              </option>
+                              <option
+                                value="L"
+                                onChange={(event) => (
+                                  setData({
+                                    ...data,
+                                    gender: event.target.value,
+                                  }),
+                                  setDirty()
+                                )}
+                              >
+                                Laki - laki
+                              </option>
+                              <option
+                                value="P"
+                                onChange={(event) => (
+                                  setData({
+                                    ...data,
+                                    gender: event.target.value,
+                                  }),
+                                  setDirty()
+                                )}
+                              >
+                                Perempuan
+                              </option>
+                            </select>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                      <Col md={3}>
+                        {editUserRole && (
+                          <FormGroup className="select2-container">
+                            <label className="control-label">Role</label>
+                            <div>
+                              <select
+                                name="role"
+                                className="form-control"
+                                defaultValue=""
+                                onChange={(event) => (
+                                  setData({
+                                    ...data,
+                                    role: event.target.value,
+                                  }),
+                                  setDirty()
+                                )}
+                              >
+                                <option value="" disabled>
+                                  Select Role
                                 </option>
-                              ))}
-                          </select>
-                        </div>
-                      </FormGroup>
-                    )}
+                                {list_role &&
+                                  list_role.map((value, index) => (
+                                    <option
+                                      key={index}
+                                      value={value && value.name}
+                                      onChange={(event) => (
+                                        setData({
+                                          ...data,
+                                          role: event.target.value,
+                                        }),
+                                        setDirty()
+                                      )}
+                                    >
+                                      {value.name}
+                                    </option>
+                                  ))}
+                              </select>
+                            </div>
+                          </FormGroup>
+                        )}
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
               </AvForm>
