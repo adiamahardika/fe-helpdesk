@@ -6,6 +6,7 @@
   "view_all_ticket": "1.4",
   "view_sent_ticket": "1.5",
   "view_assigned_to_me_ticket": "1.6",
+  "edit_ticket": "1.7",
   "settings": "2",
   "users": "2.1",
   "view_users": "2.1.1",

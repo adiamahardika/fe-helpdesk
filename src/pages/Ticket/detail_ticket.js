@@ -80,7 +80,7 @@ const DetailTicket = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const history = useHistory();
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);
@@ -95,6 +95,7 @@ const DetailTicket = (props) => {
   const [statusColor, setStatusColor] = useState(null);
   const [priorityColor, setPriorityColor] = useState(null);
   const [checkedSubmitAs, setCheckedSubmitAs] = useState(null);
+  const [isEditTicket, setIsEditTicket] = useState(false);
 
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
@@ -635,6 +636,9 @@ const DetailTicket = (props) => {
     let detailTicket = permissions.find(
       (value) => value.code === code_all_permissions.detail_ticket
     );
+    let editTicket = permissions.find(
+      (value) => value.code === code_all_permissions.edit_ticket
+    );
     if (detailTicket) {
       props.readDetailTicket(ticketId);
       props.readCategory({
@@ -654,6 +658,7 @@ const DetailTicket = (props) => {
         base64_2: "",
       });
       setCheckedSubmitAs([true, false, false, false]);
+      editTicket && setIsEditTicket(true);
     } else {
       history.push(routes.ticket);
     }
@@ -728,8 +733,7 @@ const DetailTicket = (props) => {
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
                       <strong>Submitted On</strong>
-                      {detail_ticket &&
-                        parseFullDate(detail_ticket.tglDibuat)}
+                      {detail_ticket && parseFullDate(detail_ticket.tglDibuat)}
                     </Col>
                   </Row>
                   <Row className="align-items-center mb-2">
@@ -747,21 +751,25 @@ const DetailTicket = (props) => {
                       paddingTop: "4px",
                     }}
                   >
-                    <Row className="align-items-center d-print-none">
-                      <Col className="d-flex justify-content-end align-items-center">
-                        <span
-                          className="btn-link waves-effect text-right d-flex align-items-center"
-                          onClick={() => onShowEdit()}
-                        >
-                          Edit
-                          <i className="bx bxs-edit font-size-16 align-middle ml-1"></i>
-                        </span>
-                      </Col>
-                    </Row>
+                    {isEditTicket && (
+                      <Row className="align-items-center d-print-none">
+                        <Col className="d-flex justify-content-end align-items-center">
+                          <span
+                            className="btn-link waves-effect text-right d-flex align-items-center"
+                            onClick={() => onShowEdit()}
+                          >
+                            Edit
+                            <i className="bx bxs-edit font-size-16 align-middle ml-1"></i>
+                          </span>
+                        </Col>
+                      </Row>
+                    )}
                     <Row>
                       <Col>
                         <FormGroup className="select2-container">
-                          <label className="control-label">Category</label>
+                          <label className="control-label">
+                            <strong>Category</strong>
+                          </label>
                           <div>
                             <select
                               name="kategori"
@@ -810,7 +818,9 @@ const DetailTicket = (props) => {
                     <Row>
                       <Col>
                         <FormGroup className="select2-container">
-                          <label className="control-label">Status</label>
+                          <label className="control-label">
+                            <strong>Status</strong>
+                          </label>
                           <div>
                             <select
                               name="kategori"
@@ -855,7 +865,9 @@ const DetailTicket = (props) => {
                     <Row>
                       <Col>
                         <FormGroup className="select2-container">
-                          <label className="control-label">Priority</label>
+                          <label className="control-label">
+                            <strong>Priority</strong>
+                          </label>
                           <div>
                             <select
                               name="priority"
@@ -901,7 +913,9 @@ const DetailTicket = (props) => {
                       <Col>
                         {" "}
                         <FormGroup className="select2-container">
-                          <label className="control-label">Assign To</label>
+                          <label className="control-label">
+                            <strong>Assign To</strong>
+                          </label>
                           <div>
                             <select
                               name="assignedTo"

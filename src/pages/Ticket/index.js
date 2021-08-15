@@ -292,6 +292,13 @@ const Ticket = (props) => {
         sortType: "desc",
         status: "",
       };
+      if (!viewAllTicket && viewSentTicket) {
+        item = { ...item, usernamePembuat: username };
+        setActiveTicketSideNav("sent_ticket");
+      } else if (!viewAllTicket && viewAssignedToMeTicket) {
+        item = { ...item, assignedTo: username };
+        setActiveTicketSideNav("assigned_to_me");
+      }
       props.readTicket(item);
       props.readCategory({
         size: 0,
@@ -331,7 +338,7 @@ const Ticket = (props) => {
                     </Button>
                   </Link>
                 )}
-                <div className="mail-list mt-4">
+                <div className={`mail-list ${isAddTicket && `mt-4`}`}>
                   {isViewAllTicket && (
                     <Link
                       to="#"

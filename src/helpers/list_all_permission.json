@@ -26,6 +26,10 @@
       {
         "name": "View Assigned to Me Ticket",
         "code": "1.6"
+      },
+      {
+        "name": "Edit Ticket",
+        "code": "1.7"
       }
     ]
   },
