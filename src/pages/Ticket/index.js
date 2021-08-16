@@ -96,6 +96,7 @@ const Ticket = (props) => {
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
+  console.log(permissions)
 
   const username = sessionStorage.getItem("username");
   const history = useHistory();
@@ -324,7 +325,7 @@ const Ticket = (props) => {
           <Breadcrumbs title={"Ticket"} breadcrumbItem={"Ticket"} />
           <Row>
             <Col md={3}>
-              <Card className="email-leftbar">
+              <Card className="p-3">
                 {isAddTicket && (
                   <Link to={routes.add_ticket}>
                     <Button
@@ -738,6 +739,7 @@ const Ticket = (props) => {
                                       display: "grid",
                                       gridAutoFlow: "column",
                                       columnGap: "4px",
+                                      gridTemplateColumns: "repeat(2, 1fr)",
                                     }}
                                   >
                                     <button

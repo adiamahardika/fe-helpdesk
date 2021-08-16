@@ -3,7 +3,7 @@
   "view_ticket": "1.1",
   "detail_ticket": "1.2",
   "add_ticket": "1.3",
-  "assigning_ticket": "1.3.1",
+  "assigning_ticket": "1.9",
   "view_all_ticket": "1.4",
   "view_sent_ticket": "1.5",
   "view_assigned_to_me_ticket": "1.6",

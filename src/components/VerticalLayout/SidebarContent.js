@@ -18,7 +18,7 @@ const SidebarContent = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const [isViewTicket, setIsViewTicket] = useState(true);
   const [isViewUsers, setIsViewUsers] = useState(true);
   const [isViewRoles, setIsViewRoles] = useState(true);
@@ -111,9 +111,9 @@ const SidebarContent = (props) => {
             )}
           </ul>
         </li>
-      )
+      );
     } else {
-      return <></>
+      return <></>;
     }
   };
 
@@ -137,6 +137,12 @@ const SidebarContent = (props) => {
               </Link>
             </li>
           )}
+          <li>
+            <Link to={routes.report} className="waves-effect">
+              <i className="bx bxs-report"></i>
+              <span>{props.t("Report")}</span>
+            </Link>
+          </li>
           <SettingsMenu />
         </ul>
       </div>

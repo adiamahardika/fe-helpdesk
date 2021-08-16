@@ -272,7 +272,7 @@ const AddTicket = (props) => {
   };
 
   const onSubmitCreate = async () => {
-    if (captchaValidation === captcha) {
+    if (isAssigningTicket || captchaValidation === captcha) {
       const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
       setTicketCode(ticket_code);
       props.createTicket({

@@ -28,7 +28,8 @@ const Users = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
+  const username = sessionStorage.getItem("username");
   const history = useHistory();
 
   const [deleteUser, setDeleteUser] = useState(false);
@@ -91,7 +92,7 @@ const Users = (props) => {
         <Link
           to={{
             pathname: routes.profile,
-            editUserValue: value.value,
+            search: `?username=${username}`,
           }}
         >
           <button
@@ -285,6 +286,7 @@ const Users = (props) => {
                                   display: "grid",
                                   gridAutoFlow: "column",
                                   columnGap: "4px",
+                                  gridTemplateColumns: "repeat(2, 1fr)",
                                 }}
                               >
                                 {editUser && <EditButton value={value} />}

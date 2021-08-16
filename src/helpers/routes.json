@@ -13,6 +13,7 @@
   "category": "/category",
   "add_category": "/add-category",
   "edit_category": "/edit-category",
+  "report": "/report",
   "login": "/login",
   "logout": "/logout"
 }
