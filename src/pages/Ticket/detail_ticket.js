@@ -96,6 +96,7 @@ const DetailTicket = (props) => {
   const [priorityColor, setPriorityColor] = useState(null);
   const [checkedSubmitAs, setCheckedSubmitAs] = useState(null);
   const [isEditTicket, setIsEditTicket] = useState(false);
+  const [isCloseTicket, setIsCloseTicket] = useState(false);
 
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
@@ -356,7 +357,11 @@ const DetailTicket = (props) => {
     setPristine();
   };
   const onSubmitReply = async () => {
-    props.replyTicket(replyData);
+    let ticket_status = "Replied";
+    if (detail_ticket && detail_ticket.usernamePembuat === username) {
+      ticket_status = "Waiting Reply";
+    }
+    props.replyTicket({ ...replyData, status: ticket_status });
     setReplyData({
       kodeTicket: ticketId,
       usernamePengirim: username,
@@ -639,6 +644,9 @@ const DetailTicket = (props) => {
     let editTicket = permissions.find(
       (value) => value.code === code_all_permissions.edit_ticket
     );
+    let closeTicket = permissions.find(
+      (value) => value.code === code_all_permissions.close_ticket
+    );
     if (detailTicket) {
       props.readDetailTicket(ticketId);
       props.readCategory({
@@ -659,6 +667,7 @@ const DetailTicket = (props) => {
       });
       setCheckedSubmitAs([true, false, false, false]);
       editTicket && setIsEditTicket(true);
+      closeTicket && setIsCloseTicket(true);
     } else {
       history.push(routes.ticket);
     }
@@ -1350,58 +1359,62 @@ const DetailTicket = (props) => {
                             </FormGroup>
                           </Col>
                         </Row>
-                        <Row className="mt-2 justify-content-center">
-                          <Col>
-                            <FormGroup className="select2-container">
-                              <label className="control-label">Submit as</label>
-                              <div
-                                style={{
-                                  display: "grid",
-                                  gridTemplateColumns: "repeat(4, 1fr)",
-                                  columnGap: "1rem",
-                                }}
-                              >
-                                {list_reply_status.map((value, index) => (
-                                  <ul
-                                    className="sub-menu"
-                                    aria-expanded="true"
-                                    style={{ listStyle: "none" }}
-                                    key={index}
-                                  >
-                                    <li>
-                                      <div className="has-arrow">
-                                        <div className="custom-control custom-checkbox mb-3">
-                                          <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            id="CustomCheck1"
-                                            onChange={() => false}
-                                            checked={
-                                              checkedSubmitAs &&
-                                              checkedSubmitAs[index]
-                                            }
-                                          />
-                                          <label
-                                            className="custom-control-label"
-                                            style={{ color: value.color }}
-                                            onClick={() =>
-                                              onChangeSubmitAs(
-                                                value.name,
-                                                index
-                                              )
-                                            }
-                                          >
-                                            <span>{value.name}</span>
-                                          </label>
+                        {isCloseTicket && (
+                          <Row className="mt-2 justify-content-center">
+                            <Col>
+                              <FormGroup className="select2-container">
+                                <label className="control-label">
+                                  Submit as
+                                </label>
+                                <div
+                                  style={{
+                                    display: "grid",
+                                    gridTemplateColumns: "repeat(4, 1fr)",
+                                    columnGap: "1rem",
+                                  }}
+                                >
+                                  {list_reply_status.map((value, index) => (
+                                    <ul
+                                      className="sub-menu"
+                                      aria-expanded="true"
+                                      style={{ listStyle: "none" }}
+                                      key={index}
+                                    >
+                                      <li>
+                                        <div className="has-arrow">
+                                          <div className="custom-control custom-checkbox mb-3">
+                                            <input
+                                              type="checkbox"
+                                              className="custom-control-input"
+                                              id="CustomCheck1"
+                                              onChange={() => false}
+                                              checked={
+                                                checkedSubmitAs &&
+                                                checkedSubmitAs[index]
+                                              }
+                                            />
+                                            <label
+                                              className="custom-control-label"
+                                              style={{ color: value.color }}
+                                              onClick={() =>
+                                                onChangeSubmitAs(
+                                                  value.name,
+                                                  index
+                                                )
+                                              }
+                                            >
+                                              <span>{value.name}</span>
+                                            </label>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                ))}
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
+                                      </li>
+                                    </ul>
+                                  ))}
+                                </div>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        )}
                       </Col>
                     </Row>
                   </AvForm>

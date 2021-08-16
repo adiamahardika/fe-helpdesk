@@ -8,15 +8,19 @@ import {
   Col,
   CardTitle,
   Modal,
+  Button,
+  Alert,
 } from "reactstrap";
 import { readCategory } from "../../store/pages/category/actions";
 import { readUser } from "../../store/pages/users/actions";
 import { createTicket } from "../../store/pages/ticket/actions";
+import { readCaptcha } from "../../store/auth/captcha/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
 import { uid } from "uid";
+import { parseDate } from "../../helpers";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -24,7 +28,6 @@ import general_constant from "../../helpers/general_constant.json";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import Dropzone from "react-dropzone";
-import { parseDate } from "../../helpers";
 import CryptoJS from "crypto-js";
 require("dotenv").config();
 
@@ -52,12 +55,14 @@ const AddTicket = (props) => {
   let response_code = props.response_code_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
+  const captcha = props.captcha;
+  const image_captcha = props.image_captcha;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const username = sessionStorage.getItem("username");
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
@@ -82,6 +87,9 @@ const AddTicket = (props) => {
   const [additionalInput1, setAdditionalInput1] = useState(null);
   const [additionalInput2, setAdditionalInput2] = useState(null);
   const [additionalInput3, setAdditionalInput3] = useState(null);
+  const [isAssigningTicket, setIsAssigningTicket] = useState(false);
+  const [captchaValidation, setCaptchaValidation] = useState(null);
+  const [captchaMessage, setCaptchaMessage] = useState(null);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -264,16 +272,17 @@ const AddTicket = (props) => {
   };
 
   const onSubmitCreate = async () => {
-    const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
-    setTicketCode(ticket_code);
-    props.createTicket({
-      ...data,
-      ticketCode: ticket_code,
-      isi: `${
-        additionalInput1 &&
-        additionalInput1.answer.length > 0 &&
-        additionalInput1.additionalInput1 + `: ` + additionalInput1.answer
-      }
+    if (captchaValidation === captcha) {
+      const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
+      setTicketCode(ticket_code);
+      props.createTicket({
+        ...data,
+        ticketCode: ticket_code,
+        isi: `${
+          additionalInput1 &&
+          additionalInput1.answer.length > 0 &&
+          additionalInput1.additionalInput1 + `: ` + additionalInput1.answer
+        }
       ${
         additionalInput2 &&
         additionalInput2.answer.length > 0 &&
@@ -285,9 +294,12 @@ const AddTicket = (props) => {
         additionalInput3.additionalInput3 + `: ` + additionalInput3.answer
       }
       ${data && data.isi}`,
-    });
-    setIsShowSweetAlert(true);
-    setPristine();
+      });
+      setIsShowSweetAlert(true);
+      setPristine();
+    } else {
+      setCaptchaMessage("Captcha Not Match");
+    }
   };
   const ButtonSubmitCreate = () => {
     if (data && Object.keys(data).length >= 17 && validEmail) {
@@ -362,6 +374,9 @@ const AddTicket = (props) => {
     let addTicket = permissions.find(
       (value) => value.code === code_all_permissions.add_ticket
     );
+    let assigningTicket = permissions.find(
+      (value) => value.code === code_all_permissions.assigning_ticket
+    );
     if (addTicket) {
       props.readCategory({
         size: 0,
@@ -370,6 +385,7 @@ const AddTicket = (props) => {
         order_by: "asc",
       });
       props.readUser({ size: 1000, page_no: 0, search: "*" });
+      props.readCaptcha();
       setData({
         totalWaktu: "00:00:00",
         status: "New",
@@ -384,6 +400,7 @@ const AddTicket = (props) => {
         emailNotification: "true",
       });
       setOptionColor("#34c38f");
+      assigningTicket && setIsAssigningTicket(true);
     } else {
       history.push(routes.ticket);
     }
@@ -1168,100 +1185,161 @@ const AddTicket = (props) => {
                         </FormGroup>
                       </Col>
                     </Row>
-                    <Row className="mt-3">
-                      <Col>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">Options</label>
-                          <div className="custom-control custom-checkbox mb-1">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="CustomCheck1"
-                              onChange={() => false}
-                              checked={customchk}
-                            />
-                            <label
-                              className="custom-control-label"
-                              onClick={() => {
-                                setcustomchk(!customchk);
-                                setData({
-                                  ...data,
-                                  emailNotification: (!customchk).toString(),
-                                });
-                              }}
-                            >
-                              Send email notification to the customer
-                            </label>
-                          </div>
-                          <div className="custom-control custom-checkbox">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="CustomCheck1"
-                              onChange={() => false}
-                              checked={customchk2}
-                            />
-                            <label
-                              className="custom-control-label"
-                              onClick={() => {
-                                setcustomchk2(!customchk2);
-                              }}
-                            >
-                              Show the ticket after submission
-                            </label>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row className="mt-3">
-                      <Col md={6}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">Owner</label>
-                          <Row className="align-items-center">
-                            <Col md={5}>
-                              <div
-                                className="mb-1"
-                                style={{ fontSize: "12px" }}
-                              >
-                                Assign this ticket to:
-                              </div>
-                            </Col>
-                            <Col>
-                              <div>
-                                <select
-                                  name="assignedTo"
-                                  className="form-control"
-                                  defaultValue="Unassigned"
-                                  onChange={(event) =>
+                    {isAssigningTicket ? (
+                      <>
+                        <Row className="mt-3">
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <label className="control-label">Options</label>
+                              <div className="custom-control custom-checkbox mb-1">
+                                <input
+                                  type="checkbox"
+                                  className="custom-control-input"
+                                  id="CustomCheck1"
+                                  onChange={() => false}
+                                  checked={customchk}
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  onClick={() => {
+                                    setcustomchk(!customchk);
                                     setData({
                                       ...data,
-                                      assignedTo: event.target.value,
-                                    })
-                                  }
+                                      emailNotification:
+                                        (!customchk).toString(),
+                                    });
+                                  }}
                                 >
-                                  <option value="Unassigned">Unassigned</option>
-                                  {list_user &&
-                                    list_user.map((value, index) => (
-                                      <option
-                                        key={index}
-                                        value={value.name}
-                                        onChange={(event) =>
-                                          setData({
-                                            ...data,
-                                            assignedTo: event.target.value,
-                                          })
-                                        }
-                                      >
-                                        {value.name}
-                                      </option>
-                                    ))}
-                                </select>
+                                  Send email notification to the customer
+                                </label>
                               </div>
-                            </Col>
-                          </Row>
-                        </FormGroup>
+                              <div className="custom-control custom-checkbox">
+                                <input
+                                  type="checkbox"
+                                  className="custom-control-input"
+                                  id="CustomCheck1"
+                                  onChange={() => false}
+                                  checked={customchk2}
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  onClick={() => {
+                                    setcustomchk2(!customchk2);
+                                  }}
+                                >
+                                  Show the ticket after submission
+                                </label>
+                              </div>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row className="mt-3">
+                          <Col md={6}>
+                            <FormGroup className="select2-container">
+                              <label className="control-label">Owner</label>
+                              <Row className="align-items-center">
+                                <Col md={5}>
+                                  <div
+                                    className="mb-1"
+                                    style={{ fontSize: "12px" }}
+                                  >
+                                    Assign this ticket to:
+                                  </div>
+                                </Col>
+                                <Col>
+                                  <div>
+                                    <select
+                                      name="assignedTo"
+                                      className="form-control"
+                                      defaultValue="Unassigned"
+                                      onChange={(event) =>
+                                        setData({
+                                          ...data,
+                                          assignedTo: event.target.value,
+                                        })
+                                      }
+                                    >
+                                      <option value="Unassigned">
+                                        Unassigned
+                                      </option>
+                                      {list_user &&
+                                        list_user.map((value, index) => (
+                                          <option
+                                            key={index}
+                                            value={value.name}
+                                            onChange={(event) =>
+                                              setData({
+                                                ...data,
+                                                assignedTo: event.target.value,
+                                              })
+                                            }
+                                          >
+                                            {value.name}
+                                          </option>
+                                        ))}
+                                    </select>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                      </>
+                    ) : (
+                      <Col>
+                        <Row>
+                          <label className="control-label">
+                            SPAM Prevention:{" "}
+                            <span style={{ color: "red" }}>*</span> Type the
+                            number you see in the picture below.
+                          </label>
+                        </Row>
+                        <Row
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "min-content",
+                          }}
+                        >
+                          {captchaMessage && (
+                            <Alert color="danger">{captchaMessage}</Alert>
+                          )}
+                          <div
+                            className="mb-2"
+                            style={{
+                              display: "grid",
+                              gridAutoFlow: "column",
+                              gridTemplateColumns: "max-content min-content",
+                              columnGap: "1rem",
+                            }}
+                          >
+                            {" "}
+                            <img
+                              src={`data:image/jpeg;base64,${image_captcha}`}
+                            />{" "}
+                            <Button
+                              color="secondary"
+                              style={{ color: "white" }}
+                              onClick={() => props.readCaptcha()}
+                            >
+                              <i className="bx bx-refresh font-size-16 align-middle"></i>
+                            </Button>
+                          </div>
+                          <div>
+                            <AvField
+                              name="captcha"
+                              label=""
+                              className="form-control"
+                              type="text"
+                              errorMessage="This field cannot be empty"
+                              required
+                              onChange={(event) => {
+                                setCaptchaValidation(event.target.value);
+                              }}
+                            />
+                          </div>
+                        </Row>
                       </Col>
-                    </Row>
+                    )}
                   </Col>
                 </Row>
               </AvForm>
@@ -1376,12 +1454,15 @@ const mapStatetoProps = (state) => {
   const { list_category } = state.Category;
   const { list_user } = state.User;
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
+  const { captcha, image_captcha } = state.Captcha;
   return {
     list_category,
     list_user,
     response_code_ticket,
     message_ticket,
     loading,
+    captcha,
+    image_captcha,
   };
 };
 
@@ -1391,6 +1472,7 @@ const mapDispatchToProps = (dispatch) =>
       readCategory,
       createTicket,
       readUser,
+      readCaptcha,
     },
     dispatch
   );
