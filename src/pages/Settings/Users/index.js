@@ -245,12 +245,10 @@ const Users = (props) => {
                   <thead>
                     <tr>
                       <th scope="col">No</th>
-                      <th scope="col">Name</th>
                       <th scope="col">Username</th>
-                      <th scope="col">Email</th>
-                      <th scope="col">Roles</th>
-                      <th scope="col">Gender</th>
-                      <th scope="col">Create At</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Ticketing Role</th>
+                      <th scope="col">Status</th>
                       <th scope="col">Last Update</th>
                       <th scope="col">Action</th>
                     </tr>
@@ -263,9 +261,8 @@ const Users = (props) => {
                             <th scope="row">
                               <div>{index + 1}</div>
                             </th>
-                            <td>{value.name}</td>
                             <td>{value.username}</td>
-                            <td>{value.email}</td>
+                            <td>{value.name}</td>
                             <td>
                               {value.roles.map((rolesValue, index) => {
                                 return (
@@ -277,9 +274,8 @@ const Users = (props) => {
                                 );
                               })}
                             </td>
-                            <td>{value.gender}</td>
-                            <td>{parseFullDate(value.created_at)}</td>
-                            <td>{parseFullDate(value.update_at)}</td>
+                            <td>{value.status}</td>
+                            <td>{parseFullDate(value.updated_at)}</td>
                             <td>
                               <div
                                 style={{
@@ -289,22 +285,7 @@ const Users = (props) => {
                                   gridTemplateColumns: "repeat(2, 1fr)",
                                 }}
                               >
-                                {editUser && <EditButton value={value} />}
-                                {deleteUser &&
-                                  value.username !==
-                                    sessionStorage.getItem("username") && (
-                                    <button
-                                      type="button"
-                                      className="btn btn-danger waves-effect waves-light"
-                                      style={{ minWidth: "max-content" }}
-                                      onClick={() => {
-                                        setSelectedData(value);
-                                        setModalDelete(!modalDelete);
-                                      }}
-                                    >
-                                      <i className="bx bx-trash font-size-16 align-middle"></i>
-                                    </button>
-                                  )}
+                                {editUser && value.username !== username && <EditButton value={value} />}
                               </div>
                             </td>
                           </tr>

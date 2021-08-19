@@ -75,7 +75,6 @@ const Report = (props) => {
   const list_user = props.list_user;
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
-  console.log(list_checked_category);
   const message = props.message_report;
   const response_code = props.response_code_report;
   const permissions = JSON.parse(
@@ -108,7 +107,6 @@ const Report = (props) => {
   ]);
 
   const [data, setData] = useState(null);
-  console.log(data);
   const handleCheckedAllCategory = async () => {
     let array = [];
     await list_category.map((value, index) => {
@@ -189,7 +187,7 @@ const Report = (props) => {
       category: [],
       priority: priorityArray,
       status: statusArray,
-      startDate: "2021-08-01",
+      startDate: today,
       endDate: today,
     };
 
