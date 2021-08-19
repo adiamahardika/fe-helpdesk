@@ -27,7 +27,9 @@ import general_constant from "../../../helpers/general_constant.json";
 function* readCategory({ payload: data }) {
   const response = yield call(getMethod, data);
   if (response.responseCode === general_constant.success_response_code) {
-    yield put(readCategoryFulfilled(response));
+    yield put(
+      readCategoryFulfilled({ ...response, is_check_all: data.is_check_all })
+    );
   } else {
     yield put(readCategoryReject(response));
   }
