@@ -158,85 +158,68 @@ const Users = (props) => {
           <Card>
             <CardBody>
               <Row className="mb-3 d-flex align-items-end">
-                <Col md="10">
-                  <Row className="d-flex align-items-end">
-                    <Col md="2">
-                      <div className="form-group mb-0">
-                        <label>Show Data</label>
-                        <div>
-                          <select
-                            className="form-control"
-                            defaultValue={10}
-                            onChange={(event) => (
+                <Col md="2">
+                  <div className="form-group mb-0">
+                    <label>Show Data</label>
+                    <div>
+                      <select
+                        className="form-control"
+                        defaultValue={10}
+                        onChange={(event) => (
+                          setData({
+                            ...data,
+                            size: parseInt(event.target.value),
+                            page_no: 0,
+                          }),
+                          props.readUser({
+                            ...data,
+                            size: parseInt(event.target.value),
+                            page_no: 0,
+                          })
+                        )}
+                      >
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  </div>
+                </Col>
+                <Col md="10" className="d-flex align-items-end justify-content-end">
+                  <div className="form-group mb-0">
+                    <div>
+                      <input
+                        className="form-control"
+                        type="search"
+                        placeholder="Search..."
+                        onChange={(event) =>
+                          event.target.value === ""
+                            ? (props.readUser({ ...data, search: "*" }),
                               setData({
                                 ...data,
-                                size: parseInt(event.target.value),
-                                page_no: 0,
-                              }),
-                              props.readUser({
+                                search: event.target.value,
+                              }))
+                            : setData({
                                 ...data,
-                                size: parseInt(event.target.value),
-                                page_no: 0,
+                                search: event.target.value,
                               })
-                            )}
-                          >
-                            <option value={10}>10</option>
-                            <option value={25}>25</option>
-                            <option value={50}>50</option>
-                            <option value={100}>100</option>
-                          </select>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col sm="4">
-                      <div className="form-group mb-0">
-                        <div>
-                          <input
-                            className="form-control"
-                            type="search"
-                            placeholder="Search..."
-                            onChange={(event) =>
-                              event.target.value === ""
-                                ? (props.readUser({ ...data, search: "*" }),
-                                  setData({
-                                    ...data,
-                                    search: event.target.value,
-                                  }))
-                                : setData({
-                                    ...data,
-                                    search: event.target.value,
-                                  })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </Col>
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-primary waves-effect waves-light"
-                        onClick={() => {
-                          props.readUser(data);
-                        }}
-                      >
-                        <i className="bx bx-search-alt-2 font-size-16 align-middle mr-2"></i>{" "}
-                        Search
-                      </button>
+                        }
+                      />
                     </div>
-                  </Row>
-                </Col>
-                <Col md="2" className="d-flex justify-content-end">
-                  {addUser && (
-                    <Link to={routes.add_user}>
-                      <button
-                        type="button"
-                        className="btn btn-primary waves-effect waves-light"
-                      >
-                        <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
-                        New
-                      </button>
-                    </Link>
-                  )}
+                  </div>
+                  <div className="d-flex">
+                  <button
+                    type="button"
+                    className="btn btn-primary waves-effect waves-light ml-1"
+                    onClick={() => {
+                      props.readUser(data);
+                    }}
+                  >
+                    <i className="bx bx-search-alt-2 font-size-16 align-middle mr-2"></i>{" "}
+                    Search
+                  </button>
+                </div>
                 </Col>
               </Row>
 
