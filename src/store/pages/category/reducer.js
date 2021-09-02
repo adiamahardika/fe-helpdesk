@@ -38,6 +38,7 @@ const Category = (state = INIT_STATE, action) => {
       return {
         ...state,
         loading: true,
+        list_checked_category: [],
       };
     case READ_CATEGORY_REJECT:
       return {
@@ -48,7 +49,11 @@ const Category = (state = INIT_STATE, action) => {
     case READ_CATEGORY_FULFILLED:
       if (action.payload.content) {
         action.payload.content.map(() => {
-          return state.list_checked_category.push(false);
+          if (action.payload.is_check_all === true) {
+            return state.list_checked_category.push(true);
+          } else {
+            return state.list_checked_category.push(false);
+          }
         });
       }
       return {
@@ -144,13 +149,17 @@ const Category = (state = INIT_STATE, action) => {
       };
     case CHECK_CATEGORY_FULFILLED:
       let new_array = [];
-      if (action.payload !== "") {
-        new_array = [...state.list_checked_category];
-        new_array[action.payload] = !new_array[action.payload];
-      } else {
+      if (action.payload === true) {
+        state.list_category.map(() => {
+          return new_array.push(true);
+        });
+      } else if (action.payload === false) {
         state.list_category.map(() => {
           return new_array.push(false);
         });
+      } else {
+        new_array = [...state.list_checked_category];
+        new_array[action.payload] = !new_array[action.payload];
       }
       return {
         ...state,

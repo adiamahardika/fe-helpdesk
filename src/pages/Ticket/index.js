@@ -96,7 +96,6 @@ const Ticket = (props) => {
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
-  console.log(permissions)
 
   const username = sessionStorage.getItem("username");
   const history = useHistory();
@@ -144,7 +143,7 @@ const Ticket = (props) => {
       props.checkCategory(index);
     } else {
       array = [];
-      props.checkCategory("");
+      props.checkCategory(false);
     }
 
     props.readTicket({ ...data, category: array });

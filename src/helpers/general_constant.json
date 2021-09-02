@@ -4,5 +4,32 @@
   "success_response_code": "00",
   "error_response_code": "01",
   "unauthorized_status": 401,
-  "low_priority":"low"
+  "low_priority": "low",
+  "priority": [
+    {
+      "name": "Low",
+      "color": "#34c38f"
+    },
+    {
+      "name": "Medium",
+      "color": "#f1b44c"
+    },
+    {
+      "name": "High",
+      "color": "#f46a6a"
+    },
+    {
+      "name": "Critical",
+      "color": "#9400d3"
+    }
+  ],
+  "status": [
+    { "name": "New", "color": "#f46a6a" },
+    { "name": "Waiting Reply", "color": "#f1b44c" },
+    { "name": "Replied", "color": "#556ee6" },
+    { "name": "In Progress", "color": "#34c38f" },
+    { "name": "Resolved", "color": "#34c38f" },
+    { "name": "On Hold", "color": "#343a40" },
+    { "name": "Visit", "color": "#343a40" }
+  ]
 }

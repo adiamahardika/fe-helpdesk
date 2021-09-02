@@ -23,6 +23,7 @@ import {
 export const readCategory = (value) => {
   const data = {
     url: `/api/kategori/get/${value.size}/${value.page_no}/${value.sort_by}/${value.order_by}`,
+    is_check_all: value.is_check_all,
   };
   return {
     type: READ_CATEGORY,

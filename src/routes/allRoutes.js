@@ -22,6 +22,7 @@ import Category from "../pages/Category/index";
 import AddCategory from "../pages/Category/add_category";
 import EditCategory from "../pages/Category/edit_category";
 import Profile from "../pages/Profile/index";
+import Report from "../pages/Report/index";
 
 const userRoutes = [
   { path: routes.dashboard, component: Dashboard },
@@ -38,6 +39,7 @@ const userRoutes = [
   { path: routes.add_category, component: AddCategory },
   { path: routes.edit_category, component: EditCategory },
   { path: routes.profile, component: Profile },
+  { path: routes.report, component: Report },
 
   // this route should be at the end of all other routes
   {

@@ -655,7 +655,7 @@ const DetailTicket = (props) => {
         sort_by: "nama",
         order_by: "asc",
       });
-      props.readUser({ size: 1000, page_no: 0, search: "*" });
+      props.readUser({ size: 0, page_no: 0, search: "*" });
       setReplyData({
         kodeTicket: ticketId,
         usernamePengirim: username,
