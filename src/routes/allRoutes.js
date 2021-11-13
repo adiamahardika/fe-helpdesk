@@ -12,6 +12,7 @@ import Dashboard from "../pages/Dashboard/index";
 import Users from "../pages/Settings/Users/index";
 import AddUser from "../pages/Settings/Users/add_user";
 import EditUser from "../pages/Settings/Users/edit_user";
+import DetailUser from "../pages/Settings/Users/detail_user";
 import Role from "../pages/Settings/Role/index";
 import AddRole from "../pages/Settings/Role/add_role";
 import EditRole from "../pages/Settings/Role/edit_role";
@@ -29,6 +30,7 @@ const userRoutes = [
   { path: routes.users, component: Users },
   { path: routes.add_user, component: AddUser },
   { path: routes.edit_user, component: EditUser },
+  { path: routes.detail_user, component: DetailUser },
   { path: routes.role, component: Role },
   { path: routes.add_role, component: AddRole },
   { path: routes.edit_role, component: EditRole },

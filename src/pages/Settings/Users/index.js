@@ -186,7 +186,10 @@ const Users = (props) => {
                     </div>
                   </div>
                 </Col>
-                <Col md="10" className="d-flex align-items-end justify-content-end">
+                <Col
+                  md="10"
+                  className="d-flex align-items-end justify-content-end"
+                >
                   <div className="form-group mb-0">
                     <div>
                       <input
@@ -209,17 +212,17 @@ const Users = (props) => {
                     </div>
                   </div>
                   <div className="d-flex">
-                  <button
-                    type="button"
-                    className="btn btn-primary waves-effect waves-light ml-1"
-                    onClick={() => {
-                      props.readUser(data);
-                    }}
-                  >
-                    <i className="bx bx-search-alt-2 font-size-16 align-middle mr-2"></i>{" "}
-                    Search
-                  </button>
-                </div>
+                    <button
+                      type="button"
+                      className="btn btn-primary waves-effect waves-light ml-1"
+                      onClick={() => {
+                        props.readUser(data);
+                      }}
+                    >
+                      <i className="bx bx-search-alt-2 font-size-16 align-middle mr-2"></i>{" "}
+                      Search
+                    </button>
+                  </div>
                 </Col>
               </Row>
 
@@ -268,7 +271,22 @@ const Users = (props) => {
                                   gridTemplateColumns: "repeat(2, 1fr)",
                                 }}
                               >
-                                {editUser && value.username !== username && <EditButton value={value} />}
+                                {editUser && value.username !== username && (
+                                  <Link
+                                    to={{
+                                      pathname: routes.detail_user,
+                                      search: `?username=${value.username}`,
+                                    }}
+                                  >
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary waves-effect waves-light"
+                                      style={{ minWidth: "max-content" }}
+                                    >
+                                      <i className="bx bx-edit font-size-16 align-middle"></i>
+                                    </button>
+                                  </Link>
+                                )}
                               </div>
                             </td>
                           </tr>

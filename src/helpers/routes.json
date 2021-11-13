@@ -3,6 +3,7 @@
   "users": "/users",
   "add_user": "/add-user",
   "edit_user": "/edit-user",
+  "detail_user": "/detail-user",
   "profile": "/profile",
   "role": "/role",
   "add_role": "/add-role",
