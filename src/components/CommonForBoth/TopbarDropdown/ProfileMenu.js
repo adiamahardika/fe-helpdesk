@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 // Redux
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
@@ -56,5 +56,5 @@ const mapStatetoProps = (state) => {
 };
 
 export default withRouter(
-  connect(mapStatetoProps, {})(withNamespaces()(ProfileMenu))
+  connect(mapStatetoProps, {})(withTranslation()(ProfileMenu))
 );

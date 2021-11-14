@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 
 import { Link } from "react-router-dom";
 
-
 // Import menuDropdown
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu";
 
@@ -14,7 +13,7 @@ import logoLightSvg from "../../assets/images/logo-bri-sm.png";
 import logoDark from "../../assets/images/mygrapari.png";
 
 //i18n
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 // Redux Store
 import {
@@ -134,12 +133,8 @@ const Header = (props) => {
   );
 };
 const mapStatetoProps = (state) => {
-  const {
-    layoutType,
-    showRightSidebar,
-    leftMenu,
-    leftSideBarType,
-  } = state.Layout;
+  const { layoutType, showRightSidebar, leftMenu, leftSideBarType } =
+    state.Layout;
   return { layoutType, showRightSidebar, leftMenu, leftSideBarType };
 };
 
@@ -147,4 +142,4 @@ export default connect(mapStatetoProps, {
   showRightSidebarAction,
   toggleLeftmenu,
   changeSidebarType,
-})(withNamespaces()(Header));
+})(withTranslation()(Header));

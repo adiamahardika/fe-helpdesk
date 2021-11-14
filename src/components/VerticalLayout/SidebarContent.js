@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 //i18n
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import routes from "../../helpers/routes.json";
 import CryptoJS from "crypto-js";
@@ -150,4 +150,4 @@ const SidebarContent = (props) => {
   );
 };
 
-export default withRouter(withNamespaces()(SidebarContent));
+export default withRouter(withTranslation()(SidebarContent));
