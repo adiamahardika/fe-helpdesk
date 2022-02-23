@@ -27,7 +27,7 @@ const AddCategory = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
@@ -129,7 +129,7 @@ const AddCategory = (props) => {
       props.readCategory({
         size: 0,
         page_no: 0,
-        sort_by: "nama",
+        sort_by: "name",
         order_by: "asc",
       });
       setData({
@@ -168,7 +168,7 @@ const AddCategory = (props) => {
                     <Row>
                       <Col md={4}>
                         <AvField
-                          name="nama"
+                          name="name"
                           label="Name"
                           placeholder="ex: Software"
                           type="text"
@@ -240,7 +240,7 @@ const AddCategory = (props) => {
                                               setDirty()
                                             )}
                                           >
-                                            {value.nama}
+                                            {value.name}
                                           </option>
                                         )
                                     )}
@@ -306,7 +306,7 @@ const AddCategory = (props) => {
                                                 setDirty()
                                               )}
                                             >
-                                              {value.nama}
+                                              {value.name}
                                             </option>
                                           )
                                       )}
@@ -356,7 +356,7 @@ const AddCategory = (props) => {
                                                 setDirty()
                                               )}
                                             >
-                                              {value.nama}
+                                              {value.name}
                                             </option>
                                           )
                                       )}

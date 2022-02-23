@@ -61,7 +61,7 @@ const Category = (state = INIT_STATE, action) => {
         list_category: action.payload.content,
         active_page_category: action.payload.page,
         total_pages_category: action.payload.totalPages,
-        message_category: action.payload.description,
+        message_category: action.payload.status.description[0],
         loading: false,
       };
     case READ_DETAIL_CATEGORY:
@@ -82,7 +82,7 @@ const Category = (state = INIT_STATE, action) => {
         parent_1: action.payload.parent1 && action.payload.parent1[0],
         parent_2: action.payload.parent2 && action.payload.parent2[0],
         parent_3: action.payload.parent3 && action.payload.parent3[0],
-        message_category: action.payload.description,
+        message_category: action.payload.status.description[0],
         loading: false,
       };
     case CREATE_CATEGORY:
@@ -93,15 +93,15 @@ const Category = (state = INIT_STATE, action) => {
     case CREATE_CATEGORY_REJECT:
       return {
         ...state,
-        response_code_category: action.payload.responseCode,
-        message_category: action.payload.description,
+        response_code_category: action.payload.status.responseCode,
+        message_category: action.payload.status.description[0],
         loading: true,
       };
     case CREATE_CATEGORY_FULFILLED:
       return {
         ...state,
-        response_code_category: action.payload.responseCode,
-        message_category: action.payload.description,
+        response_code_category: action.payload.status.responseCode,
+        message_category: action.payload.status.description[0],
         loading: false,
       };
     case UPDATE_CATEGORY:
@@ -112,15 +112,15 @@ const Category = (state = INIT_STATE, action) => {
     case UPDATE_CATEGORY_REJECT:
       return {
         ...state,
-        response_code_category: action.payload.responseCode,
-        message_category: action.payload.description,
+        response_code_category: action.payload.status.responseCode,
+        message_category: action.payload.status.description[0],
         loading: true,
       };
     case UPDATE_CATEGORY_FULFILLED:
       return {
         ...state,
-        response_code_category: action.payload.responseCode,
-        message_category: action.payload.description,
+        response_code_category: action.payload.status.responseCode,
+        message_category: action.payload.status.description[0],
         loading: false,
       };
     case DELETE_CATEGORY:
@@ -131,16 +131,16 @@ const Category = (state = INIT_STATE, action) => {
     case DELETE_CATEGORY_REJECT:
       return {
         ...state,
-        response_code_category: action.payload.responseCode,
-        message_category: action.payload.description,
+        response_code_category: action.payload.status.responseCode,
+        message_category: action.payload.status.description[0],
         loading: true,
       };
     case DELETE_CATEGORY_FULFILLED:
       return {
         ...state,
         list_category: action.payload.content,
-        response_code_category: action.payload.responseCode,
-        message_category: action.payload.description,
+        response_code_category: action.payload.status.responseCode,
+        message_category: action.payload.status.description[0],
         loading: false,
       };
     case CHECK_CATEGORY:

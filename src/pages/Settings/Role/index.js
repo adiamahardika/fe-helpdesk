@@ -34,7 +34,7 @@ const Role = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const history = useHistory();
 
   const [addRole, setAddRole] = useState(false);

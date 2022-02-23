@@ -22,7 +22,7 @@ import {
 // Read Category
 export const readCategory = (value) => {
   const data = {
-    url: `/api/kategori/get/${value.size}/${value.page_no}/${value.sort_by}/${value.order_by}`,
+    url: `/v1/category/get/${value.size}/${value.page_no}/${value.sort_by}/${value.order_by}`,
     is_check_all: value.is_check_all,
   };
   return {
@@ -48,7 +48,7 @@ export const readCategoryFulfilled = (data) => {
 // Read Detail Category
 export const readDetailCategory = (value) => {
   const data = {
-    url: `/api/kategori/get-detail/${value}`,
+    url: `/v1/category/get-detail/${value}`,
   };
   return {
     type: READ_DETAIL_CATEGORY,
@@ -74,7 +74,7 @@ export const readDetailCategoryFulfilled = (data) => {
 export const createCategory = (value) => {
   const data = {
     body: value,
-    url: `/api/kategori/add`,
+    url: `/v1/category/add`,
   };
   return {
     type: CREATE_CATEGORY,
@@ -100,7 +100,7 @@ export const createCategoryFulfilled = (data) => {
 export const updateCategory = (value) => {
   const data = {
     body: value,
-    url: `/api/kategori/update`,
+    url: `/v1/category/update`,
   };
   return {
     type: UPDATE_CATEGORY,
@@ -125,8 +125,8 @@ export const updateCategoryFulfilled = (data) => {
 // Delete Category
 export const deleteCategory = (value) => {
   const data = {
-    delete_url: `/api/kategori/delete/${value.id}`,
-    read_url: `/api/kategori/get/${value.size}/${value.page_no}/${value.sort_by}/${value.order_by}`,
+    delete_url: `/v1/category/delete/${value.id}`,
+    read_url: `/v1/category/get/${value.size}/${value.page_no}/${value.sort_by}/${value.order_by}`,
   };
   return {
     type: DELETE_CATEGORY,

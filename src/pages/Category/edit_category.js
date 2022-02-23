@@ -247,7 +247,7 @@ const EditCategory = (props) => {
                     <Row>
                       <Col md={4}>
                         <AvField
-                          name="nama"
+                          name="name"
                           label="Name"
                           placeholder="ex: Admin"
                           type="text"
@@ -256,7 +256,7 @@ const EditCategory = (props) => {
                             required: { value: true },
                             maxLength: { value: 25 },
                           }}
-                          value={detail_category && detail_category.nama}
+                          value={detail_category && detail_category.name}
                           style={{
                             backgroundColor:
                               isEdit === false ? "#ced4da" : "#ffffff",
@@ -336,7 +336,7 @@ const EditCategory = (props) => {
                                                 value.codeLevel
                                             }
                                           >
-                                            {value.nama}
+                                            {value.name}
                                           </option>
                                         )
                                     )}
@@ -383,7 +383,7 @@ const EditCategory = (props) => {
                                         setDirty()
                                       )}
                                     >
-                                      {isEdit ? "-" : parent_2.nama}
+                                      {isEdit ? "-" : parent_2.name}
                                     </option>
                                     {list_category &&
                                       list_category.map(
@@ -411,7 +411,7 @@ const EditCategory = (props) => {
                                                   value.codeLevel
                                               }
                                             >
-                                              {value.nama}
+                                              {value.name}
                                             </option>
                                           )
                                       )}
@@ -451,7 +451,7 @@ const EditCategory = (props) => {
                                         setDirty()
                                       )}
                                     >
-                                      {isEdit ? "-" : parent_3.nama}
+                                      {isEdit ? "-" : parent_3.name}
                                     </option>
                                     {list_category &&
                                       list_category.map(
@@ -473,7 +473,7 @@ const EditCategory = (props) => {
                                                   value.codeLevel
                                               }
                                             >
-                                              {value.nama}
+                                              {value.name}
                                             </option>
                                           )
                                       )}
@@ -631,7 +631,7 @@ const EditCategory = (props) => {
                   props.deleteCategory({
                     size: 0,
                     page_no: 0,
-                    sort_by: "nama",
+                    sort_by: "name",
                     order_by: "asc",
                     id: selectedData,
                   });

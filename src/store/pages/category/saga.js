@@ -26,7 +26,7 @@ import general_constant from "../../../helpers/general_constant.json";
 
 function* readCategory({ payload: data }) {
   const response = yield call(getMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(
       readCategoryFulfilled({ ...response, is_check_all: data.is_check_all })
     );
@@ -36,7 +36,7 @@ function* readCategory({ payload: data }) {
 }
 function* readDetailCategory({ payload: data }) {
   const response = yield call(getMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(readDetailCategoryFulfilled(response));
   } else {
     yield put(readDetailCategoryReject(response));
@@ -44,7 +44,7 @@ function* readDetailCategory({ payload: data }) {
 }
 function* createCategory({ payload: data }) {
   const response = yield call(postMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(createCategoryFulfilled(response));
   } else {
     yield put(createCategoryReject(response));
@@ -52,7 +52,7 @@ function* createCategory({ payload: data }) {
 }
 function* updateCategory({ payload: data }) {
   const response = yield call(putMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(updateCategoryFulfilled(response));
   } else {
     yield put(updateCategoryReject(response));
@@ -60,7 +60,7 @@ function* updateCategory({ payload: data }) {
 }
 function* deleteCategory({ payload: data }) {
   const response = yield call(deleteMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(deleteCategoryFulfilled(response));
   } else {
     yield put(deleteCategoryReject(response));

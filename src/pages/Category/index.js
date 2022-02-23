@@ -31,13 +31,13 @@ const Category = (props) => {
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
-  );;
+  );
   const history = useHistory();
 
   const [data, setData] = useState({
     size: 0,
     page_no: 0,
-    sort_by: "nama",
+    sort_by: "name",
     order_by: "asc",
   });
   const [selectedData, setSelectedData] = useState(null);
@@ -164,7 +164,7 @@ const Category = (props) => {
                                     }}
                                     className=" waves-effect text-right"
                                   >
-                                    {value.nama}
+                                    {value.name}
                                   </Link>
                                 </div>
                               </li>
@@ -203,7 +203,7 @@ const Category = (props) => {
                                                 style={{ color: "#343a40" }}
                                                 className=" waves-effect text-right "
                                               >
-                                                {sl1_value.nama}
+                                                {sl1_value.name}
                                               </Link>
                                             </div>
                                           </li>
@@ -251,7 +251,7 @@ const Category = (props) => {
                                                             }}
                                                             className=" waves-effect text-right "
                                                           >
-                                                            {sl2_value.nama}
+                                                            {sl2_value.name}
                                                           </Link>
                                                         </div>
                                                       </li>
@@ -302,7 +302,7 @@ const Category = (props) => {
                                                                       className=" waves-effect text-right "
                                                                     >
                                                                       {
-                                                                        sl3_value.nama
+                                                                        sl3_value.name
                                                                       }
                                                                     </Link>
                                                                   </div>
