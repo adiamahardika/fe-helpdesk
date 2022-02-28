@@ -16,7 +16,7 @@ import {
 export const createRole = (value) => {
   let data = {
     body: value,
-    url: "/api/role",
+    url: "/v1/role/add",
   };
   return {
     type: CREATE_ROLE,
@@ -40,7 +40,7 @@ export const createRoleFulfilled = (payload) => {
 
 export const readRole = () => {
   let data = {
-    url: "/api/role",
+    url: "/v1/role/get",
   };
   return {
     type: READ_ROLE,
@@ -65,7 +65,7 @@ export const readRoleFulfilled = (data) => {
 export const updateRole = (value) => {
   let data = {
     body: value,
-    url: "/api/role",
+    url: "/v1/role/update",
   };
   return {
     type: UPDATE_ROLE,
@@ -89,8 +89,8 @@ export const updateRoleFulfilled = (payload) => {
 
 export const deleteRole = (id) => {
   let data = {
-    delete_url: `/api/role/${id}`,
-    read_url: `/api/role`,
+    delete_url: `/v1/role/delete/${id}`,
+    read_url: `/v1/role/get`,
   };
   return {
     type: DELETE_ROLE,

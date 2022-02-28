@@ -31,8 +31,8 @@ const Role = (state = INIT_STATE, action) => {
     case READ_ROLE_REJECT:
       return {
         ...state,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         loading: true,
       };
     case READ_ROLE_FULFILLED:
@@ -47,8 +47,8 @@ const Role = (state = INIT_STATE, action) => {
       return {
         ...state,
         list_role: action.payload.listRole,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         loading: true,
       };
     case CREATE_ROLE:
@@ -59,15 +59,15 @@ const Role = (state = INIT_STATE, action) => {
     case CREATE_ROLE_REJECT:
       return {
         ...state,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         loading: true,
       };
     case CREATE_ROLE_FULFILLED:
       return {
         ...state,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         loading: true,
       };
     case UPDATE_ROLE:
@@ -78,15 +78,15 @@ const Role = (state = INIT_STATE, action) => {
     case UPDATE_ROLE_REJECT:
       return {
         ...state,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         loading: true,
       };
     case UPDATE_ROLE_FULFILLED:
       return {
         ...state,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         lading: false,
       };
     case DELETE_ROLE:
@@ -97,15 +97,15 @@ const Role = (state = INIT_STATE, action) => {
     case DELETE_ROLE_REJECT:
       return {
         ...state,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         loading: true,
       };
     case DELETE_ROLE_FULFILLED:
       return {
         ...state,
-        response_code_role: action.payload.responseCode,
-        message_role: action.payload.description,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
         list_role: action.payload.listRole,
         loading: true,
       };

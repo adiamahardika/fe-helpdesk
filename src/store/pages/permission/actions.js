@@ -6,7 +6,7 @@ import {
 
 export const readPermission = () => {
   const data = {
-    url: `/api/permission`,
+    url: `/v1/permission/get`,
   };
   return {
     type: READ_PERMISSION,
