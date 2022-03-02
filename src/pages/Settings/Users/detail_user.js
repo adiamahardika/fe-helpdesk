@@ -32,7 +32,6 @@ const DetailUser = (props) => {
   const message = props.message_user;
   const response_code = props.response_code_user;
   const user_detail = props.user_detail;
-  console.log(user_detail);
   const option_role = props.option_role;
   const history = useHistory();
   const { search } = useLocation();

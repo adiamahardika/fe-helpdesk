@@ -42,16 +42,16 @@ const User = (state = INIT_STATE, action) => {
     case READ_USER_REJECT:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case READ_USER_FULFILLED:
       return {
         ...state,
         list_user: action.payload.listUser,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         active_page_user: action.payload.page,
         total_pages_user: action.payload.totalPages,
         loading: false,
@@ -64,16 +64,16 @@ const User = (state = INIT_STATE, action) => {
     case READ_USER_DETAIL_REJECT:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case READ_USER_DETAIL_FULFILLED:
       return {
         ...state,
         user_detail: action.payload.listUser,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case CREATE_USER:
@@ -84,15 +84,15 @@ const User = (state = INIT_STATE, action) => {
     case CREATE_USER_REJECT:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case CREATE_USER_FULFILLED:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case UPDATE_USER:
@@ -103,15 +103,15 @@ const User = (state = INIT_STATE, action) => {
     case UPDATE_USER_REJECT:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case UPDATE_USER_FULFILLED:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case UPDATE_USER_PROFILE:
@@ -122,15 +122,15 @@ const User = (state = INIT_STATE, action) => {
     case UPDATE_USER_PROFILE_REJECT:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case UPDATE_USER_PROFILE_FULFILLED:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case DELETE_USER:
@@ -141,16 +141,16 @@ const User = (state = INIT_STATE, action) => {
     case DELETE_USER_REJECT:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case DELETE_USER_FULFILLED:
       return {
         ...state,
         list_user: action.payload.listUser,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case RESET_PASSWORD:
@@ -161,15 +161,15 @@ const User = (state = INIT_STATE, action) => {
     case RESET_PASSWORD_REJECT:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     case RESET_PASSWORD_FULFILLED:
       return {
         ...state,
-        response_code_user: action.payload.responseCode,
-        message_user: action.payload.description,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
         loading: false,
       };
     default:

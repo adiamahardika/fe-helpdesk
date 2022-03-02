@@ -30,7 +30,7 @@ import general_constant from "../../../helpers/general_constant.json";
 
 function* readUser({ payload: data }) {
   const response = yield call(getMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(readUserFulfilled(response));
   } else {
     yield put(readUserReject(response));
@@ -38,7 +38,7 @@ function* readUser({ payload: data }) {
 }
 function* readUserDetail({ payload: data }) {
   const response = yield call(getMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(readUserDetailFulfilled(response));
   } else {
     yield put(readUserDetailReject(response));
@@ -46,7 +46,7 @@ function* readUserDetail({ payload: data }) {
 }
 function* createUser({ payload: data }) {
   const response = yield call(postMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(createUserFulfilled(response));
   } else {
     yield put(createUserReject(response));
@@ -54,7 +54,7 @@ function* createUser({ payload: data }) {
 }
 function* updateUser({ payload: data }) {
   const response = yield call(putMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(updateUserFulfilled(response));
   } else {
     yield put(updateUserReject(response));
@@ -62,7 +62,7 @@ function* updateUser({ payload: data }) {
 }
 function* updateUserProfile({ payload: data }) {
   const response = yield call(putMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(updateUserProfileFulfilled(response));
   } else {
     yield put(updateUserProfileReject(response));
@@ -70,7 +70,7 @@ function* updateUserProfile({ payload: data }) {
 }
 function* deleteUser({ payload: data }) {
   const response = yield call(deleteMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(deleteUserFulfilled(response));
   } else {
     yield put(deleteUserReject(response));
@@ -78,7 +78,7 @@ function* deleteUser({ payload: data }) {
 }
 function* resetPassword({ payload: data }) {
   const response = yield call(postMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(resetPasswordFulfilled(response));
   } else {
     yield put(resetPasswordReject(response));

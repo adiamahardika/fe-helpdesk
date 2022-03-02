@@ -261,7 +261,7 @@ const Users = (props) => {
                               })}
                             </td>
                             <td>{value.status}</td>
-                            <td>{parseFullDate(value.updated_at)}</td>
+                            <td>{parseFullDate(value.updatedAt)}</td>
                             <td>
                               <div
                                 style={{

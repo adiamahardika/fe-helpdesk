@@ -49,7 +49,7 @@ export const createUserFulfilled = (payload) => {
 
 export const readUser = (value) => {
   let data = {
-    url: `/api/user/${value.search}/${value.size}/${value.page_no}`,
+    url: `/v1/user/get/${value.search}/${value.size}/${value.page_no}`,
   };
   return {
     type: READ_USER,
@@ -73,7 +73,7 @@ export const readUserFulfilled = (data) => {
 
 export const readUserDetail = (value) => {
   let data = {
-    url: `/api/user/${value}`,
+    url: `/v1/user/get-detail/${value}`,
   };
   return {
     type: READ_USER_DETAIL,
@@ -147,8 +147,8 @@ export const updateUserProfileFulfilled = (payload) => {
 
 export const deleteUser = (value) => {
   let data = {
-    delete_url: `/api/user/${value.id}`,
-    read_url: `/api/user/${value.search}/${value.size}/${value.page_no}`,
+    delete_url: `/v1/user/delete/${value.id}`,
+    read_url: `/v1/user/get/${value.search}/${value.size}/${value.page_no}`,
   };
   return {
     type: DELETE_USER,

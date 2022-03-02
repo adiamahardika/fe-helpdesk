@@ -334,51 +334,6 @@ const Profile = (props) => {
                     value={updateUserData && updateUserData.email}
                     onChange={(event) => onValidateEmail(event.target.value)}
                   />
-                  <FormGroup className="select2-container">
-                    <label className="control-label">Gender</label>
-                    <div>
-                      <select
-                        name="gender"
-                        className="form-control"
-                        defaultValue={updateUserData && updateUserData.gender}
-                        onClick={(event) => (
-                          setUpdateUserData({
-                            ...updateUserData,
-                            gender: event.target.value,
-                          }),
-                          setDirty()
-                        )}
-                      >
-                        <option value="default" disabled>
-                          Select Gender
-                        </option>
-                        <option
-                          value="L"
-                          onClick={(event) => (
-                            setUpdateUserData({
-                              ...updateUserData,
-                              gender: event.target.value,
-                            }),
-                            setDirty()
-                          )}
-                        >
-                          Laki - laki
-                        </option>
-                        <option
-                          value="P"
-                          onClick={(event) => (
-                            setUpdateUserData({
-                              ...updateUserData,
-                              gender: event.target.value,
-                            }),
-                            setDirty()
-                          )}
-                        >
-                          Perempuan
-                        </option>
-                      </select>
-                    </div>
-                  </FormGroup>
                 </AvForm>
               ) : (
                 <div className="table-responsive">
@@ -397,11 +352,6 @@ const Profile = (props) => {
                       <tr>
                         <th>Email</th>
                         <td>{user_detail && user_detail.email}</td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <th>Gender</th>
-                        <td>{user_detail && user_detail.gender}</td>
                         <td></td>
                       </tr>
                       <tr>
