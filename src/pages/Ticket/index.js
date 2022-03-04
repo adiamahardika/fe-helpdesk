@@ -303,7 +303,7 @@ const Ticket = (props) => {
       props.readCategory({
         size: 0,
         page_no: 0,
-        sort_by: "nama",
+        sort_by: "name",
         order_by: "asc",
       });
       setData(item);
@@ -547,7 +547,7 @@ const Ticket = (props) => {
                                             );
                                           }}
                                         >
-                                          <span> {value.nama}</span>
+                                          <span> {value.name}</span>
                                         </label>
                                       </div>
                                     </DropdownItem>

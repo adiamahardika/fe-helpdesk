@@ -202,7 +202,7 @@ const Report = (props) => {
     props.readCategory({
       size: 0,
       page_no: 0,
-      sort_by: "nama",
+      sort_by: "name",
       order_by: "asc",
       is_check_all: true,
     });
@@ -210,6 +210,11 @@ const Report = (props) => {
     setData(item);
     setToday(today);
   }, []);
+
+  useEffect(() => {
+    props.readReport(data);
+  }, [data]);
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -235,7 +240,7 @@ const Report = (props) => {
                           max={today}
                           defaultValue={today}
                           onChange={(event) =>
-                            setData({ ...data, start: event.target.value })
+                            setData({ ...data, startDate: event.target.value })
                           }
                         />
                       </div>
@@ -256,7 +261,7 @@ const Report = (props) => {
                           min={data && data.start}
                           defaultValue={today}
                           onChange={(event) =>
-                            setData({ ...data, end: event.target.value })
+                            setData({ ...data, endDate: event.target.value })
                           }
                         />
                       </div>
@@ -403,7 +408,7 @@ const Report = (props) => {
                                     handleCheckedCategory(value, index);
                                   }}
                                 >
-                                  {value.nama}
+                                  {value.name}
                                 </label>
                               </div>
                             ))}

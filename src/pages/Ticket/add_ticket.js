@@ -381,7 +381,7 @@ const AddTicket = (props) => {
       props.readCategory({
         size: 0,
         page_no: 0,
-        sort_by: "nama",
+        sort_by: "name",
         order_by: "asc",
       });
       props.readUser({ size: 0, page_no: 0, search: "*" });
@@ -592,7 +592,7 @@ const AddTicket = (props) => {
                                               value && JSON.stringify(value)
                                             }
                                           >
-                                            {value.nama}
+                                            {value.name}
                                           </option>
                                         )
                                     )}
@@ -682,7 +682,7 @@ const AddTicket = (props) => {
                                                 value && JSON.stringify(value)
                                               }
                                             >
-                                              {value.nama}
+                                              {value.name}
                                             </option>
                                           )
                                       )}
@@ -772,7 +772,7 @@ const AddTicket = (props) => {
                                                 value && JSON.stringify(value)
                                               }
                                             >
-                                              {value.nama}
+                                              {value.name}
                                             </option>
                                           )
                                       )}
@@ -832,7 +832,7 @@ const AddTicket = (props) => {
                                                 value && JSON.stringify(value)
                                               }
                                             >
-                                              {value.nama}
+                                              {value.name}
                                             </option>
                                           )
                                       )}

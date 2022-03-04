@@ -7,7 +7,7 @@ import {
 export const readReport = (value) => {
   const data = {
     body: value,
-    url: `/api/report/list-ticket`,
+    url: `/v1/report/get`,
   };
   return {
     type: READ_REPORT,

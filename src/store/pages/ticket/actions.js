@@ -19,7 +19,7 @@ import {
 export const readTicket = (value) => {
   const data = {
     body: value,
-    url: `/api/ticketing/list-ticket`,
+    url: `/v1/ticket/get`,
   };
   return {
     type: READ_TICKET,
@@ -68,7 +68,7 @@ export const createTicketFulfilled = (data) => {
 
 export const readDetailTicket = (value) => {
   const data = {
-    url: `/api/ticketing/detail-ticket/${value}`,
+    url: `/v1/ticket/get-detail/${value}`,
   };
   return {
     type: READ_DETAIL_TICKET,

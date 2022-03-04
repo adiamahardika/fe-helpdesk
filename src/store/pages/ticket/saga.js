@@ -1,10 +1,4 @@
-import {
-  all,
-  call,
-  fork,
-  put,
-  takeLatest,
-} from "redux-saga/effects";
+import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 import {
   READ_TICKET,
@@ -30,7 +24,7 @@ import general_constant from "../../../helpers/general_constant.json";
 
 function* readTicket({ payload: data }) {
   const response = yield call(postMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(readTicketFulfilled(response));
   } else {
     yield put(readTicketReject(response));
@@ -38,7 +32,7 @@ function* readTicket({ payload: data }) {
 }
 function* createTicket({ payload: data }) {
   const response = yield call(postMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(createTicketFulfilled(response));
   } else {
     yield put(createTicketReject(response));
@@ -46,7 +40,7 @@ function* createTicket({ payload: data }) {
 }
 function* readDetailTicket({ payload: data }) {
   const response = yield call(getMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     yield put(readDetailTicketFulfilled(response));
   } else {
     yield put(readDetailTicketReject(response));
@@ -54,7 +48,7 @@ function* readDetailTicket({ payload: data }) {
 }
 function* updateTicket({ payload: data }) {
   const response = yield call(putMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     const detailResponse = yield call(getMethod, { url: data.detail_url });
     yield put(updateTicketFulfilled(detailResponse));
   } else {
@@ -63,7 +57,7 @@ function* updateTicket({ payload: data }) {
 }
 function* replyTicket({ payload: data }) {
   const response = yield call(postMethod, data);
-  if (response.responseCode === general_constant.success_response_code) {
+  if (response.status.responseCode === general_constant.success_response_code) {
     const detailResponse = yield call(getMethod, { url: data.detail_url });
     yield put(replyTicketFulfilled(detailResponse));
   } else {

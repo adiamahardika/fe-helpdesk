@@ -21,16 +21,16 @@ const Report = (state = INIT_STATE, action) => {
     case READ_REPORT_REJECT:
       return {
         ...state,
-        response_code_report: action.payload.responseCode,
-        message_report: action.payload.description,
+        response_code_report: action.payload.status.responseCode,
+        message_report: action.payload.status.description[0],
         loading: false,
       };
     case READ_REPORT_FULFILLED:
       return {
         ...state,
         list_report: action.payload.content,
-        response_code_report: action.payload.responseCode,
-        message_report: action.payload.description,
+        response_code_report: action.payload.status.responseCode,
+        message_report: action.payload.status.description[0],
         loading: false,
       };
     default:

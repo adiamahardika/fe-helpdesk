@@ -38,16 +38,16 @@ const Ticket = (state = INIT_STATE, action) => {
     case READ_TICKET_REJECT:
       return {
         ...state,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
     case READ_TICKET_FULFILLED:
       return {
         ...state,
         list_ticket: action.payload.content,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         active_page_ticket: action.payload.page,
         total_pages_ticket: action.payload.totalPages,
         loading: false,
@@ -60,15 +60,15 @@ const Ticket = (state = INIT_STATE, action) => {
     case CREATE_TICKET_REJECT:
       return {
         ...state,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
     case CREATE_TICKET_FULFILLED:
       return {
         ...state,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
 
@@ -80,8 +80,8 @@ const Ticket = (state = INIT_STATE, action) => {
     case READ_DETAIL_TICKET_REJECT:
       return {
         ...state,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
     case READ_DETAIL_TICKET_FULFILLED:
@@ -89,8 +89,8 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         detail_ticket: action.payload.listDetailTicket,
         list_reply_ticket: action.payload.listReplyTicket,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
 
@@ -102,8 +102,8 @@ const Ticket = (state = INIT_STATE, action) => {
     case UPDATE_TICKET_REJECT:
       return {
         ...state,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
     case UPDATE_TICKET_FULFILLED:
@@ -111,8 +111,8 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         detail_ticket: action.payload.listDetailTicket,
         list_reply_ticket: action.payload.listReplyTicket,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
 
@@ -124,8 +124,8 @@ const Ticket = (state = INIT_STATE, action) => {
     case REPLY_TICKET_REJECT:
       return {
         ...state,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
     case REPLY_TICKET_FULFILLED:
@@ -133,8 +133,8 @@ const Ticket = (state = INIT_STATE, action) => {
         ...state,
         detail_ticket: action.payload.listDetailTicket,
         list_reply_ticket: action.payload.listReplyTicket,
-        response_code_ticket: action.payload.responseCode,
-        message_ticket: action.payload.description,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
         loading: false,
       };
     default:

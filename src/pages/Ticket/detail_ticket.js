@@ -652,7 +652,7 @@ const DetailTicket = (props) => {
       props.readCategory({
         size: 0,
         page_no: 0,
-        sort_by: "nama",
+        sort_by: "name",
         order_by: "asc",
       });
       props.readUser({ size: 0, page_no: 0, search: "*" });
@@ -816,7 +816,7 @@ const DetailTicket = (props) => {
                                         value.id.toString()
                                     }
                                   >
-                                    {value.nama}
+                                    {value.name}
                                   </option>
                                 ))}
                             </select>
@@ -850,7 +850,7 @@ const DetailTicket = (props) => {
                               {list_status.map((value, index) => (
                                 <option
                                   key={index}
-                                  value={value && value.nama}
+                                  value={value && value.name}
                                   onChange={(event) =>
                                     onChangeStatus(event.target.value)
                                   }
