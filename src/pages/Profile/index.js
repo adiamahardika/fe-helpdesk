@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, Table, Button, Modal } from "reactstrap";
+import {
+  Container,
+  Card,
+  CardBody,
+  Table,
+  Button,
+  Modal,
+  Row,
+  Col,
+} from "reactstrap";
 import { readPermission } from "../../store/pages/permission/actions";
 import {
   readUserDetail,
   updateUserProfile,
-  updateUser,
   changePassword,
 } from "../../store/pages/users/actions";
 import { connect } from "react-redux";
@@ -109,9 +117,10 @@ const Profile = (props) => {
     delete updateUserData.changepass;
     delete updateUserData.created_at;
     delete updateUserData.update_at;
-    props.updateUser({
-      ...updateUserData,
-    });
+    delete updateUserData.role;
+    delete updateUserData.username;
+
+    props.updateUserProfile(updateUserData);
     setSweeAlertText("Your profile has successfully edited!");
     setIsShowSweetAlert(true);
     delete updateUserData.oldPassword;
@@ -294,39 +303,70 @@ const Profile = (props) => {
               </div>
               {isShowUpdateUser ? (
                 <AvForm>
-                  <AvField
-                    style={{ backgroundColor: "#ced4da" }}
-                    name="username"
-                    label="Username"
-                    value={updateUserData && updateUserData.username}
-                    disabled
-                  />
-                  <AvField
-                    name="name"
-                    label="Name"
-                    placeholder="ex: Admin"
-                    type="text"
-                    errorMessage="Type your name"
-                    validate={{
-                      required: { value: true },
-                      maxLength: { value: 16 },
-                    }}
-                    value={updateUserData && updateUserData.name}
-                    onChange={onChangeUpdateUserData}
-                  />
-                  <AvField
-                    name="email"
-                    label="Email"
-                    placeholder="ex: admin@mail.com"
-                    type="email"
-                    errorMessage="Type valid email"
-                    validate={{
-                      required: { value: true },
-                      maxLength: { value: 40 },
-                    }}
-                    value={updateUserData && updateUserData.email}
-                    onChange={(event) => onValidateEmail(event.target.value)}
-                  />
+                  <Row className="justify-content-center">
+                    <Col md={8}>
+                      <Row>
+                        <Col md={6}>
+                          <AvField
+                            style={{ backgroundColor: "#ced4da" }}
+                            name="username"
+                            label="Username"
+                            value={updateUserData && updateUserData.username}
+                            disabled
+                          />
+                        </Col>
+                        <Col md={6}>
+                          <AvField
+                            name="name"
+                            label="Name"
+                            placeholder="ex: Admin"
+                            type="text"
+                            errorMessage="Type your name"
+                            validate={{
+                              required: { value: true },
+                              maxLength: { value: 16 },
+                            }}
+                            value={updateUserData && updateUserData.name}
+                            onChange={onChangeUpdateUserData}
+                          />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={6}>
+                          <AvField
+                            name="email"
+                            label="Email"
+                            placeholder="ex: admin@mail.com"
+                            type="email"
+                            errorMessage="Type valid email"
+                            validate={{
+                              required: { value: true },
+                              maxLength: { value: 40 },
+                            }}
+                            value={updateUserData && updateUserData.email}
+                            onChange={(event) =>
+                              onValidateEmail(event.target.value)
+                            }
+                          />
+                        </Col>
+                        <Col md={6}>
+                          <AvField
+                            name="phone"
+                            label="Phone"
+                            placeholder="ex: 08123123123"
+                            type="number"
+                            errorMessage="Type your phone"
+                            validate={{
+                              required: { value: true },
+                              maxLength: { value: 14 },
+                            }}
+                            value={updateUserData && updateUserData.phone}
+                            onChange={onChangeUpdateUserData}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
                 </AvForm>
               ) : (
                 <div className="table-responsive">
@@ -345,6 +385,11 @@ const Profile = (props) => {
                       <tr>
                         <th>Email</th>
                         <td>{user_detail && user_detail.email}</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th>Phone</th>
+                        <td>{user_detail && user_detail.phone}</td>
                         <td></td>
                       </tr>
                       <tr>
@@ -563,7 +608,6 @@ const mapDispatchToProps = (dispatch) =>
       readPermission,
       readUserDetail,
       updateUserProfile,
-      updateUser,
       readRole,
       changePassword,
     },

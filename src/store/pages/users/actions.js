@@ -126,7 +126,7 @@ export const updateUserFulfilled = (payload) => {
 export const updateUserProfile = (value) => {
   let data = {
     body: value,
-    url: "/api/user/edit-user-profile",
+    url: "/v1/user/update-profile",
   };
   return {
     type: UPDATE_USER_PROFILE,
