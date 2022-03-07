@@ -8,6 +8,7 @@ import {
   DELETE_USER,
   RESET_PASSWORD,
   UPDATE_USER_PROFILE,
+  CHANGE_PASSWORD,
 } from "./actionTypes";
 import {
   createUserReject,
@@ -24,6 +25,8 @@ import {
   resetPasswordFulfilled,
   updateUserProfileFulfilled,
   updateUserProfileReject,
+  changePasswordFulfilled,
+  changePasswordReject,
 } from "./actions";
 import { postMethod, getMethod, putMethod, deleteMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
@@ -84,6 +87,14 @@ function* resetPassword({ payload: data }) {
     yield put(resetPasswordReject(response));
   }
 }
+function* changePassword({ payload: data }) {
+  const response = yield call(postMethod, data);
+  if (response.status.responseCode === general_constant.success_response_code) {
+    yield put(changePasswordFulfilled(response));
+  } else {
+    yield put(changePasswordReject(response));
+  }
+}
 
 export function* watchReadUser() {
   yield takeLatest(READ_USER, readUser);
@@ -106,6 +117,9 @@ export function* watchDeleteUser() {
 export function* watchResetPassword() {
   yield takeLatest(RESET_PASSWORD, resetPassword);
 }
+export function* watchChangePassword() {
+  yield takeLatest(CHANGE_PASSWORD, changePassword);
+}
 
 function* UserSaga() {
   yield all([
@@ -116,6 +130,7 @@ function* UserSaga() {
     fork(watchUpdateUserProfile),
     fork(watchDeleteUser),
     fork(watchResetPassword),
+    fork(watchChangePassword),
   ]);
 }
 

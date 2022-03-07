@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Card,
-  CardBody,
-  Table,
-  Button,
-  FormGroup,
-  Modal,
-} from "reactstrap";
+import { Container, Card, CardBody, Table, Button, Modal } from "reactstrap";
 import { readPermission } from "../../store/pages/permission/actions";
 import {
   readUserDetail,
   updateUserProfile,
   updateUser,
+  changePassword,
 } from "../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -102,7 +95,7 @@ const Profile = (props) => {
     delete updateUserData.changepass;
     delete updateUserData.created_at;
     delete updateUserData.updated_at;
-    await props.updateUserProfile({
+    await props.changePassword({
       ...updateUserData,
     });
     setSweeAlertText("Password has successfully changed!");
@@ -572,6 +565,7 @@ const mapDispatchToProps = (dispatch) =>
       updateUserProfile,
       updateUser,
       readRole,
+      changePassword,
     },
     dispatch
   );

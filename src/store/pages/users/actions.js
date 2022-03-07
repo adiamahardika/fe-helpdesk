@@ -20,6 +20,9 @@ import {
   UPDATE_USER_PROFILE,
   UPDATE_USER_PROFILE_REJECT,
   UPDATE_USER_PROFILE_FULFILLED,
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_REJECT,
+  CHANGE_PASSWORD_FULFILLED,
 } from "./actionTypes";
 
 export const createUser = (value) => {
@@ -191,6 +194,31 @@ export const resetPasswordReject = (payload) => {
 export const resetPasswordFulfilled = (payload) => {
   return {
     type: RESET_PASSWORD_FULFILLED,
+    payload: payload,
+  };
+};
+
+export const changePassword = (value) => {
+  let data = {
+    body: value,
+    url: "/v1/user/change-pass",
+  };
+  return {
+    type: CHANGE_PASSWORD,
+    payload: data,
+  };
+};
+
+export const changePasswordReject = (payload) => {
+  return {
+    type: CHANGE_PASSWORD_REJECT,
+    payload: payload,
+  };
+};
+
+export const changePasswordFulfilled = (payload) => {
+  return {
+    type: CHANGE_PASSWORD_FULFILLED,
     payload: payload,
   };
 };
