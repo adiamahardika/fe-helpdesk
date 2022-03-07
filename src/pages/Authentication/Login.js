@@ -13,18 +13,40 @@ import CryptoJS from "crypto-js";
 require("dotenv").config();
 
 const Login = (props) => {
-  const captcha = props.captcha;
+  const captcha_id = props.captcha_id;
   const image_captcha = props.image_captcha;
   const [data, setData] = useState(null);
+  const [captchaRequest, setCaptchaRequest] = useState(null);
+  const [verifyCaptchaRequest, setVerifyCaptchaRequest] = useState(null);
   const [message, setMessage] = useState(null);
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const [captchaValidation, setCaptchaValidation] = useState(null);
   const history = useHistory();
 
   let year = new Date().getFullYear();
   const handleValidSubmit = async () => {
-    if (captchaValidation === captcha) {
-      await fetch(`${process.env.REACT_APP_API}/api/auth/signin`, {
+    let valid_captcha = false;
+    await fetch(`${process.env.REACT_APP_API}/v1/captcha/verify`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(verifyCaptchaRequest),
+    })
+      .then((response) => response.json())
+      .then(async (value) => {
+        if (value.is_valid == true) {
+          valid_captcha = true;
+        } else {
+          setMessage(value.status.description[0]);
+          setVerifyCaptchaRequest({
+            ...verifyCaptchaRequest,
+            captchaId: captcha_id,
+            verifyValue: null,
+          });
+          props.readCaptcha(captchaRequest);
+        }
+      });
+    if (valid_captcha) {
+      await fetch(`${process.env.REACT_APP_API}/v1/auth/login`, {
         method: "POST",
         mode: "cors",
         headers: { "Content-Type": "application/json" },
@@ -32,7 +54,9 @@ const Login = (props) => {
       })
         .then((response) => response.json())
         .then((value) => {
-          if (value.responseCode === general_constant.success_response_code) {
+          if (
+            value.status.responseCode === general_constant.success_response_code
+          ) {
             sessionStorage.setItem("accessToken", value.response.accessToken);
             sessionStorage.setItem("username", value.response.username);
             sessionStorage.setItem("name", value.response.name);
@@ -47,17 +71,36 @@ const Login = (props) => {
             sessionStorage.setItem("isAuth", true);
             history.push(routes.ticket);
           } else {
-            setMessage(value.description);
+            props.readCaptcha(captchaRequest);
+            setMessage(value.status.description);
           }
         })
         .catch((error) => console.log(error.message));
-    } else {
-      setMessage("Captcha Not Match");
     }
   };
   useEffect(() => {
+    const request = {
+      captchaId: "",
+      verifyValue: "",
+      driverString: {
+        Height: 50,
+        Width: 210,
+        ShowLineOptions: 0,
+        NoiseCount: 40,
+        Source: "1234567890qwertyuioplkjhgfdsazxcvbnm",
+        Length: 6,
+        Fonts: ["wqy-microhei.ttc"],
+        BgColor: {
+          R: 0,
+          G: 0,
+          B: 0,
+          A: 0,
+        },
+      },
+    };
     sessionStorage.clear();
-    props.readCaptcha();
+    setCaptchaRequest(request);
+    props.readCaptcha(request);
   }, []);
 
   return (
@@ -194,11 +237,11 @@ const Login = (props) => {
                   }}
                 >
                   {" "}
-                  <img src={`data:image/jpeg;base64,${image_captcha}`} />{" "}
+                  <img src={image_captcha} />{" "}
                   <Button
                     color="secondary"
                     style={{ color: "white" }}
-                    onClick={() => props.readCaptcha()}
+                    onClick={() => props.readCaptcha(captchaRequest)}
                   >
                     <i className="bx bx-refresh font-size-16 align-middle"></i>
                   </Button>
@@ -213,7 +256,11 @@ const Login = (props) => {
                     errorMessage="This field cannot be empty"
                     required
                     onChange={(event) => {
-                      setCaptchaValidation(event.target.value);
+                      setVerifyCaptchaRequest({
+                        ...verifyCaptchaRequest,
+                        captchaId: captcha_id,
+                        verifyValue: event.target.value,
+                      });
                     }}
                   />
                 </Row>
@@ -241,8 +288,8 @@ const Login = (props) => {
 
 const mapStatetoProps = (state) => {
   const { error } = state.Login;
-  const { captcha, image_captcha } = state.Captcha;
-  return { error, captcha, image_captcha };
+  const { captcha_id, image_captcha } = state.Captcha;
+  return { error, captcha_id, image_captcha };
 };
 
 const mapDispatchToProps = (dispatch) =>

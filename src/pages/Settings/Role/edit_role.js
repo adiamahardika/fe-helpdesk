@@ -298,8 +298,6 @@ const EditRole = (props) => {
     setPermissionData(newArrayPermissionData);
     setDirty();
   };
-  console.log(data);
-  console.log(permissionData);
   const ButtonSubmitEdit = () => {
     if (
       data &&

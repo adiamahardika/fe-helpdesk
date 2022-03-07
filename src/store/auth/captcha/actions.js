@@ -4,9 +4,10 @@ import {
   READ_CAPTCHA_FULFILLED,
 } from "./actionTypes";
 
-export const readCaptcha = () => {
+export const readCaptcha = (value) => {
   const data = {
-    url: `/captcha/get`,
+    body: value,
+    url: `/v1/captcha/generate`,
   };
   return {
     type: READ_CAPTCHA,

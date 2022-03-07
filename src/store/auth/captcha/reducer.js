@@ -5,8 +5,10 @@ import {
 } from "./actionTypes";
 
 const INIT_STATE = {
-  captcha: null,
+  captcha_id: null,
   image_captcha: null,
+  response_code_captcha: null,
+  message_captcha: null,
   loading: false,
 };
 
@@ -20,13 +22,18 @@ const Captcha = (state = INIT_STATE, action) => {
     case READ_CAPTCHA_REJECT:
       return {
         ...state,
+        response_code_captcha: action.payload.status.responseCode,
+        message_captcha: action.payload.status.description[0],
         loading: true,
       };
     case READ_CAPTCHA_FULFILLED:
       return {
         ...state,
-        captcha: action.payload.hidden,
-        image_captcha: action.payload.image,
+        captcha_id: action.payload.response.captchaId,
+        image_captcha: action.payload.response.image,
+        image_captcha: action.payload.response.image,
+        response_code_captcha: action.payload.status.responseCode,
+        message_captcha: action.payload.status.description[0],
         loading: false,
       };
     default:

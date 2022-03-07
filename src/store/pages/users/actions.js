@@ -25,7 +25,7 @@ import {
 export const createUser = (value) => {
   let data = {
     body: value,
-    url: "/api/user/add",
+    url: "/v1/user/add",
   };
   return {
     type: CREATE_USER,
@@ -98,7 +98,7 @@ export const readUserDetailFulfilled = (data) => {
 export const updateUser = (value) => {
   let data = {
     body: value,
-    url: "/api/user/edituser",
+    url: "/v1/user/update",
   };
   return {
     type: UPDATE_USER,
@@ -173,7 +173,7 @@ export const deleteUserFulfilled = (payload) => {
 export const resetPassword = (value) => {
   let data = {
     body: value,
-    url: "/api/resetpassword",
+    url: "/v1/user/reset-pass",
   };
   return {
     type: RESET_PASSWORD,
