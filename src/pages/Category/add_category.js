@@ -20,7 +20,6 @@ require("dotenv").config();
 const AddCategory = (props) => {
   const message = props.message_category;
   const response_code = props.response_code_category;
-  const loading = props.loading;
   const list_category = props.list_category;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(

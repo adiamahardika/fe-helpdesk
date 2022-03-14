@@ -27,7 +27,7 @@ const ProfileMenu = (props) => {
           <span className="d-none d-xl-inline-block ml-2 mr-1">{name}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
         </DropdownToggle>
-        <DropdownMenu right>
+        <DropdownMenu end>
           <Link
             to={{
               pathname: routes.profile,

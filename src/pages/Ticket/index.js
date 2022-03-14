@@ -24,7 +24,7 @@ import {
 } from "../../store/pages/category/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { parseDateAndMonth, parseFullDate } from "../../helpers/index";
+import { parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -64,23 +64,23 @@ const status = [
   { name: "Resolved", color: "#34c38f" },
   { name: "On Hold", color: "#343a40" },
 ];
-const sortItem = [
-  {
-    name: "Last Update",
-    sort_by: "tglDiperbarui",
-    sort_type: "DESC",
-  },
-  {
-    name: "Last Update",
-    sort_by: "tglDiperbarui",
-    sort_type: "ASC",
-  },
-  {
-    name: "Subject",
-    sort_by: "judul",
-    sort_type: "ASC",
-  },
-];
+// const sortItem = [
+//   {
+//     name: "Last Update",
+//     sort_by: "tglDiperbarui",
+//     sort_type: "DESC",
+//   },
+//   {
+//     name: "Last Update",
+//     sort_by: "tglDiperbarui",
+//     sort_type: "ASC",
+//   },
+//   {
+//     name: "Subject",
+//     sort_by: "judul",
+//     sort_type: "ASC",
+//   },
+// ];
 
 const Ticket = (props) => {
   const list_ticket = props.list_ticket;
@@ -103,7 +103,6 @@ const Ticket = (props) => {
   const [modalDetail, setModalDetail] = useState(false);
   const [activeTabJustify, setactiveTabJustify] = useState("");
   const [category, setCategory] = useState(false);
-  const [showSort, setShowSort] = useState(false);
   const [isAddTicket, setIsAddTicket] = useState(false);
   const [isDetailTicket, setIsDetailTicket] = useState(false);
   const [isViewAllTicket, setIsViewAllTicket] = useState(false);

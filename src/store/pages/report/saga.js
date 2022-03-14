@@ -1,11 +1,4 @@
-import {
-  all,
-  call,
-  fork,
-  takeEvery,
-  put,
-  takeLatest,
-} from "redux-saga/effects";
+import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 import { READ_REPORT } from "./actionTypes";
 import { readReportReject, readReportFulfilled } from "./actions";

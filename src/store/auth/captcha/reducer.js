@@ -31,7 +31,6 @@ const Captcha = (state = INIT_STATE, action) => {
         ...state,
         captcha_id: action.payload.response.captchaId,
         image_captcha: action.payload.response.image,
-        image_captcha: action.payload.response.image,
         response_code_captcha: action.payload.status.responseCode,
         message_captcha: action.payload.status.description[0],
         loading: false,

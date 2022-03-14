@@ -5,7 +5,6 @@ import { withRouter, useHistory } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { readCaptcha } from "../../store/auth/captcha/actions";
 import { bindActionCreators } from "redux";
-import logo from "../../assets/images/mygrapari.png";
 import login2 from "../../assets/images/login-image.svg";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
@@ -33,7 +32,7 @@ const Login = (props) => {
     })
       .then((response) => response.json())
       .then(async (value) => {
-        if (value.is_valid == true) {
+        if (value.is_valid === true) {
           valid_captcha = true;
         } else {
           setMessage(value.status.description[0]);
@@ -42,7 +41,6 @@ const Login = (props) => {
             captchaId: captcha_id,
             verifyValue: null,
           });
-          props.readCaptcha(captchaRequest);
         }
       });
     if (valid_captcha) {
@@ -71,12 +69,12 @@ const Login = (props) => {
             sessionStorage.setItem("isAuth", true);
             history.push(routes.ticket);
           } else {
-            props.readCaptcha(captchaRequest);
             setMessage(value.status.description);
           }
         })
         .catch((error) => console.log(error.message));
     }
+    props.readCaptcha(captchaRequest);
   };
   useEffect(() => {
     const request = {

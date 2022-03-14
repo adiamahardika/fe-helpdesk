@@ -1,10 +1,8 @@
 import React, { Fragment, useRef, useState } from "react";
 import IdleTimer from "react-idle-timer";
-import { useHistory } from "react-router";
 import { Modal } from "reactstrap";
 
 const IdleTimerContainer = (props) => {
-  const history = useHistory();
   const IdleTimerRef = useRef(null);
   const sessionTimeoutRef = useRef(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
