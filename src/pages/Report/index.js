@@ -22,7 +22,7 @@ require("dotenv").config();
 const headers = [
   {
     label: "Ticket Id",
-    key: "kodeTicket",
+    key: "ticketCode",
   },
   {
     label: "Terminal Id",

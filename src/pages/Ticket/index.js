@@ -692,7 +692,7 @@ const Ticket = (props) => {
                                 <th scope="row">
                                   <div>{index + 1}</div>
                                 </th>
-                                <td>{value.kodeTicket}</td>
+                                <td>{value.ticketCode}</td>
                                 <StatusLabel value={value.status} />
                                 <td>
                                   <span
@@ -718,7 +718,7 @@ const Ticket = (props) => {
                                       display: "block",
                                     }}
                                   >
-                                    {value.kategori}
+                                    {value.category}
                                   </span>
                                 </td>
                                 <td>
@@ -755,8 +755,8 @@ const Ticket = (props) => {
                                       <Link
                                         to={{
                                           pathname: routes.detail_ticket,
-                                          search: `?ticketId=${value.kodeTicket}`,
-                                          detailValue: value.kodeTicket,
+                                          search: `?ticketId=${value.ticketCode}`,
+                                          detailValue: value.ticketCode,
                                         }}
                                       >
                                         <button
@@ -854,7 +854,7 @@ const Ticket = (props) => {
               }}
             >
               <h5 className="modal-title mt-0" id="myModalLabel">
-                Ticket {selectedData && selectedData.kodeTicket}
+                Ticket {selectedData && selectedData.ticketCode}
               </h5>
               <PriorityLabel
                 value={selectedData && selectedData.prioritas}
@@ -879,7 +879,7 @@ const Ticket = (props) => {
                   <tbody>
                     <tr>
                       <th>Ticket Id</th>
-                      <td>{selectedData && selectedData.kodeTicket}</td>
+                      <td>{selectedData && selectedData.ticketCode}</td>
                       <td></td>
                     </tr>
                     <tr>
@@ -906,7 +906,7 @@ const Ticket = (props) => {
                     </tr>
                     <tr>
                       <th>Category</th>
-                      <td>{selectedData && selectedData.kategori}</td>
+                      <td>{selectedData && selectedData.category}</td>
                       <td></td>
                     </tr>
                     <tr>

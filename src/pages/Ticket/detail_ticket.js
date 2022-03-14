@@ -238,7 +238,7 @@ const DetailTicket = (props) => {
       prioritas: detail_ticket.prioritas,
       status: detail_ticket.status,
       assignedTo: detail_ticket.assignedTo,
-      kodeTicket: detail_ticket.kodeTicket,
+      ticketCode: detail_ticket.ticketCode,
     });
 
     if (detail_ticket) {
@@ -363,7 +363,7 @@ const DetailTicket = (props) => {
     }
     props.replyTicket({ ...replyData, status: ticket_status });
     setReplyData({
-      kodeTicket: ticketId,
+      ticketCode: ticketId,
       usernamePengirim: username,
       status: "Replied",
       base64FileName1: "",
@@ -511,12 +511,13 @@ const DetailTicket = (props) => {
   const FileIcon = (value) => {
     const split = value && value.value.split(".");
     const file_name = value && value.value.split("/");
+    console.log(value.value);
     let is_image = false;
     let color = null;
     let icon = null;
     let file_type = null;
 
-    switch (split[split.length - 1]) {
+    switch (split[split.length - 1].toLowerCase()) {
       case "pdf":
         color = "#f1b44c";
         icon = "bx bxs-file-pdf";
@@ -599,7 +600,8 @@ const DetailTicket = (props) => {
     }
     return (
       <a
-        href={file_type + value.base64}
+        target="_blank"
+        href={value.value}
         download={file_name[file_name.length - 1]}
         className="flex-column ml-3"
         style={{ maxWidth: "125px" }}
@@ -612,7 +614,7 @@ const DetailTicket = (props) => {
               width: "100%",
             }}
             alt={file_name[file_name.length - 1]}
-            src={file_type + value.base64}
+            src={value.value}
           />
         ) : (
           <>
@@ -657,7 +659,7 @@ const DetailTicket = (props) => {
       });
       props.readUser({ size: 0, page_no: 0, search: "*" });
       setReplyData({
-        kodeTicket: ticketId,
+        ticketCode: ticketId,
         usernamePengirim: username,
         status: "Replied",
         base64FileName1: "",
@@ -682,7 +684,7 @@ const DetailTicket = (props) => {
               <Card>
                 <CardBody>
                   <CardTitle className="mb-2">
-                    Ticket {detail_ticket && detail_ticket.kodeTicket}
+                    Ticket {detail_ticket && detail_ticket.ticketCode}
                   </CardTitle>
                   <Row>
                     <Col md={4}>

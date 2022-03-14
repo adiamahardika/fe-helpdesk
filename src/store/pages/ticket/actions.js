@@ -94,7 +94,7 @@ export const updateTicket = (value) => {
   const data = {
     body: value,
     url: `/api/ticketing/edit-ticket`,
-    detail_url: `/api/ticketing/detail-ticket/${value.kodeTicket}`,
+    detail_url: `/api/ticketing/detail-ticket/${value.ticketCode}`,
   };
   return {
     type: UPDATE_TICKET,
@@ -120,7 +120,7 @@ export const replyTicket = (value) => {
   const data = {
     body: value,
     url: `/api/ticketing/reply-ticketing`,
-    detail_url: `/api/ticketing/detail-ticket/${value.kodeTicket}`,
+    detail_url: `/api/ticketing/detail-ticket/${value.ticketCode}`,
   };
   return {
     type: REPLY_TICKET,
