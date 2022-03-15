@@ -19,7 +19,12 @@ import {
   replyTicketReject,
   replyTicketFulfilled,
 } from "./actions";
-import { getMethod, postMethod, putMethod } from "../../method";
+import {
+  getMethod,
+  postMethod,
+  postMethodWithFile,
+  putMethod,
+} from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
 
 function* readTicket({ payload: data }) {
@@ -56,7 +61,9 @@ function* updateTicket({ payload: data }) {
   }
 }
 function* replyTicket({ payload: data }) {
-  const response = yield call(postMethod, data);
+  console.log("req", data);
+  const response = yield call(postMethodWithFile, data);
+  console.log("res", response);
   if (response.status.responseCode === general_constant.success_response_code) {
     const detailResponse = yield call(getMethod, { url: data.detail_url });
     yield put(replyTicketFulfilled(detailResponse));

@@ -36,6 +36,23 @@ export const postMethod = async (data) => {
   }
 };
 
+export const postMethodWithFile = async (data) => {
+  const response = await fetch(process.env.REACT_APP_API + data.url, {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+    },
+    body: data.body,
+  });
+  if (response.status === general_constant.unauthorized_status) {
+    sessionStorage.clear();
+    window.location.assign("/login");
+  } else {
+    return response.json();
+  }
+};
+
 export const putMethod = async (data) => {
   const response = await fetch(process.env.REACT_APP_API + data.url, {
     method: "PUT",

@@ -94,7 +94,7 @@ export const updateTicket = (value) => {
   const data = {
     body: value,
     url: `/api/ticketing/edit-ticket`,
-    detail_url: `/api/ticketing/detail-ticket/${value.ticketCode}`,
+    detail_url: `/v1/ticket/get-detail/${value.ticketCode}`,
   };
   return {
     type: UPDATE_TICKET,
@@ -116,11 +116,11 @@ export const updateTicketFulfilled = (data) => {
   };
 };
 
-export const replyTicket = (value) => {
+export const replyTicket = (value, ticket_code) => {
   const data = {
     body: value,
-    url: `/api/ticketing/reply-ticketing`,
-    detail_url: `/api/ticketing/detail-ticket/${value.ticketCode}`,
+    url: `/v1/ticket/reply`,
+    detail_url: `/v1/ticket/get-detail/${ticket_code}`,
   };
   return {
     type: REPLY_TICKET,

@@ -23,6 +23,7 @@ import { parseDate, parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
+import { saveAs } from "file-saver";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -200,6 +201,7 @@ const DetailTicket = (props) => {
             setSelectedFiles1(files[0]);
             setReplyData({
               ...replyData,
+              attachment1: files[0],
               base64_1: base64[1],
               base64FileName1: (parseDate(new Date()) + "-" + files[0].name)
                 .split(" ")
@@ -209,6 +211,7 @@ const DetailTicket = (props) => {
             setSelectedFiles2(files[0]);
             setReplyData({
               ...replyData,
+              attachment2: files[0],
               base64_2: base64[1],
               base64FileName2: (parseDate(new Date()) + "-" + files[0].name)
                 .split(" ")
@@ -356,12 +359,22 @@ const DetailTicket = (props) => {
     setShowEditTicket(false);
     setPristine();
   };
-  const onSubmitReply = async () => {
+
+  const onSubmitReply = async (event) => {
+    event.preventDefault();
     let ticket_status = "Replied";
     if (detail_ticket && detail_ticket.usernamePembuat === username) {
       ticket_status = "Waiting Reply";
     }
-    props.replyTicket({ ...replyData, status: ticket_status });
+    let reply_request = new FormData();
+    reply_request.append("ticketCode", ticketId);
+    reply_request.append("isi", replyData.isi);
+    reply_request.append("usernamePengirim", replyData.usernamePengirim);
+    reply_request.append("attachment1", replyData.attachment1);
+    reply_request.append("attachment2", replyData.attachment2);
+    reply_request.append("status", ticket_status);
+    // console.log(reply_request);
+    props.replyTicket(reply_request, ticketId);
     setReplyData({
       ticketCode: ticketId,
       usernamePengirim: username,
@@ -385,8 +398,8 @@ const DetailTicket = (props) => {
         <button
           type="button"
           className="btn btn-primary waves-effect waves-light"
-          onClick={() => {
-            onSubmitReply();
+          onClick={(event) => {
+            onSubmitReply(event);
           }}
         >
           <i className="bx bxs-send font-size-16 align-middle mr-2"></i>
@@ -511,100 +524,84 @@ const DetailTicket = (props) => {
   const FileIcon = (value) => {
     const split = value && value.value.split(".");
     const file_name = value && value.value.split("/");
-    console.log(value.value);
     let is_image = false;
     let color = null;
     let icon = null;
-    let file_type = null;
 
     switch (split[split.length - 1].toLowerCase()) {
       case "pdf":
         color = "#f1b44c";
         icon = "bx bxs-file-pdf";
-        file_type = "data:application/pdf;base64,";
         is_image = false;
         break;
       case "doc":
         color = "#556ee6";
         icon = "bx bxs-file-doc";
-        file_type = "data:application/msword;base64,";
         is_image = false;
         break;
       case "docx":
         color = "#556ee6";
         icon = "bx bxs-file-doc";
-        file_type =
-          "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,";
         is_image = false;
         break;
       case "xlsx":
         color = "#34c38f";
         icon = "bx bxs-file";
-        file_type =
-          "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
         is_image = false;
         break;
       case "xls":
         color = "#34c38f";
         icon = "bx bxs-file";
-        file_type = "data:application/vnd.ms-excel;base64,";
         is_image = false;
         break;
       case "csv":
         color = "#34c38f";
         icon = "bx bxs-file";
-        file_type = "data:application/vnd.ms-excel;base64,";
         is_image = false;
         break;
       case "rar":
         color = "#f46a6a";
         icon = "bx bxs-file-archive";
-        file_type = "data:application/octet-stream;base64,";
         is_image = false;
         break;
       case "zip":
         color = "#f46a6a";
         icon = "bx bxs-file-archive";
-        file_type = "data:application/zip;base64,";
         is_image = false;
         break;
       case "txt":
         color = "#556ee6";
         icon = "bx bxs-file-txt";
-        file_type = "data:text/plain;base64,";
         is_image = false;
         break;
       case "jpeg":
         color = "#34c38f";
         icon = "bx bxs-file-image";
-        file_type = "data:image/jpeg;base64,";
         is_image = true;
         break;
       case "jpg":
         color = "#34c38f";
         icon = "bx bxs-file-image";
-        file_type = "data:image/jpeg;base64,";
         is_image = true;
         break;
       case "png":
         color = "#34c38f";
         icon = "bx bxs-file-image";
-        file_type = "data:image/png;base64,";
         is_image = true;
         break;
       default:
         color = "#34c38f";
         icon = "bx bxs-file";
-        file_type = "data:text/plain;base64,";
         is_image = false;
     }
     return (
-      <a
-        target="_blank"
-        href={value.value}
-        download={file_name[file_name.length - 1]}
-        className="flex-column ml-3"
-        style={{ maxWidth: "125px" }}
+      <button
+        onClick={() => saveAs(value.value, file_name[file_name.length - 1])}
+        style={{
+          maxWidth: "125px",
+          backgroundColor: "transparent",
+          border: "none",
+        }}
       >
         {is_image ? (
           <img
@@ -635,7 +632,7 @@ const DetailTicket = (props) => {
             </div>
           </>
         )}
-      </a>
+      </button>
     );
   };
 
