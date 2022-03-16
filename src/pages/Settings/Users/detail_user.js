@@ -255,13 +255,51 @@ const DetailUser = (props) => {
                       </FormGroup>
                     </Col>
                     <Col md={5}>
-                      <AvField
-                        style={{ backgroundColor: "#ced4da" }}
-                        name="a"
-                        label="Status"
-                        value={updateUserData && updateUserData.status}
-                        disabled
-                      />
+                      <FormGroup className="select2-container">
+                        <label className="control-label">Status</label>
+                        <div>
+                          <select
+                            name="status"
+                            className="form-control"
+                            defaultValue={
+                              updateUserData && updateUserData.status
+                            }
+                            onChange={(event) => (
+                              setUpdateUserData({
+                                ...updateUserData,
+                                status: [event.target.value],
+                              }),
+                              setDirty()
+                            )}
+                          >
+                            {" "}
+                            <option
+                              value="Inactive"
+                              onChange={() => (
+                                setUpdateUserData({
+                                  ...updateUserData,
+                                  status: "Inactive",
+                                }),
+                                setDirty()
+                              )}
+                            >
+                              Inactive
+                            </option>
+                            <option
+                              value="Active"
+                              onChange={() => (
+                                setUpdateUserData({
+                                  ...updateUserData,
+                                  status: "Active",
+                                }),
+                                setDirty()
+                              )}
+                            >
+                              Active
+                            </option>
+                          </select>
+                        </div>
+                      </FormGroup>
                     </Col>
                   </Row>
                 </AvForm>
