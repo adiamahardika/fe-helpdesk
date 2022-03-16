@@ -44,7 +44,7 @@ export const readTicketFulfilled = (data) => {
 export const createTicket = (value) => {
   const data = {
     body: value,
-    url: `/api/ticketing/add-ticket`,
+    url: `/v1/ticket/add`,
   };
   return {
     type: CREATE_TICKET,

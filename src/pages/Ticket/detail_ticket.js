@@ -8,7 +8,6 @@ import {
   CardTitle,
   FormGroup,
   Modal,
-  Button,
 } from "reactstrap";
 import {
   readDetailTicket,
@@ -19,7 +18,7 @@ import { readCategory } from "../../store/pages/category/actions";
 import { readUser } from "../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { parseDate, parseFullDate } from "../../helpers/index";
+import { parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
@@ -202,20 +201,12 @@ const DetailTicket = (props) => {
             setReplyData({
               ...replyData,
               attachment1: files[0],
-              base64_1: base64[1],
-              base64FileName1: (parseDate(new Date()) + "-" + files[0].name)
-                .split(" ")
-                .join("_"),
             });
           } else {
             setSelectedFiles2(files[0]);
             setReplyData({
               ...replyData,
               attachment2: files[0],
-              base64_2: base64[1],
-              base64FileName2: (parseDate(new Date()) + "-" + files[0].name)
-                .split(" ")
-                .join("_"),
             });
           }
         }
@@ -237,7 +228,7 @@ const DetailTicket = (props) => {
   const onShowEdit = () => {
     setShowEditTicket(true);
     setEditData({
-      kategori: detail_ticket.kategori,
+      category: detail_ticket.category,
       prioritas: detail_ticket.prioritas,
       status: detail_ticket.status,
       assignedTo: detail_ticket.assignedTo,
@@ -373,16 +364,11 @@ const DetailTicket = (props) => {
     reply_request.append("attachment1", replyData.attachment1);
     reply_request.append("attachment2", replyData.attachment2);
     reply_request.append("status", ticket_status);
-    // console.log(reply_request);
     props.replyTicket(reply_request, ticketId);
     setReplyData({
       ticketCode: ticketId,
       usernamePengirim: username,
       status: "Replied",
-      base64FileName1: "",
-      base64_1: "",
-      base64FileName2: "",
-      base64_2: "",
     });
     setSelectedFiles1(null);
     setSelectedFiles2(null);
@@ -659,10 +645,6 @@ const DetailTicket = (props) => {
         ticketCode: ticketId,
         usernamePengirim: username,
         status: "Replied",
-        base64FileName1: "",
-        base64_1: "",
-        base64FileName2: "",
-        base64_2: "",
       });
       setCheckedSubmitAs([true, false, false, false]);
       editTicket && setIsEditTicket(true);
@@ -780,12 +762,12 @@ const DetailTicket = (props) => {
                           </label>
                           <div>
                             <select
-                              name="kategori"
+                              name="category"
                               className="form-control"
                               onChange={(event) => (
                                 setEditData({
                                   ...editData,
-                                  kategori: event.target.value,
+                                  category: event.target.value,
                                 }),
                                 setDirty()
                               )}
@@ -805,13 +787,13 @@ const DetailTicket = (props) => {
                                     onChange={(event) => (
                                       setEditData({
                                         ...editData,
-                                        kategori: event.target.value,
+                                        category: event.target.value,
                                       }),
                                       setDirty()
                                     )}
                                     selected={
                                       detail_ticket &&
-                                      detail_ticket.kategori ===
+                                      detail_ticket.category ===
                                         value.id.toString()
                                     }
                                   >
@@ -831,7 +813,7 @@ const DetailTicket = (props) => {
                           </label>
                           <div>
                             <select
-                              name="kategori"
+                              name="category"
                               className="form-control"
                               onChange={(event) =>
                                 onChangeStatus(event.target.value)
@@ -1071,17 +1053,11 @@ const DetailTicket = (props) => {
                             </Col>
                           </Row>
                           <Row className="justify-content-end">
-                            {value.urlAttachment1 !== "Not Found" && (
-                              <FileIcon
-                                value={value.attachment1}
-                                base64={value.urlAttachment1}
-                              />
+                            {value.attachment1 !== "-" && (
+                              <FileIcon value={value.attachment1} />
                             )}
-                            {value.urlAttachment2 !== "Not Found" && (
-                              <FileIcon
-                                value={value.attachment2}
-                                base64={value.urlAttachment2}
-                              />
+                            {value.attachment2 !== "-" && (
+                              <FileIcon value={value.attachment2} />
                             )}
                           </Row>
                         </Col>

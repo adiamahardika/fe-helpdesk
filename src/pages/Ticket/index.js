@@ -332,7 +332,7 @@ const Ticket = (props) => {
                       className="waves-effect waves-light"
                       block
                     >
-                      <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
+                      <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>
                       New
                     </Button>
                   </Link>

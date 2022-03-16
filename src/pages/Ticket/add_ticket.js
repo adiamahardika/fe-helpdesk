@@ -20,7 +20,6 @@ import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
 import { uid } from "uid";
-import { parseDate } from "../../helpers";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -57,6 +56,7 @@ const AddTicket = (props) => {
   const list_user = props.list_user;
   const captcha = props.captcha;
   const image_captcha = props.image_captcha;
+  const loading = props.loading;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
@@ -68,6 +68,7 @@ const AddTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
+  const [captchaRequest, setCaptchaRequest] = useState(null);
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
   const [optionColor, setOptionColor] = useState(null);
@@ -188,24 +189,17 @@ const AddTicket = (props) => {
       });
       reader.onload = () => {
         if (reader.readyState === 2) {
-          let base64 = reader.result.split(",");
           if (number === "1") {
             setSelectedFiles1(files[0]);
             setData({
               ...data,
-              base64_1: base64[1],
-              base64FileName1: (parseDate(new Date()) + "-" + files[0].name)
-                .split(" ")
-                .join("_"),
+              attachment1: files[0],
             });
           } else {
             setSelectedFiles2(files[0]);
             setData({
               ...data,
-              base64_2: base64[1],
-              base64FileName2: (parseDate(new Date()) + "-" + files[0].name)
-                .split(" ")
-                .join("_"),
+              attachment2: files[0],
             });
           }
         }
@@ -275,34 +269,60 @@ const AddTicket = (props) => {
     if (isAssigningTicket || captchaValidation === captcha) {
       const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
       setTicketCode(ticket_code);
-      props.createTicket({
-        ...data,
-        ticketCode: ticket_code,
-        isi: `${
-          additionalInput1 &&
-          additionalInput1.answer.length > 0 &&
-          additionalInput1.additionalInput1 + `: ` + additionalInput1.answer
-        }
-      ${
-        additionalInput2 &&
-        additionalInput2.answer.length > 0 &&
-        additionalInput2.additionalInput2 + `: ` + additionalInput2.answer
-      }
-      ${
-        additionalInput3 &&
-        additionalInput3.answer.length > 0 &&
-        additionalInput3.additionalInput3 + `: ` + additionalInput3.answer
-      }
-      ${data && data.isi}`,
-      });
-      setIsShowSweetAlert(true);
+      const additional1 =
+        additionalInput1 && additionalInput1.answer
+          ? additionalInput1.additionalInput1 +
+            `: ` +
+            additionalInput1.answer +
+            "\n"
+          : "";
+
+      const additional2 =
+        additionalInput2 && additionalInput2.answer
+          ? additionalInput2.additionalInput2 +
+            `: ` +
+            additionalInput2.answer +
+            "\n"
+          : "";
+
+      const additional3 =
+        additionalInput3 && additionalInput3.answer
+          ? additionalInput3.additionalInput3 +
+            `: ` +
+            additionalInput3.answer +
+            "\n"
+          : "";
+
+      const isi = `${additional1} ${additional2} ${additional3} ${
+        data && data.isi
+      }`;
+
+      let request = new FormData();
+      request.append("status", data.status);
+      request.append("prioritas", data.prioritas);
+      request.append("assignedTo", data.assignedTo);
+      request.append("userPembuat", data.userPembuat);
+      data.attachment1 !== null &&
+        request.append("attachment1", data.attachment1);
+      data.attachment1 !== null &&
+        request.append("attachment2", data.attachment2);
+      request.append("ticketCode", ticket_code);
+      request.append("email", data.email);
+      request.append("judul", data.judul);
+      request.append("terminalId", data.terminalId);
+      request.append("category", data.category);
+      request.append("lokasi", data.lokasi);
+      request.append("isi", isi);
+
+      props.createTicket(request);
+      setIsShowSweetAlert(setTimeout(true, 1500));
       setPristine();
     } else {
       setCaptchaMessage("Captcha Not Match");
     }
   };
   const ButtonSubmitCreate = () => {
-    if (data && Object.keys(data).length >= 17 && validEmail) {
+    if (data && Object.keys(data).length >= 13 && validEmail) {
       return (
         <button
           type="button"
@@ -333,7 +353,10 @@ const AddTicket = (props) => {
   const ShowSweetAlert = () => {
     let value = null;
     if (isShowSweetAlert) {
-      if (response_code === general_constant.success_response_code) {
+      if (
+        !loading &&
+        response_code === general_constant.success_response_code
+      ) {
         value = (
           <SweetAlert
             title={general_constant.success_message}
@@ -385,18 +408,35 @@ const AddTicket = (props) => {
         order_by: "asc",
       });
       props.readUser({ size: 0, page_no: 0, search: "*" });
-      props.readCaptcha();
+      const captcha_request = {
+        captchaId: "",
+        verifyValue: "",
+        driverString: {
+          Height: 50,
+          Width: 210,
+          ShowLineOptions: 0,
+          NoiseCount: 40,
+          Source: "1234567890qwertyuioplkjhgfdsazxcvbnm",
+          Length: 6,
+          Fonts: ["wqy-microhei.ttc"],
+          BgColor: {
+            R: 0,
+            G: 0,
+            B: 0,
+            A: 0,
+          },
+        },
+      };
+      props.readCaptcha(captcha_request);
+      setCaptchaRequest(captcha_request);
       setData({
-        totalWaktu: "00:00:00",
         status: "New",
         prioritas: "Low",
         assignedTo: "Unassigned",
         userPembuat: username,
         userPengirim: username,
-        base64FileName1: "",
-        base64_1: "",
-        base64FileName2: "",
-        base64_2: "",
+        attachment1: null,
+        attachment2: null,
         emailNotification: "true",
       });
       setOptionColor("#34c38f");
@@ -533,13 +573,13 @@ const AddTicket = (props) => {
                             <Col md={3}>
                               <div>
                                 <select
-                                  name="kategori"
+                                  name="category"
                                   className="form-control"
                                   defaultValue="0"
                                   onChange={(event) => (
                                     setData({
                                       ...data,
-                                      kategori: JSON.parse(
+                                      category: JSON.parse(
                                         event.target.value
                                       ).id.toString(),
                                     }),
@@ -551,6 +591,7 @@ const AddTicket = (props) => {
                                     setShowSubLevel3(false),
                                     setAdditionalInput1({
                                       ...additionalInput1,
+                                      answer: null,
                                       mainAdditionalInput1: JSON.parse(
                                         event.target.value
                                       ).additionalInput1,
@@ -560,6 +601,7 @@ const AddTicket = (props) => {
                                     }),
                                     setAdditionalInput2({
                                       ...additionalInput2,
+                                      answer: null,
                                       mainAdditionalInput2: JSON.parse(
                                         event.target.value
                                       ).additionalInput2,
@@ -569,6 +611,7 @@ const AddTicket = (props) => {
                                     }),
                                     setAdditionalInput3({
                                       ...additionalInput3,
+                                      answer: null,
                                       mainAdditionalInput3: JSON.parse(
                                         event.target.value
                                       ).additionalInput3,
@@ -603,13 +646,13 @@ const AddTicket = (props) => {
                               <Col md={3}>
                                 <div>
                                   <select
-                                    name="kategori"
+                                    name="category"
                                     className="form-control"
                                     defaultValue={mainValue}
                                     onChange={(event) => (
                                       setData({
                                         ...data,
-                                        kategori: JSON.parse(
+                                        category: JSON.parse(
                                           event.target.value
                                         ).id.toString(),
                                       }),
@@ -620,6 +663,7 @@ const AddTicket = (props) => {
                                         ? (setShowSubLevel2(false),
                                           setAdditionalInput1({
                                             ...additionalInput1,
+                                            answer: null,
                                             sl1AdditionalInput1:
                                               additionalInput1.mainAdditionalInput1,
                                             additionalInput1:
@@ -627,6 +671,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput2({
                                             ...additionalInput2,
+                                            answer: null,
                                             sl1AdditionalInput2:
                                               additionalInput2.mainAdditionalInput2,
                                             additionalInput2:
@@ -634,6 +679,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput3({
                                             ...additionalInput3,
+                                            answer: null,
                                             sl1AdditionalInput3:
                                               additionalInput3.mainAdditionalInput3,
                                             additionalInput3:
@@ -642,6 +688,7 @@ const AddTicket = (props) => {
                                         : (setShowSubLevel2(true),
                                           setAdditionalInput1({
                                             ...additionalInput1,
+                                            answer: null,
                                             sl1AdditionalInput1: JSON.parse(
                                               event.target.value
                                             ).additionalInput1,
@@ -651,6 +698,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput2({
                                             ...additionalInput2,
+                                            answer: null,
                                             sl1AdditionalInput2: JSON.parse(
                                               event.target.value
                                             ).additionalInput2,
@@ -660,6 +708,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput3({
                                             ...additionalInput3,
+                                            answer: null,
                                             sl1AdditionalInput3: JSON.parse(
                                               event.target.value
                                             ).additionalInput3,
@@ -694,13 +743,13 @@ const AddTicket = (props) => {
                               <Col md={3}>
                                 <div>
                                   <select
-                                    name="kategori"
+                                    name="category"
                                     className="form-control"
                                     defaultValue={subLevel1Value}
                                     onChange={(event) => (
                                       setData({
                                         ...data,
-                                        kategori: JSON.parse(
+                                        category: JSON.parse(
                                           event.target.value
                                         ).id.toString(),
                                       }),
@@ -711,6 +760,7 @@ const AddTicket = (props) => {
                                         ? (setShowSubLevel3(false),
                                           setAdditionalInput1({
                                             ...additionalInput1,
+                                            answer: null,
                                             sl2AdditionalInput1:
                                               additionalInput1.sl1AdditionalInput1,
                                             additionalInput1:
@@ -718,6 +768,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput2({
                                             ...additionalInput2,
+                                            answer: null,
                                             sl2AdditionalInput2:
                                               additionalInput2.sl1AdditionalInput2,
                                             additionalInput2:
@@ -725,6 +776,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput3({
                                             ...additionalInput3,
+                                            answer: null,
                                             sl2AdditionalInput3:
                                               additionalInput3.sl1AdditionalInput3,
                                             additionalInput3:
@@ -733,6 +785,7 @@ const AddTicket = (props) => {
                                         : (setShowSubLevel3(true),
                                           setAdditionalInput1({
                                             ...additionalInput1,
+                                            answer: null,
                                             sl2AdditionalInput1: JSON.parse(
                                               event.target.value
                                             ).additionalInput1,
@@ -742,6 +795,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput2({
                                             ...additionalInput2,
+                                            answer: null,
                                             sl2AdditionalInput2: JSON.parse(
                                               event.target.value
                                             ).additionalInput2,
@@ -751,6 +805,7 @@ const AddTicket = (props) => {
                                           }),
                                           setAdditionalInput3({
                                             ...additionalInput3,
+                                            answer: null,
                                             sl2AdditionalInput3: JSON.parse(
                                               event.target.value
                                             ).additionalInput3,
@@ -784,18 +839,19 @@ const AddTicket = (props) => {
                               <Col md={3}>
                                 <div>
                                   <select
-                                    name="kategori"
+                                    name="category"
                                     className="form-control"
                                     defaultValue={subLevel2Value}
                                     onChange={(event) => (
                                       setData({
                                         ...data,
-                                        kategori: JSON.parse(
+                                        category: JSON.parse(
                                           event.target.value
                                         ).id.toString(),
                                       }),
                                       setAdditionalInput1({
                                         ...additionalInput1,
+                                        answer: null,
                                         additionalInput1:
                                           event.target.value === subLevel2Value
                                             ? additionalInput1.sl2AdditionalInput1
@@ -804,6 +860,7 @@ const AddTicket = (props) => {
                                       }),
                                       setAdditionalInput2({
                                         ...additionalInput2,
+                                        answer: null,
                                         additionalInput2:
                                           event.target.value === subLevel2Value
                                             ? additionalInput2.sl2AdditionalInput2
@@ -812,6 +869,7 @@ const AddTicket = (props) => {
                                       }),
                                       setAdditionalInput3({
                                         ...additionalInput3,
+                                        answer: null,
                                         additionalInput3:
                                           event.target.value === subLevel2Value
                                             ? additionalInput3.sl2AdditionalInput3
@@ -1313,13 +1371,11 @@ const AddTicket = (props) => {
                             }}
                           >
                             {" "}
-                            <img
-                              src={`data:image/jpeg;base64,${image_captcha}`}
-                            />{" "}
+                            <img src={image_captcha} />{" "}
                             <Button
                               color="secondary"
                               style={{ color: "white" }}
-                              onClick={() => props.readCaptcha()}
+                              onClick={() => props.readCaptcha(captchaRequest)}
                             >
                               <i className="bx bx-refresh font-size-16 align-middle"></i>
                             </Button>

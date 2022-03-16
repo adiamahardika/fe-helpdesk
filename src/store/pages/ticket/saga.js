@@ -36,7 +36,7 @@ function* readTicket({ payload: data }) {
   }
 }
 function* createTicket({ payload: data }) {
-  const response = yield call(postMethod, data);
+  const response = yield call(postMethodWithFile, data);
   if (response.status.responseCode === general_constant.success_response_code) {
     yield put(createTicketFulfilled(response));
   } else {
@@ -61,9 +61,7 @@ function* updateTicket({ payload: data }) {
   }
 }
 function* replyTicket({ payload: data }) {
-  console.log("req", data);
   const response = yield call(postMethodWithFile, data);
-  console.log("res", response);
   if (response.status.responseCode === general_constant.success_response_code) {
     const detailResponse = yield call(getMethod, { url: data.detail_url });
     yield put(replyTicketFulfilled(detailResponse));

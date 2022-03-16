@@ -50,7 +50,7 @@ const headers = [
   },
   {
     label: "Category",
-    key: "kategori",
+    key: "category",
   },
   {
     label: "Status",
