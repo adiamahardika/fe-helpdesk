@@ -75,10 +75,9 @@ const AddUser = (props) => {
     props.createUser({
       ...data,
       password: generatePassword,
-      role: [data.role],
     });
     setPassword(generatePassword);
-    setIsShowSweetAlert(true);
+    setIsShowSweetAlert(setTimeout(1500, true));
     setPristine();
   };
   const ButtonSubmitCreate = () => {
@@ -118,7 +117,7 @@ const AddUser = (props) => {
 
   const ShowSweetAlert = () => {
     let value = null;
-    if (isShowSweetAlert && loading === true) {
+    if (isShowSweetAlert) {
       if (response_code === general_constant.success_response_code) {
         value = (
           <SweetAlert
@@ -226,7 +225,7 @@ const AddUser = (props) => {
                       </Col>
                     </Row>{" "}
                     <Row>
-                      <Col md={6}>
+                      <Col md={5}>
                         <AvField
                           name="email"
                           label="Email"
@@ -242,52 +241,19 @@ const AddUser = (props) => {
                           }
                         />
                       </Col>
-                      <Col md={3}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">Gender</label>
-                          <div>
-                            <select
-                              name="gender"
-                              className="form-control"
-                              defaultValue=""
-                              onChange={(event) => (
-                                setData({
-                                  ...data,
-                                  gender: event.target.value,
-                                }),
-                                setDirty()
-                              )}
-                            >
-                              <option value="" disabled>
-                                Select Gender
-                              </option>
-                              <option
-                                value="L"
-                                onChange={(event) => (
-                                  setData({
-                                    ...data,
-                                    gender: event.target.value,
-                                  }),
-                                  setDirty()
-                                )}
-                              >
-                                Laki - laki
-                              </option>
-                              <option
-                                value="P"
-                                onChange={(event) => (
-                                  setData({
-                                    ...data,
-                                    gender: event.target.value,
-                                  }),
-                                  setDirty()
-                                )}
-                              >
-                                Perempuan
-                              </option>
-                            </select>
-                          </div>
-                        </FormGroup>
+                      <Col md={4}>
+                        <AvField
+                          name="phone"
+                          label="Phone"
+                          placeholder=""
+                          type="text"
+                          errorMessage="Enter Phone"
+                          validate={{
+                            required: { value: true },
+                            maxLength: { value: 14 },
+                          }}
+                          onChange={onChangeData}
+                        />
                       </Col>
                       <Col md={3}>
                         {editUserRole && (
@@ -313,7 +279,7 @@ const AddUser = (props) => {
                                   list_role.map((value, index) => (
                                     <option
                                       key={index}
-                                      value={value && value.name}
+                                      value={value && value.id}
                                       onChange={(event) => (
                                         setData({
                                           ...data,

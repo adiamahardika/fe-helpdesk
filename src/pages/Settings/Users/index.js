@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, Modal, Table, Col, Row } from "reactstrap";
+import {
+  Container,
+  Card,
+  CardBody,
+  Modal,
+  Table,
+  Col,
+  Row,
+  Button,
+} from "reactstrap";
 import { readUser, deleteUser } from "../../../store/pages/users/actions";
 import { readRole } from "../../../store/pages/role/actions";
 import { connect } from "react-redux";
@@ -187,7 +196,7 @@ const Users = (props) => {
                   </div>
                 </Col>
                 <Col
-                  md="10"
+                  md="8"
                   className="d-flex align-items-end justify-content-end"
                 >
                   <div className="form-group mb-0">
@@ -223,6 +232,21 @@ const Users = (props) => {
                       Search
                     </button>
                   </div>
+                </Col>
+                <Col md="2" className="align-items-end justify-content-end">
+                  {addUser && (
+                    <Link to={routes.add_user}>
+                      <Button
+                        type="button"
+                        color="primary"
+                        className="waves-effect waves-light"
+                        block
+                      >
+                        <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>
+                        New
+                      </Button>
+                    </Link>
+                  )}
                 </Col>
               </Row>
 
@@ -280,10 +304,10 @@ const Users = (props) => {
                                   >
                                     <button
                                       type="button"
-                                      className="btn btn-primary waves-effect waves-light"
+                                      className="btn btn-info waves-effect waves-light"
                                       style={{ minWidth: "max-content" }}
                                     >
-                                      <i className="bx bx-edit font-size-16 align-middle"></i>
+                                      <i className="bx bx-show-alt font-size-16 align-middle"></i>
                                     </button>
                                   </Link>
                                 )}
