@@ -93,7 +93,7 @@ export const readDetailTicketFulfilled = (data) => {
 export const updateTicket = (value) => {
   const data = {
     body: value,
-    url: `/api/ticketing/edit-ticket`,
+    url: `/v1/ticket/update`,
     detail_url: `/v1/ticket/get-detail/${value.ticketCode}`,
   };
   return {

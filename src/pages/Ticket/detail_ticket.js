@@ -69,6 +69,7 @@ const list_priority = [
 ];
 const DetailTicket = (props) => {
   const detail_ticket = props.detail_ticket;
+  console.log(detail_ticket);
   const list_reply_ticket = props.list_reply_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
@@ -228,11 +229,15 @@ const DetailTicket = (props) => {
   const onShowEdit = () => {
     setShowEditTicket(true);
     setEditData({
-      category: detail_ticket.category,
+      judul: detail_ticket.judul,
       prioritas: detail_ticket.prioritas,
       status: detail_ticket.status,
-      assignedTo: detail_ticket.assignedTo,
       ticketCode: detail_ticket.ticketCode,
+      category: detail_ticket.category,
+      lokasi: detail_ticket.lokasi,
+      terminalId: detail_ticket.terminalId,
+      email: detail_ticket.email,
+      assignedTo: detail_ticket.assignedTo,
     });
 
     if (detail_ticket) {
@@ -346,7 +351,7 @@ const DetailTicket = (props) => {
   };
   const onSubmitUpdate = async () => {
     props.updateTicket(editData);
-    setIsShowSweetAlert(true);
+    setIsShowSweetAlert(setTimeout(true, 1500));
     setShowEditTicket(false);
     setPristine();
   };
