@@ -11,7 +11,11 @@ import {
   Col,
 } from "reactstrap";
 import { readPermission } from "../../../store/pages/permission/actions";
-import { readUserDetail, updateUser } from "../../../store/pages/users/actions";
+import {
+  readUserDetail,
+  updateUser,
+  resetPassword,
+} from "../../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
@@ -32,7 +36,7 @@ const DetailUser = (props) => {
   const message = props.message_user;
   const response_code = props.response_code_user;
   const user_detail = props.user_detail;
-  const option_role = props.option_role;
+  const list_role = props.list_role;
   const history = useHistory();
   const { search } = useLocation();
   const { username } = queryString.parse(search);
@@ -45,10 +49,38 @@ const DetailUser = (props) => {
   );
 
   const [updateUserData, setUpdateUserData] = useState(null);
+  const [validEmail, setValidEmail] = useState(true);
+  const [resetPassword, setResetPassword] = useState(false);
+  const [modalResetPassword, setModalResetPassword] = useState(false);
   const [isShowUpdateUser, setIsShowUpdateUser] = useState(false);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [sweetAlertText, setSweeAlertText] = useState(null);
 
+  const removeBodyCss = () => {
+    document.body.classList.add("no_padding");
+  };
+
+  const onChangeData = (event) => {
+    setUpdateUserData({
+      ...updateUserData,
+      [event.target.name]: event.target.value,
+    });
+    setDirty();
+  };
+  const onValidateEmail = (email) => {
+    let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setUpdateUserData({
+      ...updateUserData,
+      email: email,
+    });
+    setDirty();
+    if (regex.test(email) === true) {
+      setValidEmail(true);
+    } else {
+      setValidEmail(false);
+    }
+  };
+  console.log(updateUserData);
   const onSubmitUpdateUser = async () => {
     delete updateUserData.roles;
     delete updateUserData.password;
@@ -60,19 +92,29 @@ const DetailUser = (props) => {
     });
     setSweeAlertText("Your profile has successfully edited!");
     setIsShowSweetAlert(true);
-    delete updateUserData.oldPassword;
-    delete updateUserData.newPassword;
     setPristine();
+  };
+  const onSubmitResetPassword = async () => {
+    let password = Math.random().toString(20).substr(2, 8);
+
+    await props.resetPassword({
+      username: username,
+      newPassword: password,
+    });
+    setSweeAlertText(`The user new password is ${password}`);
+    setModalResetPassword(!modalResetPassword);
+    setIsShowSweetAlert(true);
+    removeBodyCss();
   };
 
   const ShowEditUser = () => {
     if (updateUserData === null) {
-      let role_name = null;
-      user_detail.roles.map((value) => (role_name = value.name));
+      let role_id = null;
+      user_detail.roles.map((value) => (role_id = value.id));
       setUpdateUserData(
         user_detail && {
           ...user_detail,
-          role: [role_name],
+          role: role_id.toString(),
         }
       );
     }
@@ -91,8 +133,6 @@ const DetailUser = (props) => {
               setIsShowSweetAlert(false);
               setIsShowUpdateUser(false);
               props.readUserDetail(username);
-              sessionStorage.setItem("name", updateUserData.name);
-              sessionStorage.setItem("email", updateUserData.email);
               setUpdateUserData(null);
               setPristine();
               history.push(routes.detail_user + "?username=" + username);
@@ -123,7 +163,8 @@ const DetailUser = (props) => {
     if (
       updateUserData &&
       Object.keys(updateUserData).length >= 7 &&
-      Object.values(updateUserData).every((value) => value !== "")
+      Object.values(updateUserData).every((value) => value !== "") &&
+      validEmail === true
     ) {
       return (
         <button
@@ -154,7 +195,12 @@ const DetailUser = (props) => {
     let isEditUser = permissions.find(
       (value) => value.code === code_all_permissions.edit_user
     );
+    let isResetPassword = permissions.find(
+      (value) => value.code === code_all_permissions.reset_password
+    );
+
     if (isEditUser && username !== sessionStorage.getItem("username")) {
+      isResetPassword && setResetPassword(true);
       props.readUserDetail(username);
       props.readPermission();
       props.readRole();
@@ -178,6 +224,19 @@ const DetailUser = (props) => {
                   columnGap: "8px",
                 }}
               >
+                {!isShowUpdateUser && resetPassword && (
+                  <button
+                    type="button"
+                    className="btn btn-danger waves-effect waves-light"
+                    style={{ minWidth: "max-content" }}
+                    onClick={() => {
+                      setModalResetPassword(!modalResetPassword);
+                    }}
+                  >
+                    <i className="bx bx-reset font-size-16 align-middle"></i>{" "}
+                    Reset Password
+                  </button>
+                )}
                 {isShowUpdateUser ? (
                   <ButtonSubmitUpdateUser />
                 ) : (
@@ -194,112 +253,103 @@ const DetailUser = (props) => {
               {isShowUpdateUser ? (
                 <AvForm>
                   <Row className="d-flex justify-content-center">
-                    <Col md={4}>
-                      <AvField
-                        style={{ backgroundColor: "#ced4da" }}
-                        name="username"
-                        label="Username"
-                        value={updateUserData && updateUserData.username}
-                        disabled
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <AvField
-                        style={{ backgroundColor: "#ced4da" }}
-                        name="name"
-                        label="Name"
-                        value={updateUserData && updateUserData.username}
-                        disabled
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="d-flex justify-content-center">
-                    <Col md={3}>
-                      <FormGroup className="select2-container">
-                        <label className="control-label">Role</label>
-                        <div>
-                          <select
-                            name="role"
-                            className="form-control"
-                            defaultValue={
-                              updateUserData && updateUserData.role[0]
+                    <Col md={8}>
+                      <Row>
+                        <Col md={6}>
+                          <AvField
+                            style={{ backgroundColor: "#ced4da" }}
+                            name="username"
+                            label="Username"
+                            value={updateUserData && updateUserData.username}
+                            disabled
+                          />
+                        </Col>
+                        <Col md={6}>
+                          <AvField
+                            name="name"
+                            label="Name"
+                            value={updateUserData && updateUserData.name}
+                            placeholder="ex: Admin"
+                            type="text"
+                            errorMessage="Enter Name"
+                            validate={{
+                              required: { value: true },
+                              maxLength: { value: 30 },
+                            }}
+                            onChange={onChangeData}
+                          />
+                        </Col>
+                      </Row>
+                      <Row className="d-flex justify-content-center">
+                        <Col md={5}>
+                          <AvField
+                            name="email"
+                            label="Email"
+                            value={updateUserData && updateUserData.email}
+                            disabplaceholder="ex: admin@mail.com"
+                            type="email"
+                            errorMessage="Enter valid Email"
+                            validate={{
+                              required: { value: true },
+                              maxLength: { value: 40 },
+                            }}
+                            onChange={(event) =>
+                              onValidateEmail(event.target.value)
                             }
-                            onChange={(event) => (
-                              setUpdateUserData({
-                                ...updateUserData,
-                                role: [event.target.value],
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            <option value="" disabled>
-                              Select Role
-                            </option>
-                            {option_role.map((value, index) => (
-                              <option
-                                key={index}
-                                value={value && value.value}
+                          />
+                        </Col>
+                        <Col md={4}>
+                          <AvField
+                            name="phone"
+                            label="Phone"
+                            value={updateUserData && updateUserData.phone}
+                            type="text"
+                            errorMessage="Enter Phone"
+                            validate={{
+                              required: { value: true },
+                              maxLength: { value: 14 },
+                            }}
+                            onChange={onChangeData}
+                          />
+                        </Col>
+                        <Col md={3}>
+                          <FormGroup className="select2-container">
+                            <label className="control-label">Role</label>
+                            <div>
+                              <select
+                                name="role"
+                                className="form-control"
+                                defaultValue={
+                                  updateUserData && updateUserData.role
+                                }
                                 onChange={(event) => (
                                   setUpdateUserData({
                                     ...updateUserData,
-                                    role: [event.target.value],
+                                    role: event.target.value.toString(),
                                   }),
                                   setDirty()
                                 )}
                               >
-                                {value.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </FormGroup>
-                    </Col>
-                    <Col md={5}>
-                      <FormGroup className="select2-container">
-                        <label className="control-label">Status</label>
-                        <div>
-                          <select
-                            name="status"
-                            className="form-control"
-                            defaultValue={
-                              updateUserData && updateUserData.status
-                            }
-                            onChange={(event) => (
-                              setUpdateUserData({
-                                ...updateUserData,
-                                status: [event.target.value],
-                              }),
-                              setDirty()
-                            )}
-                          >
-                            {" "}
-                            <option
-                              value="Inactive"
-                              onChange={() => (
-                                setUpdateUserData({
-                                  ...updateUserData,
-                                  status: "Inactive",
-                                }),
-                                setDirty()
-                              )}
-                            >
-                              Inactive
-                            </option>
-                            <option
-                              value="Active"
-                              onChange={() => (
-                                setUpdateUserData({
-                                  ...updateUserData,
-                                  status: "Active",
-                                }),
-                                setDirty()
-                              )}
-                            >
-                              Active
-                            </option>
-                          </select>
-                        </div>
-                      </FormGroup>
+                                {list_role.map((value, index) => (
+                                  <option
+                                    key={index}
+                                    value={value && value.id}
+                                    onChange={(event) => (
+                                      setUpdateUserData({
+                                        ...updateUserData,
+                                        role: event.target.value.toString(),
+                                      }),
+                                      setDirty()
+                                    )}
+                                  >
+                                    {value.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </FormGroup>
+                        </Col>
+                      </Row>
                     </Col>
                   </Row>
                 </AvForm>
@@ -315,6 +365,16 @@ const DetailUser = (props) => {
                       <tr>
                         <th>Name</th>
                         <td>{user_detail && user_detail.name}</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th>Email</th>
+                        <td>{user_detail && user_detail.email}</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th>Phone</th>
+                        <td>{user_detail && user_detail.phone}</td>
                         <td></td>
                       </tr>
                       <tr>
@@ -336,6 +396,57 @@ const DetailUser = (props) => {
               )}
             </CardBody>
           </Card>
+
+          {/* Modal ResetPassword */}
+          <Modal
+            isOpen={modalResetPassword}
+            toggle={() => {
+              setModalResetPassword(!modalResetPassword);
+              removeBodyCss();
+            }}
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Reset Password
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalResetPassword(false);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Are you sure want to reset password this user?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalResetPassword(!modalResetPassword);
+                  removeBodyCss();
+                }}
+                className="btn btn-secondary waves-effect"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger waves-effect waves-light"
+                onClick={() => {
+                  onSubmitResetPassword();
+                }}
+              >
+                Reset Password
+              </button>
+            </div>
+          </Modal>
           {Prompt}
         </Container>
         <ShowSweetAlert />
@@ -346,13 +457,13 @@ const DetailUser = (props) => {
 const mapStatetoProps = (state) => {
   const { option_permission, list_permission } = state.Permission;
   const { message_user, loading, response_code_user, user_detail } = state.User;
-  const { option_role } = state.Role;
+  const { list_role } = state.Role;
   return {
     message_user,
     loading,
     response_code_user,
     user_detail,
-    option_role,
+    list_role,
     option_permission,
     list_permission,
   };
@@ -365,6 +476,7 @@ const mapDispatchToProps = (dispatch) =>
       readUserDetail,
       updateUser,
       readRole,
+      resetPassword,
     },
     dispatch
   );

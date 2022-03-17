@@ -40,7 +40,7 @@ const Role = (state = INIT_STATE, action) => {
         action.payload.listRole.map((value) => {
           return state.option_role.push({
             label: value.name,
-            value: value.name,
+            value: value.id,
           });
         });
       }
