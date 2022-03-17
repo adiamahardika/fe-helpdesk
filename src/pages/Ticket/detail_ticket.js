@@ -69,7 +69,6 @@ const list_priority = [
 ];
 const DetailTicket = (props) => {
   const detail_ticket = props.detail_ticket;
-  console.log(detail_ticket);
   const list_reply_ticket = props.list_reply_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
@@ -196,7 +195,6 @@ const DetailTicket = (props) => {
       });
       reader.onload = () => {
         if (reader.readyState === 2) {
-          let base64 = reader.result.split(",");
           if (number === "1") {
             setSelectedFiles1(files[0]);
             setReplyData({

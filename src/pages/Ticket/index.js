@@ -467,94 +467,90 @@ const Ticket = (props) => {
               </Card>
             </Col>
             <Col md={9}>
-              <Card>
-                <CardBody>
-                  <Row className="mb-3 d-flex align-items-end">
-                    <Col>
-                      <Row className="d-flex align-items-end">
-                        <Col md={4}>
-                          <Dropdown
-                            isOpen={category}
-                            toggle={() => {
-                              setCategory(true);
+              <Card className="p-3">
+                <Row className="mb-3 d-flex align-items-end">
+                  <Col>
+                    <Row className="d-flex align-items-end">
+                      <Col md={4}>
+                        <Dropdown
+                          isOpen={category}
+                          toggle={() => {
+                            setCategory(true);
+                          }}
+                          className="btn-group mr-2 mb-2 mb-sm-0"
+                        >
+                          <DropdownToggle
+                            className="btn btn-primary waves-light waves-effect dropdown-toggle d-flex align-items-center"
+                            style={{
+                              backgroundColor: "#556ee6",
+                              border: "none",
                             }}
-                            className="btn-group mr-2 mb-2 mb-sm-0"
                           >
-                            <DropdownToggle
-                              className="btn btn-primary waves-light waves-effect dropdown-toggle d-flex align-items-center"
+                            <i className="bx bx-filter-alt font-size-16 align-middle"></i>
+                            <i className="mdi mdi-chevron-down ml-1"></i>
+                          </DropdownToggle>
+                          <DropdownMenu>
+                            <Row>
+                              <Col className="d-flex align-items-center ml-3">
+                                <h6 style={{ fontWeight: "600" }}>
+                                  Filter by Category
+                                </h6>
+                              </Col>
+                              <Col className="d-flex justify-content-end align-items-center mr-3">
+                                <span
+                                  className="btn-link waves-effect text-right mr-3"
+                                  style={{ textDecoration: "none" }}
+                                  onClick={() => {
+                                    handleIsCheckedCategory("");
+                                  }}
+                                >
+                                  Clear All
+                                </span>
+                                <span
+                                  className="waves-effect text-right"
+                                  onClick={() => {
+                                    setCategory(false);
+                                  }}
+                                >
+                                  <i className="bx bxs-x-square font-size-24"></i>
+                                </span>
+                              </Col>
+                            </Row>
+                            <div
                               style={{
-                                backgroundColor: "#556ee6",
-                                border: "none",
+                                display: "grid",
+                                gridTemplateColumns: "repeat(4, 1fr)",
                               }}
                             >
-                              <i className="bx bx-filter-alt font-size-16 align-middle"></i>
-                              <i className="mdi mdi-chevron-down ml-1"></i>
-                            </DropdownToggle>
-                            <DropdownMenu>
-                              <Row>
-                                <Col className="d-flex align-items-center ml-3">
-                                  <h6 style={{ fontWeight: "600" }}>
-                                    Filter by Category
-                                  </h6>
-                                </Col>
-                                <Col className="d-flex justify-content-end align-items-center mr-3">
-                                  <span
-                                    className="btn-link waves-effect text-right mr-3"
-                                    style={{ textDecoration: "none" }}
-                                    onClick={() => {
-                                      handleIsCheckedCategory("");
-                                    }}
-                                  >
-                                    Clear All
-                                  </span>
-                                  <span
-                                    className="waves-effect text-right"
-                                    onClick={() => {
-                                      setCategory(false);
-                                    }}
-                                  >
-                                    <i className="bx bxs-x-square font-size-24"></i>
-                                  </span>
-                                </Col>
-                              </Row>
-                              <div
-                                style={{
-                                  display: "grid",
-                                  gridTemplateColumns: "repeat(4, 1fr)",
-                                }}
-                              >
-                                {list_category &&
-                                  list_category.map((value, index) => (
-                                    <DropdownItem to="#" key={index}>
-                                      <div className="custom-control custom-checkbox">
-                                        <input
-                                          type="checkbox"
-                                          className="custom-control-input"
-                                          id="CustomCheck1"
-                                          onChange={() => false}
-                                          checked={
-                                            list_checked_category &&
-                                            list_checked_category[index]
-                                          }
-                                        />
-                                        <label
-                                          className="custom-control-label"
-                                          onClick={() => {
-                                            handleIsCheckedCategory(
-                                              value,
-                                              index
-                                            );
-                                          }}
-                                        >
-                                          <span> {value.name}</span>
-                                        </label>
-                                      </div>
-                                    </DropdownItem>
-                                  ))}
-                              </div>
-                            </DropdownMenu>
-                          </Dropdown>
-                          {/* <Dropdown
+                              {list_category &&
+                                list_category.map((value, index) => (
+                                  <DropdownItem to="#" key={index}>
+                                    <div className="custom-control custom-checkbox">
+                                      <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="CustomCheck1"
+                                        onChange={() => false}
+                                        checked={
+                                          list_checked_category &&
+                                          list_checked_category[index]
+                                        }
+                                      />
+                                      <label
+                                        className="custom-control-label"
+                                        onClick={() => {
+                                          handleIsCheckedCategory(value, index);
+                                        }}
+                                      >
+                                        <span> {value.name}</span>
+                                      </label>
+                                    </div>
+                                  </DropdownItem>
+                                ))}
+                            </div>
+                          </DropdownMenu>
+                        </Dropdown>
+                        {/* <Dropdown
                             isOpen={showSort}
                             toggle={() => {
                               setShowSort(!showSort);
@@ -591,246 +587,243 @@ const Ticket = (props) => {
                               ))}
                             </DropdownMenu>
                           </Dropdown> */}
-                        </Col>
-                        <Col
-                          md={8}
-                          className="d-flex flex-row justify-content-end align-items-end"
-                        >
-                          <div className="form-group mb-0">
-                            <input
-                              className="form-control"
-                              type="search"
-                              placeholder="Search..."
-                              onChange={(event) =>
-                                event.target.value === ""
-                                  ? (props.readTicket({
-                                      ...data,
-                                      search: "",
-                                    }),
-                                    setData({
-                                      ...data,
-                                      search: event.target.value,
-                                    }))
-                                  : setData({
-                                      ...data,
-                                      search: event.target.value,
-                                    })
-                              }
-                            />
-                          </div>
-                          <div className="ml-2">
-                            <button
-                              type="button"
-                              className="btn btn-primary waves-effect waves-light d-flex align-items-center"
-                              onClick={() => {
-                                props.readTicket(data);
-                              }}
-                            >
-                              <i className="bx bx-search-alt-2 font-size-16 align-middle mr-2"></i>{" "}
-                              Search
-                            </button>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                  <Nav tabs className="nav-tabs-custom nav-justified">
-                    <NavItem>
+                      </Col>
+                      <Col
+                        md={8}
+                        className="d-flex flex-row justify-content-end align-items-end"
+                      >
+                        <div className="form-group mb-0">
+                          <input
+                            className="form-control"
+                            type="search"
+                            placeholder="Search..."
+                            onChange={(event) =>
+                              event.target.value === ""
+                                ? (props.readTicket({
+                                    ...data,
+                                    search: "",
+                                  }),
+                                  setData({
+                                    ...data,
+                                    search: event.target.value,
+                                  }))
+                                : setData({
+                                    ...data,
+                                    search: event.target.value,
+                                  })
+                            }
+                          />
+                        </div>
+                        <div className="ml-2">
+                          <button
+                            type="button"
+                            className="btn btn-primary waves-effect waves-light d-flex align-items-center"
+                            onClick={() => {
+                              props.readTicket(data);
+                            }}
+                          >
+                            <i className="bx bx-search-alt-2 font-size-16 align-middle mr-2"></i>{" "}
+                            Search
+                          </button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                <Nav tabs className="nav-tabs-custom nav-justified">
+                  <NavItem>
+                    <NavLink
+                      style={{ cursor: "pointer" }}
+                      className={classnames({
+                        active: activeTabJustify === "",
+                      })}
+                      onClick={() => {
+                        toggleCustomJustified("");
+                        setData({
+                          ...data,
+                          priority: "",
+                        });
+                        props.readTicket({
+                          ...data,
+                          priority: "",
+                        });
+                      }}
+                    >
+                      <span className="d-none d-sm-block">All</span>
+                    </NavLink>
+                  </NavItem>
+                  {priority.map((value, index) => (
+                    <NavItem key={index}>
                       <NavLink
                         style={{ cursor: "pointer" }}
                         className={classnames({
-                          active: activeTabJustify === "",
+                          active: activeTabJustify === value.name,
                         })}
                         onClick={() => {
-                          toggleCustomJustified("");
+                          toggleCustomJustified(value.name);
                           setData({
                             ...data,
-                            priority: "",
+                            priority: value.name,
                           });
                           props.readTicket({
                             ...data,
-                            priority: "",
+                            priority: value.name,
                           });
                         }}
                       >
-                        <span className="d-none d-sm-block">All</span>
+                        <span className="d-none d-sm-block">{value.name}</span>
                       </NavLink>
                     </NavItem>
-                    {priority.map((value, index) => (
-                      <NavItem key={index}>
-                        <NavLink
-                          style={{ cursor: "pointer" }}
-                          className={classnames({
-                            active: activeTabJustify === value.name,
-                          })}
-                          onClick={() => {
-                            toggleCustomJustified(value.name);
-                            setData({
-                              ...data,
-                              priority: value.name,
-                            });
-                            props.readTicket({
-                              ...data,
-                              priority: value.name,
-                            });
-                          }}
-                        >
-                          <span className="d-none d-sm-block">
-                            {value.name}
-                          </span>
-                        </NavLink>
-                      </NavItem>
-                    ))}
-                  </Nav>
-                  <div className="table-responsive mt-3">
-                    <Table className="table table-centered table-striped">
-                      <tbody>
-                        {list_ticket &&
-                          list_ticket.map((value, index) => {
-                            return (
-                              <tr key={value.id}>
-                                <th scope="row">
-                                  <div>{index + 1}</div>
-                                </th>
-                                <td>{value.ticketCode}</td>
-                                <StatusLabel value={value.status} />
-                                <td>
-                                  <span
-                                    style={{
-                                      textOverflow: "ellipsis",
-                                      overflow: "hidden",
-                                      whiteSpace: "nowrap",
-                                      width: "150px",
-                                      display: "block",
+                  ))}
+                </Nav>
+                <div className="table-responsive mt-3">
+                  <Table className="table table-centered table-striped">
+                    <tbody>
+                      {list_ticket &&
+                        list_ticket.map((value, index) => {
+                          return (
+                            <tr key={value.id}>
+                              <th scope="row">
+                                <div>{index + 1}</div>
+                              </th>
+                              <td>{value.ticketCode}</td>
+                              <StatusLabel value={value.status} />
+                              <td>
+                                <span
+                                  style={{
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    width: "150px",
+                                    display: "block",
+                                  }}
+                                >
+                                  <PriorityLabel value={value.prioritas} />-{" "}
+                                  {value.judul}
+                                </span>
+                              </td>
+                              <td>
+                                <span
+                                  style={{
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    width: "100px",
+                                    display: "block",
+                                  }}
+                                >
+                                  {value.category}
+                                </span>
+                              </td>
+                              <td>
+                                <span
+                                  style={{
+                                    width: "50px",
+                                    display: "block",
+                                  }}
+                                >
+                                  {parseFullDate(value.tglDiperbarui)}
+                                </span>
+                              </td>
+                              <td>
+                                <div
+                                  style={{
+                                    display: "grid",
+                                    gridAutoFlow: "column",
+                                    columnGap: "4px",
+                                    gridTemplateColumns: "repeat(2, 1fr)",
+                                  }}
+                                >
+                                  <button
+                                    type="button"
+                                    className="btn btn-info waves-effect waves-light"
+                                    style={{ minWidth: "max-content" }}
+                                    onClick={() => {
+                                      setSelectedData(value);
+                                      setModalDetail(!modalDetail);
                                     }}
                                   >
-                                    <PriorityLabel value={value.prioritas} />-{" "}
-                                    {value.judul}
-                                  </span>
-                                </td>
-                                <td>
-                                  <span
-                                    style={{
-                                      textOverflow: "ellipsis",
-                                      overflow: "hidden",
-                                      whiteSpace: "nowrap",
-                                      width: "100px",
-                                      display: "block",
-                                    }}
-                                  >
-                                    {value.category}
-                                  </span>
-                                </td>
-                                <td>
-                                  <span
-                                    style={{
-                                      width: "50px",
-                                      display: "block",
-                                    }}
-                                  >
-                                    {parseFullDate(value.tglDiperbarui)}
-                                  </span>
-                                </td>
-                                <td>
-                                  <div
-                                    style={{
-                                      display: "grid",
-                                      gridAutoFlow: "column",
-                                      columnGap: "4px",
-                                      gridTemplateColumns: "repeat(2, 1fr)",
-                                    }}
-                                  >
-                                    <button
-                                      type="button"
-                                      className="btn btn-info waves-effect waves-light"
-                                      style={{ minWidth: "max-content" }}
-                                      onClick={() => {
-                                        setSelectedData(value);
-                                        setModalDetail(!modalDetail);
+                                    <i className="bx bx-show-alt font-size-16 align-middle"></i>
+                                  </button>
+                                  {isDetailTicket && (
+                                    <Link
+                                      to={{
+                                        pathname: routes.detail_ticket,
+                                        search: `?ticketId=${value.ticketCode}`,
+                                        detailValue: value.ticketCode,
                                       }}
                                     >
-                                      <i className="bx bx-show-alt font-size-16 align-middle"></i>
-                                    </button>
-                                    {isDetailTicket && (
-                                      <Link
-                                        to={{
-                                          pathname: routes.detail_ticket,
-                                          search: `?ticketId=${value.ticketCode}`,
-                                          detailValue: value.ticketCode,
-                                        }}
+                                      <button
+                                        type="button"
+                                        className="btn btn-primary waves-effect waves-light"
+                                        style={{ minWidth: "max-content" }}
                                       >
-                                        <button
-                                          type="button"
-                                          className="btn btn-primary waves-effect waves-light"
-                                          style={{ minWidth: "max-content" }}
-                                        >
-                                          <i className="bx bxs-detail font-size-16 align-middle"></i>
-                                        </button>
-                                      </Link>
-                                    )}
-                                  </div>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                      </tbody>
-                    </Table>
-                    {list_ticket && list_ticket.length <= 0 && (
-                      <div style={{ textAlign: "center" }}>No Data</div>
-                    )}
-                  </div>
-                  {list_ticket && list_ticket.length > 0 && (
-                    <Row className="d-flex align-items-end">
-                      <Col md="6">
-                        <div className="form-group mb-0 d-flex flex-row align-items-end">
-                          <label>Show Data</label>
-                          <div className="ml-2">
-                            <select
-                              className="form-control"
-                              defaultValue={10}
-                              onChange={(event) => (
-                                setData({
-                                  ...data,
-                                  pageSize: parseInt(event.target.value),
-                                  pageNo: 0,
-                                }),
-                                props.readTicket({
-                                  ...data,
-                                  pageSize: parseInt(event.target.value),
-                                  pageNo: 0,
-                                })
-                              )}
-                            >
-                              <option value={10}>10</option>
-                              <option value={25}>25</option>
-                              <option value={50}>50</option>
-                              <option value={100}>100</option>
-                            </select>
-                          </div>
-                        </div>
-                      </Col>
-                      <Col
-                        className="justify-content-end"
-                        style={{ display: "grid" }}
-                      >
-                        <ReactPaginate
-                          previousLabel={"previous"}
-                          nextLabel={"next"}
-                          breakLabel={"..."}
-                          breakClassName={"break-me"}
-                          pageCount={total_pages_ticket}
-                          marginPagesDisplayed={1}
-                          pageRangeDisplayed={5}
-                          forcePage={active_page_ticket}
-                          onPageChange={handlePageClick}
-                          containerClassName={"pagination"}
-                          subContainerClassName={"pages pagination"}
-                          activeClassName={"active"}
-                        />
-                      </Col>
-                    </Row>
+                                        <i className="bx bxs-detail font-size-16 align-middle"></i>
+                                      </button>
+                                    </Link>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </Table>
+                  {list_ticket && list_ticket.length <= 0 && (
+                    <div style={{ textAlign: "center" }}>No Data</div>
                   )}
-                </CardBody>
+                </div>
+                {list_ticket && list_ticket.length > 0 && (
+                  <Row className="d-flex align-items-end">
+                    <Col md="6">
+                      <div className="form-group mb-0 d-flex flex-row align-items-end">
+                        <label>Show Data</label>
+                        <div className="ml-2">
+                          <select
+                            className="form-control"
+                            defaultValue={10}
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                pageSize: parseInt(event.target.value),
+                                pageNo: 0,
+                              }),
+                              props.readTicket({
+                                ...data,
+                                pageSize: parseInt(event.target.value),
+                                pageNo: 0,
+                              })
+                            )}
+                          >
+                            <option value={10}>10</option>
+                            <option value={25}>25</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                          </select>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col
+                      className="justify-content-end"
+                      style={{ display: "grid" }}
+                    >
+                      <ReactPaginate
+                        previousLabel={"previous"}
+                        nextLabel={"next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={total_pages_ticket}
+                        marginPagesDisplayed={1}
+                        pageRangeDisplayed={5}
+                        forcePage={active_page_ticket}
+                        onPageChange={handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"pages pagination"}
+                        activeClassName={"active"}
+                      />
+                    </Col>
+                  </Row>
+                )}
               </Card>
             </Col>
           </Row>
