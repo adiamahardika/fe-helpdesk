@@ -15,6 +15,7 @@ import {
   readUserDetail,
   updateUser,
   resetPassword,
+  updateUserStatus,
 } from "../../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -49,10 +50,13 @@ const DetailUser = (props) => {
   );
 
   const [updateUserData, setUpdateUserData] = useState(null);
+  const [updateStatusData, setUpdateStatusData] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
-  const [resetPassword, setResetPassword] = useState(false);
   const [modalResetPassword, setModalResetPassword] = useState(false);
+  const [modalUpdateStatus, setModalUpdateStatus] = useState(false);
   const [isShowUpdateUser, setIsShowUpdateUser] = useState(false);
+  const [isShowResetPassword, setIsShowResetPassword] = useState(false);
+  const [isShowUpdateStatus, setIsShowUpdateStatus] = useState(false);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [sweetAlertText, setSweeAlertText] = useState(null);
 
@@ -80,7 +84,16 @@ const DetailUser = (props) => {
       setValidEmail(false);
     }
   };
-  console.log(updateUserData);
+  const ShowUpdateStatus = () => {
+    setUpdateStatusData(
+      user_detail && {
+        username: username,
+        status: user_detail.status,
+      }
+    );
+    setModalUpdateStatus(!modalUpdateStatus);
+  };
+
   const onSubmitUpdateUser = async () => {
     delete updateUserData.roles;
     delete updateUserData.password;
@@ -90,7 +103,7 @@ const DetailUser = (props) => {
     props.updateUser({
       ...updateUserData,
     });
-    setSweeAlertText("Your profile has successfully edited!");
+    setSweeAlertText("User has successfully updated!");
     setIsShowSweetAlert(true);
     setPristine();
   };
@@ -103,6 +116,13 @@ const DetailUser = (props) => {
     });
     setSweeAlertText(`The user new password is ${password}`);
     setModalResetPassword(!modalResetPassword);
+    setIsShowSweetAlert(true);
+    removeBodyCss();
+  };
+  const onSubmitUpdateStatus = async () => {
+    await props.updateUserStatus(updateStatusData);
+    setSweeAlertText("User status has successfully updated!");
+    setModalUpdateStatus(!modalUpdateStatus);
     setIsShowSweetAlert(true);
     removeBodyCss();
   };
@@ -192,15 +212,19 @@ const DetailUser = (props) => {
   };
 
   useEffect(() => {
-    let isEditUser = permissions.find(
+    let isUpdateUser = permissions.find(
       (value) => value.code === code_all_permissions.edit_user
     );
     let isResetPassword = permissions.find(
       (value) => value.code === code_all_permissions.reset_password
     );
+    let isUpdateStatus = permissions.find(
+      (value) => value.code === code_all_permissions.edit_user_status
+    );
 
-    if (isEditUser && username !== sessionStorage.getItem("username")) {
-      isResetPassword && setResetPassword(true);
+    if (isUpdateUser && username !== sessionStorage.getItem("username")) {
+      isResetPassword && setIsShowResetPassword(true);
+      isUpdateStatus && setIsShowUpdateStatus(true);
       props.readUserDetail(username);
       props.readPermission();
       props.readRole();
@@ -208,6 +232,7 @@ const DetailUser = (props) => {
       history.push(routes.users);
     }
   }, []);
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -224,7 +249,7 @@ const DetailUser = (props) => {
                   columnGap: "8px",
                 }}
               >
-                {!isShowUpdateUser && resetPassword && (
+                {!isShowUpdateUser && isShowResetPassword && (
                   <button
                     type="button"
                     className="btn btn-danger waves-effect waves-light"
@@ -378,17 +403,32 @@ const DetailUser = (props) => {
                         <td></td>
                       </tr>
                       <tr>
-                        <th>Status</th>
-                        <td>{user_detail && user_detail.status}</td>
-                        <td></td>
-                      </tr>
-                      <tr>
                         <th>Role</th>
                         <td>
                           {user_detail &&
                             user_detail.roles.map((value) => value.name)}
                         </td>
                         <td></td>
+                      </tr>
+                      <tr>
+                        <th>Status</th>
+                        <td>{user_detail && user_detail.status}</td>
+                        <td
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          {isShowUpdateStatus && (
+                            <Button
+                              color="light"
+                              className="waves-effect waves-light"
+                              onClick={ShowUpdateStatus}
+                            >
+                              Change Status
+                            </Button>
+                          )}
+                        </td>
                       </tr>
                     </tbody>
                   </Table>
@@ -447,6 +487,96 @@ const DetailUser = (props) => {
               </button>
             </div>
           </Modal>
+
+          <Modal isOpen={modalUpdateStatus}>
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Change Status
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalUpdateStatus(!modalUpdateStatus);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div
+              className="modal-body"
+              style={{ paddingLeft: "80px", paddingRight: "80px" }}
+            >
+              <AvForm>
+                <FormGroup className="select2-container">
+                  <label className="control-label">Status</label>
+                  <div>
+                    <select
+                      name="status"
+                      className="form-control"
+                      defaultValue={updateStatusData && updateStatusData.status}
+                      onChange={(event) => (
+                        setUpdateStatusData({
+                          ...updateStatusData,
+                          status: event.target.value,
+                        }),
+                        setDirty()
+                      )}
+                    >
+                      <option
+                        value="Active"
+                        onChange={() => (
+                          setUpdateStatusData({
+                            ...updateStatusData,
+                            status: "Active",
+                          }),
+                          setDirty()
+                        )}
+                      >
+                        Active
+                      </option>
+                      <option
+                        value="Inactive"
+                        onChange={() => (
+                          setUpdateStatusData({
+                            ...updateStatusData,
+                            status: "Inactive",
+                          }),
+                          setDirty()
+                        )}
+                      >
+                        Inactive
+                      </option>
+                    </select>
+                  </div>
+                </FormGroup>
+              </AvForm>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalUpdateStatus(!modalUpdateStatus);
+                  removeBodyCss();
+                }}
+                className="btn btn-secondary waves-effect"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger waves-effect waves-light"
+                onClick={() => {
+                  onSubmitUpdateStatus();
+                }}
+              >
+                Save
+              </button>
+            </div>
+          </Modal>
           {Prompt}
         </Container>
         <ShowSweetAlert />
@@ -477,6 +607,7 @@ const mapDispatchToProps = (dispatch) =>
       updateUser,
       readRole,
       resetPassword,
+      updateUserStatus,
     },
     dispatch
   );

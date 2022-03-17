@@ -17,6 +17,7 @@
   "delete_user": "2.1.4",
   "reset_password": "2.1.5",
   "edit_user_role": "2.1.6",
+  "edit_user_status": "2.1.7",
   "roles": "2.2",
   "view_role": "2.2.1",
   "add_role": "2.2.2",

@@ -23,6 +23,9 @@ import {
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_REJECT,
   CHANGE_PASSWORD_FULFILLED,
+  UPDATE_USER_STATUS,
+  UPDATE_USER_STATUS_REJECT,
+  UPDATE_USER_STATUS_FULFILLED,
 } from "./actionTypes";
 
 export const createUser = (value) => {
@@ -219,6 +222,31 @@ export const changePasswordReject = (payload) => {
 export const changePasswordFulfilled = (payload) => {
   return {
     type: CHANGE_PASSWORD_FULFILLED,
+    payload: payload,
+  };
+};
+
+export const updateUserStatus = (value) => {
+  let data = {
+    body: value,
+    url: "/v1/user/update-status",
+  };
+  return {
+    type: UPDATE_USER_STATUS,
+    payload: data,
+  };
+};
+
+export const updateUserStatusReject = (payload) => {
+  return {
+    type: UPDATE_USER_STATUS_REJECT,
+    payload: payload,
+  };
+};
+
+export const updateUserStatusFulfilled = (payload) => {
+  return {
+    type: UPDATE_USER_STATUS_FULFILLED,
     payload: payload,
   };
 };

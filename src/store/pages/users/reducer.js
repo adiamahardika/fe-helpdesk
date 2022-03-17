@@ -23,6 +23,9 @@ import {
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_REJECT,
   CHANGE_PASSWORD_FULFILLED,
+  UPDATE_USER_STATUS,
+  UPDATE_USER_STATUS_REJECT,
+  UPDATE_USER_STATUS_FULFILLED,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -188,6 +191,25 @@ const User = (state = INIT_STATE, action) => {
         loading: false,
       };
     case CHANGE_PASSWORD_FULFILLED:
+      return {
+        ...state,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
+        loading: false,
+      };
+    case UPDATE_USER_STATUS:
+      return {
+        ...state,
+        loading: true,
+      };
+    case UPDATE_USER_STATUS_REJECT:
+      return {
+        ...state,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
+        loading: false,
+      };
+    case UPDATE_USER_STATUS_FULFILLED:
       return {
         ...state,
         response_code_user: action.payload.status.responseCode,

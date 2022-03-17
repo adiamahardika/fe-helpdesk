@@ -73,6 +73,10 @@
           {
             "name": "Edit User Role",
             "code": "2.1.6"
+          },
+          {
+            "name": "Edit User Status",
+            "code": "2.1.7"
           }
         ]
       },
