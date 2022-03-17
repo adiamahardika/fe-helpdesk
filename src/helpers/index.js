@@ -1,6 +1,6 @@
 export const parseFullDate = (time) => {
   let date = new Date(time);
-
+  date.setTime(date.getTime() - 7 * 60 * 60 * 1000);
   let monthNames = [
     "Jan",
     "Feb",
@@ -24,7 +24,7 @@ export const parseFullDate = (time) => {
     " " +
     date.getFullYear() +
     ", " +
-    ("0" + (date.getHours() - 7)).slice(-2) +
+    ("0" + date.getHours()).slice(-2) +
     ":" +
     ("0" + date.getMinutes()).slice(-2) +
     ":" +
