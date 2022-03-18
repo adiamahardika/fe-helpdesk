@@ -24,7 +24,7 @@ const Captcha = (state = INIT_STATE, action) => {
         ...state,
         response_code_captcha: action.payload.status.responseCode,
         message_captcha: action.payload.status.description[0],
-        loading: true,
+        loading: false,
       };
     case READ_CAPTCHA_FULFILLED:
       return {

@@ -9,6 +9,7 @@ import login2 from "../../assets/images/login-image.svg";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import CryptoJS from "crypto-js";
+import jwt from "jsonwebtoken";
 require("dotenv").config();
 
 const Login = (props) => {
@@ -55,10 +56,11 @@ const Login = (props) => {
           if (
             value.status.responseCode === general_constant.success_response_code
           ) {
+            const decode = jwt.decode(value.response.accessToken);
+            sessionStorage.setItem("signatureKey", decode.signature_key);
             sessionStorage.setItem("accessToken", value.response.accessToken);
             sessionStorage.setItem("username", value.response.username);
             sessionStorage.setItem("name", value.response.name);
-            sessionStorage.setItem("role", value.response.roles);
             sessionStorage.setItem(
               "permission",
               CryptoJS.AES.encrypt(
