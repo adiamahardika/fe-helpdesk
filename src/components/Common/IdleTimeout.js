@@ -1,5 +1,6 @@
 import React, { Fragment, useRef, useState } from "react";
 import IdleTimer from "react-idle-timer";
+import routes from "../../helpers/routes.json";
 import { Modal } from "reactstrap";
 
 const IdleTimerContainer = (props) => {
@@ -17,7 +18,7 @@ const IdleTimerContainer = (props) => {
   };
   const logOut = () => {
     setModalIsOpen(!modalIsOpen);
-    window.location.assign("/login");
+    window.location.assign(routes.login);
     clearTimeout(sessionTimeoutRef.current);
     sessionStorage.clear();
   };

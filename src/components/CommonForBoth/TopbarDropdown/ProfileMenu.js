@@ -40,7 +40,7 @@ const ProfileMenu = (props) => {
             {props.t("Profile")}{" "}
           </Link>
           <div className="dropdown-divider"></div>
-          <Link to="/login" className="dropdown-item">
+          <Link to={routes.login} className="dropdown-item">
             <i className="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i>
             <span>{props.t("Logout")}</span>
           </Link>

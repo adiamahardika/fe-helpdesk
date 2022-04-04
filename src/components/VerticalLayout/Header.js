@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 // Import menuDropdown
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu";
 
-import logo from "../../assets/images/logo-bri-sm.png";
+import logo from "../../assets/images/Telkomsel_new.png";
 import logoLightPng from "../../assets/images/mygrapari.png";
-import logoLightSvg from "../../assets/images/logo-bri-sm.png";
+import logoLightSvg from "../../assets/images/Telkomsel_new.png";
 import logoDark from "../../assets/images/mygrapari.png";
 
 //i18n

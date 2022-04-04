@@ -7,7 +7,7 @@ import {
   changeSidebarTheme,
   changeSidebarType,
   changeTopbarTheme,
-  changeLayoutWidth
+  changeLayoutWidth,
 } from "../../store/actions";
 
 // Layout Related Components
@@ -19,39 +19,33 @@ class Layout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
     };
     this.toggleMenuCallback = this.toggleMenuCallback.bind(this);
   }
 
-  capitalizeFirstLetter = string => {
+  capitalizeFirstLetter = (string) => {
     return string.charAt(1).toUpperCase() + string.slice(2);
   };
 
   componentDidMount() {
-
     if (this.props.isPreloader === true) {
-      document.getElementById('preloader').style.display = "block";
-      document.getElementById('status').style.display = "block";
+      document.getElementById("preloader").style.display = "block";
+      document.getElementById("status").style.display = "block";
 
       setTimeout(function () {
-
-        document.getElementById('preloader').style.display = "none";
-        document.getElementById('status').style.display = "none";
-
+        document.getElementById("preloader").style.display = "none";
+        document.getElementById("status").style.display = "none";
       }, 2500);
-    }
-    else {
-      document.getElementById('preloader').style.display = "none";
-      document.getElementById('status').style.display = "none";
+    } else {
+      document.getElementById("preloader").style.display = "none";
+      document.getElementById("status").style.display = "none";
     }
 
     // Scroll Top to 0
     window.scrollTo(0, 0);
-    let currentage = this.capitalizeFirstLetter(this.props.location.pathname);
 
-    document.title =
-      currentage + " | Myg Ticketing";
+    document.title = "Myg Ticketing";
     if (this.props.leftSideBarTheme) {
       this.props.changeSidebarTheme(this.props.leftSideBarTheme);
     }
@@ -66,7 +60,6 @@ class Layout extends Component {
     if (this.props.topbarTheme) {
       this.props.changeTopbarTheme(this.props.topbarTheme);
     }
-
   }
   toggleMenuCallback = () => {
     if (this.props.leftSideBarType === "default") {
@@ -93,24 +86,23 @@ class Layout extends Component {
         </div>
 
         <div id="layout-wrapper">
-          <Header toggleMenuCallback={this.toggleMenuCallback}  />
-          <Sidebar theme={this.props.leftSideBarTheme}
+          <Header toggleMenuCallback={this.toggleMenuCallback} />
+          <Sidebar
+            theme={this.props.leftSideBarTheme}
             type={this.props.leftSideBarType}
-            isMobile={this.state.isMobile} />
-          <div className="main-content">
-            {this.props.children}
-          </div>
+            isMobile={this.state.isMobile}
+          />
+          <div className="main-content">{this.props.children}</div>
         </div>
-        { this.props.showRightSidebar ? <Rightbar /> : null  }
+        {this.props.showRightSidebar ? <Rightbar /> : null}
       </React.Fragment>
     );
   }
 }
 
-
-const mapStatetoProps = state => {
+const mapStatetoProps = (state) => {
   return {
-    ...state.Layout
+    ...state.Layout,
   };
 };
 export default connect(mapStatetoProps, {
@@ -118,5 +110,5 @@ export default connect(mapStatetoProps, {
   changeSidebarTheme,
   changeSidebarType,
   changeTopbarTheme,
-  changeLayoutWidth
+  changeLayoutWidth,
 })(withRouter(Layout));

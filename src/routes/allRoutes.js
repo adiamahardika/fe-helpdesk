@@ -45,15 +45,15 @@ const userRoutes = [
 
   // this route should be at the end of all other routes
   {
-    path: "/",
+    path: "/ticketing",
     exact: true,
     component: () => <Redirect to={routes.ticket} />,
   },
 ];
 
 const authRoutes = [
-  { path: "/logout", component: Logout },
-  { path: "/login", component: Login },
+  { path: routes.logout, component: Logout },
+  { path: routes.login, component: Login },
   { path: "/forgot-password", component: ForgetPwd },
   { path: "/register", component: Register },
 ];

@@ -676,8 +676,19 @@ const Ticket = (props) => {
                     </NavItem>
                   ))}
                 </Nav>
-                <div className="table-responsive mt-3">
+                <div className="table-responsive">
                   <Table className="table table-centered table-striped">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Ticket Code</th>
+                        <th>Status</th>
+                        <th>Priority - Judul</th>
+                        <th>Category</th>
+                        <th>Last Update</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
                     <tbody>
                       {list_ticket &&
                         list_ticket.map((value, index) => {

@@ -1,4 +1,5 @@
 import general_constant from "../helpers/general_constant.json";
+import routes from "../helpers/routes.json";
 require("dotenv").config();
 
 const refreshToken = async () => {
@@ -42,9 +43,9 @@ export const getMethod = async (data) => {
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
     sessionStorage.clear();
-    window.location.assign("/login");
+    window.location.assign(routes.login);
   } else {
-    return parse;
+    return item;
   }
 };
 
@@ -60,22 +61,22 @@ export const postMethod = async (data) => {
     },
     body: JSON.stringify(data.body),
   });
-
   const parse = response.json();
   let item = null;
   await parse.then((value) => (item = value));
   if (
-    item.status.responseCode === general_constant.expired_token_response_code
+    response.status.responseCode ===
+    general_constant.expired_token_response_code
   ) {
     await refreshToken();
     return await postMethod(data);
   } else if (
-    item.status.httpStatusCode === general_constant.unauthorized_status
+    response.status.httpStatusCode === general_constant.unauthorized_status
   ) {
     sessionStorage.clear();
-    window.location.assign("/login");
+    window.location.assign(routes.login);
   } else {
-    return parse;
+    return item;
   }
 };
 
@@ -103,9 +104,9 @@ export const postMethodWithFile = async (data) => {
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
     sessionStorage.clear();
-    window.location.assign("/login");
+    window.location.assign(routes.login);
   } else {
-    return parse;
+    return item;
   }
 };
 
@@ -134,9 +135,9 @@ export const putMethod = async (data) => {
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
     sessionStorage.clear();
-    window.location.assign("/login");
+    window.location.assign(routes.login);
   } else {
-    return parse;
+    return item;
   }
 };
 
@@ -163,8 +164,11 @@ export const deleteMethod = async (data) => {
   });
 
   const parse = response.json();
+  const parseResponseGet = responseGet.json();
   let item = null;
+  let itemGet = null;
   await parse.then((value) => (item = value));
+  await parseResponseGet.then((value) => (itemGet = value));
   if (
     item.status.responseCode === general_constant.expired_token_response_code
   ) {
@@ -174,10 +178,10 @@ export const deleteMethod = async (data) => {
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
     sessionStorage.clear();
-    window.location.assign("/login");
+    window.location.assign(routes.login);
   } else if (item.status.responseCode === general_constant.success_message) {
-    return parse;
+    return item;
   } else {
-    return responseGet.json();
+    return itemGet;
   }
 };
