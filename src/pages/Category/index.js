@@ -35,7 +35,7 @@ const Category = (props) => {
   const history = useHistory();
 
   const [data, setData] = useState({
-    size: 0,
+    size: 10,
     page_no: 0,
     sort_by: "name",
     order_by: "asc",
@@ -84,6 +84,10 @@ const Category = (props) => {
     }
     return value;
   };
+  const handlePageClick = (value) => {
+    props.readCategory({ ...data, page_no: value.selected });
+    setData({ ...data, page_no: value.selected });
+  };
 
   useEffect(() => {
     let viewCategory = permissions.find(
@@ -123,207 +127,140 @@ const Category = (props) => {
                   )}
                 </Col>
               </Row>
-              <Row>
-                <Col>
-                  <ol
-                    className="sub-menu "
-                    aria-expanded="true"
-                    style={{
-                      listStyle: "upper-alpha",
-                      fontSize: "24px",
-                      fontWeight: "600",
-                      display: "grid",
-                      gridTemplateColumns: "repeat(2,1fr)",
-                      columnGap: "32px",
-                    }}
-                  >
+              <div className="table-responsive">
+                <Table className="table table-centered table-striped">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Name</th>
+                      <th>Add. Question 1</th>
+                      <th>Add. Question 2</th>
+                      <th>Add. Question 3</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {list_category &&
-                      list_category.map(
-                        (value) =>
-                          value.parent === "0" && (
-                            <div>
-                              <li
+                      list_category.map((value, index) => {
+                        return (
+                          <tr key={value.id}>
+                            <th scope="row">
+                              <div>{index + 1}</div>
+                            </th>
+                            <td>{value.name}</td>
+                            <td>
+                              <span
                                 style={{
-                                  borderBottomColor: "#cfcfcf",
-                                  borderBottomStyle: "solid",
-                                  borderBottomWidth: "0.5px",
-                                  marginBottom: "8px",
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  width: "200px",
+                                  display: "block",
                                 }}
                               >
-                                <div
-                                  className="custom-checkbox d-flex hover-text"
-                                  style={{ width: "max-content" }}
+                                {value.additionalInput1}
+                              </span>
+                            </td>
+                            <td>
+                              <span
+                                style={{
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  width: "200px",
+                                  display: "block",
+                                }}
+                              >
+                                {value.additionalInput2}
+                              </span>
+                            </td>
+                            <td>
+                              <span
+                                style={{
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  width: "200px",
+                                  display: "block",
+                                }}
+                              >
+                                {value.additionalInput3}
+                              </span>
+                            </td>
+
+                            <td>
+                              <Link
+                                to={{
+                                  pathname: routes.edit_category,
+                                  search: `?code=${value.codeLevel}`,
+                                }}
+                              >
+                                <button
+                                  type="button"
+                                  className="btn btn-primary waves-effect waves-light"
+                                  style={{ minWidth: "max-content" }}
                                 >
-                                  <Link
-                                    to={{
-                                      pathname: routes.edit_category,
-                                      search: `?code=${value.codeLevel}`,
-                                    }}
-                                    style={{
-                                      color: "#343a40",
-                                    }}
-                                    className=" waves-effect text-right"
-                                  >
-                                    {value.name}
-                                  </Link>
-                                </div>
-                              </li>
-                              <ol
-                                className="sub-menu"
-                                aria-expanded="true"
-                                style={{
-                                  listStyleType: "number",
-                                  fontSize: "20px",
-                                  fontWeight: "500",
-                                }}
-                              >
-                                {list_category &&
-                                  list_category.map(
-                                    (sl1_value, sl1_index) =>
-                                      sl1_value.parent === value.codeLevel && (
-                                        <>
-                                          <li
-                                            style={{
-                                              borderBottomColor: "#cfcfcf",
-                                              borderBottomStyle: "solid",
-                                              borderBottomWidth: "0.5px",
-                                              marginBottom: "8px",
-                                            }}
-                                          >
-                                            <div
-                                              className="d-flex custom-checkbox hover-text"
-                                              style={{ width: "max-content" }}
-                                            >
-                                              <Link
-                                                to={{
-                                                  pathname:
-                                                    routes.edit_category,
-                                                  search: `?code=${sl1_value.codeLevel}`,
-                                                }}
-                                                style={{ color: "#343a40" }}
-                                                className=" waves-effect text-right "
-                                              >
-                                                {sl1_value.name}
-                                              </Link>
-                                            </div>
-                                          </li>
-                                          <ol
-                                            className="sub-menu"
-                                            aria-expanded="true"
-                                            style={{
-                                              listStyleType: "upper-alpha",
-                                              fontSize: "18px",
-                                              fontWeight: "500",
-                                            }}
-                                          >
-                                            {list_category &&
-                                              list_category.map(
-                                                (sl2_value, sl2_index) =>
-                                                  sl2_value.parent ===
-                                                    sl1_value.codeLevel && (
-                                                    <>
-                                                      <li
-                                                        style={{
-                                                          borderBottomColor:
-                                                            "#cfcfcf",
-                                                          borderBottomStyle:
-                                                            "solid",
-                                                          borderBottomWidth:
-                                                            "0.5px",
-                                                          marginBottom: "8px",
-                                                        }}
-                                                      >
-                                                        <div
-                                                          className="d-flex custom-checkbox hover-text"
-                                                          style={{
-                                                            width:
-                                                              "max-content",
-                                                          }}
-                                                        >
-                                                          <Link
-                                                            to={{
-                                                              pathname:
-                                                                routes.edit_category,
-                                                              search: `?code=${sl2_value.codeLevel}`,
-                                                            }}
-                                                            style={{
-                                                              color: "#343a40",
-                                                            }}
-                                                            className=" waves-effect text-right "
-                                                          >
-                                                            {sl2_value.name}
-                                                          </Link>
-                                                        </div>
-                                                      </li>
-                                                      <ol
-                                                        className="sub-menu"
-                                                        aria-expanded="true"
-                                                        style={{
-                                                          listStyleType:
-                                                            "number",
-                                                          fontSize: "16px",
-                                                          fontWeight: "400",
-                                                        }}
-                                                      >
-                                                        {list_category &&
-                                                          list_category.map(
-                                                            (sl3_value) =>
-                                                              sl3_value.parent ===
-                                                                sl2_value.codeLevel && (
-                                                                <li
-                                                                  style={{
-                                                                    borderBottomColor:
-                                                                      "#cfcfcf",
-                                                                    borderBottomStyle:
-                                                                      "solid",
-                                                                    borderBottomWidth:
-                                                                      "0.5px",
-                                                                    marginBottom:
-                                                                      "8px",
-                                                                  }}
-                                                                >
-                                                                  <div
-                                                                    className="d-flex custom-checkbox hover-text"
-                                                                    style={{
-                                                                      width:
-                                                                        "max-content",
-                                                                    }}
-                                                                  >
-                                                                    <Link
-                                                                      to={{
-                                                                        pathname:
-                                                                          routes.edit_category,
-                                                                        search: `?code=${sl3_value.codeLevel}`,
-                                                                      }}
-                                                                      style={{
-                                                                        color:
-                                                                          "#343a40",
-                                                                      }}
-                                                                      className=" waves-effect text-right "
-                                                                    >
-                                                                      {
-                                                                        sl3_value.name
-                                                                      }
-                                                                    </Link>
-                                                                  </div>
-                                                                </li>
-                                                              )
-                                                          )}
-                                                      </ol>
-                                                    </>
-                                                  )
-                                              )}
-                                          </ol>
-                                        </>
-                                      )
-                                  )}
-                              </ol>
-                            </div>
-                          )
-                      )}
-                  </ol>
-                </Col>
-              </Row>
+                                  <i className="bx bxs-edit font-size-16 align-middle"></i>
+                                </button>
+                              </Link>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </Table>
+              </div>
+              {list_category && list_category.length > 0 && (
+                <Row className="d-flex align-items-end">
+                  <Col md="6">
+                    <div className="form-group mb-0 d-flex flex-row align-items-end">
+                      <label>Show Data</label>
+                      <div className="ml-2">
+                        <select
+                          className="form-control"
+                          defaultValue={10}
+                          onChange={(event) => (
+                            setData({
+                              ...data,
+                              size: parseInt(event.target.value),
+                              pageNo: 0,
+                            }),
+                            props.readCategory({
+                              ...data,
+                              size: parseInt(event.target.value),
+                              pageNo: 0,
+                            })
+                          )}
+                        >
+                          <option value={10}>10</option>
+                          <option value={25}>25</option>
+                          <option value={50}>50</option>
+                          <option value={100}>100</option>
+                        </select>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col
+                    className="justify-content-end"
+                    style={{ display: "grid" }}
+                  >
+                    <ReactPaginate
+                      previousLabel={"previous"}
+                      nextLabel={"next"}
+                      breakLabel={"..."}
+                      breakClassName={"break-me"}
+                      pageCount={total_pages_category}
+                      marginPagesDisplayed={1}
+                      pageRangeDisplayed={5}
+                      forcePage={active_page_category}
+                      onPageChange={handlePageClick}
+                      containerClassName={"pagination"}
+                      subContainerClassName={"pages pagination"}
+                      activeClassName={"active"}
+                    />
+                  </Col>
+                </Row>
+              )}
             </CardBody>
           </Card>
           <Modal
