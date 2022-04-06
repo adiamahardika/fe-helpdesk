@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Container,
   Card,
-  CardBody,
   Modal,
   Table,
   Col,
@@ -22,6 +21,7 @@ import {
   checkCategory,
   uncheckCategory,
 } from "../../store/pages/category/actions";
+import { readTicketStatus } from "../../store/pages/ticketStatus/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { parseFullDate } from "../../helpers/index";
@@ -56,14 +56,6 @@ const priority = [
     color: "#9400d3",
   },
 ];
-const status = [
-  { name: "New", color: "#f46a6a" },
-  { name: "Waiting Reply", color: "#f1b44c" },
-  { name: "Replied", color: "#556ee6" },
-  { name: "In Progress", color: "#34c38f" },
-  { name: "Resolved", color: "#34c38f" },
-  { name: "On Hold", color: "#343a40" },
-];
 // const sortItem = [
 //   {
 //     name: "Last Update",
@@ -86,6 +78,7 @@ const Ticket = (props) => {
   const list_ticket = props.list_ticket;
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
+  const list_ticket_status = props.list_ticket_status;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const total_pages_ticket = props.total_pages_ticket;
@@ -298,6 +291,7 @@ const Ticket = (props) => {
         item = { ...item, assignedTo: username };
         setActiveTicketSideNav("assigned_to_me");
       }
+      props.readTicketStatus();
       props.readTicket(item);
       props.readCategory({
         size: 0,
@@ -438,31 +432,32 @@ const Ticket = (props) => {
                       All
                     </span>
                   </Link>
-                  {status.map((value, index) => (
-                    <Link
-                      to="#"
-                      key={index}
-                      onClick={() => (
-                        props.readTicket({ ...data, status: value.name }),
-                        setData({ ...data, status: value.name })
-                      )}
-                    >
-                      <span
-                        className="mdi mdi-arrow-right-drop-circle float-right"
-                        style={{ color: value.color }}
-                      ></span>
-                      <span
-                        style={{
-                          fontWeight:
-                            data && data.status === value.name
-                              ? "bold"
-                              : "normal",
-                        }}
+                  {list_ticket_status &&
+                    list_ticket_status.map((value, index) => (
+                      <Link
+                        to="#"
+                        key={index}
+                        onClick={() => (
+                          props.readTicket({ ...data, status: value.name }),
+                          setData({ ...data, status: value.name })
+                        )}
                       >
-                        {value.name}
-                      </span>
-                    </Link>
-                  ))}
+                        <span
+                          className="mdi mdi-arrow-right-drop-circle float-right"
+                          style={{ color: value.color }}
+                        ></span>
+                        <span
+                          style={{
+                            fontWeight:
+                              data && data.status === value.name
+                                ? "bold"
+                                : "normal",
+                          }}
+                        >
+                          {value.name}
+                        </span>
+                      </Link>
+                    ))}
                 </div>
               </Card>
             </Col>
@@ -971,10 +966,12 @@ const mapStatetoProps = (state) => {
     active_page_ticket,
   } = state.Ticket;
   const { list_category, list_checked_category } = state.Category;
+  const { list_ticket_status } = state.TicketStatus;
   return {
     list_ticket,
     list_category,
     list_checked_category,
+    list_ticket_status,
     response_code_ticket,
     message_ticket,
     page_ticket,
@@ -991,6 +988,7 @@ const mapDispatchToProps = (dispatch) =>
       readCategory,
       checkCategory,
       uncheckCategory,
+      readTicketStatus,
     },
     dispatch
   );

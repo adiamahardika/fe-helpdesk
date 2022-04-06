@@ -15,6 +15,7 @@ import {
   replyTicket,
 } from "../../store/pages/ticket/actions";
 import { readCategory } from "../../store/pages/category/actions";
+import { readTicketStatus } from "../../store/pages/ticketStatus/actions";
 import { readUser } from "../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -35,20 +36,6 @@ import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
 require("dotenv").config();
 
-const list_status = [
-  { name: "New", color: "#f46a6a" },
-  { name: "Waiting Reply", color: "#f1b44c" },
-  { name: "Replied", color: "#556ee6" },
-  { name: "In Progress", color: "#34c38f" },
-  { name: "Resolved", color: "#34c38f" },
-  { name: "On Hold", color: "#343a40" },
-];
-const list_reply_status = [
-  { name: "Replied", color: "#556ee6" },
-  { name: "In Progress", color: "#34c38f" },
-  { name: "Resolved", color: "#34c38f" },
-  { name: "On Hold", color: "#343a40" },
-];
 const list_priority = [
   {
     name: "Low",
@@ -72,6 +59,7 @@ const DetailTicket = (props) => {
   const list_reply_ticket = props.list_reply_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
+  const list_ticket_status = props.list_ticket_status;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const username = sessionStorage.getItem("username");
@@ -243,16 +231,10 @@ const DetailTicket = (props) => {
         case "New":
           setStatusColor("#f46a6a");
           break;
-        case "Waiting Reply":
-          setStatusColor("#f1b44c");
-          break;
-        case "Replied":
+        case "Process":
           setStatusColor("#556ee6");
           break;
-        case "In Progress":
-          setStatusColor("#34c38f");
-          break;
-        case "Resolved":
+        case "Finish":
           setStatusColor("#34c38f");
           break;
         case "On Hold":
@@ -285,16 +267,10 @@ const DetailTicket = (props) => {
         case "New":
           setStatusColor("#f46a6a");
           break;
-        case "Waiting Reply":
-          setStatusColor("#f1b44c");
-          break;
-        case "Replied":
+        case "Process":
           setStatusColor("#556ee6");
           break;
-        case "In Progress":
-          setStatusColor("#34c38f");
-          break;
-        case "Resolved":
+        case "Finish":
           setStatusColor("#34c38f");
           break;
         case "On Hold":
@@ -356,7 +332,7 @@ const DetailTicket = (props) => {
 
   const onSubmitReply = async (event) => {
     event.preventDefault();
-    let ticket_status = "Replied";
+    let ticket_status = "Process";
     if (detail_ticket && detail_ticket.usernamePembuat === username) {
       ticket_status = "Waiting Reply";
     }
@@ -371,7 +347,7 @@ const DetailTicket = (props) => {
     setReplyData({
       ticketCode: ticketId,
       usernamePengirim: username,
-      status: "Replied",
+      status: "Process",
     });
     setSelectedFiles1(null);
     setSelectedFiles2(null);
@@ -445,71 +421,6 @@ const DetailTicket = (props) => {
     return value;
   };
 
-  const StatusLabel = (value) => {
-    let color = null;
-    if (value) {
-      switch (value.value) {
-        case "New":
-          color = "#f46a6a";
-          break;
-        case "Waiting Reply":
-          color = "#f1b44c";
-          break;
-        case "Replied":
-          color = "#556ee6";
-          break;
-        case "In Progress":
-          color = "#34c38f";
-          break;
-        case "Resolved":
-          color = "#34c38f";
-          break;
-        case "On Hold":
-          color = "#343a40";
-          break;
-        default:
-          color = "#34c38f";
-      }
-      return <span style={{ color: color }}>{value.value}</span>;
-    }
-  };
-  const PriorityLabel = (value) => {
-    let color = null;
-    if (value) {
-      switch (value.value) {
-        case "High":
-          color = "#f46a6a";
-          break;
-        case "Medium":
-          color = "#f1b44c";
-          break;
-        case "Critical":
-          color = "#9400d3";
-          break;
-        case "Low":
-          color = "#34c38f";
-          break;
-        default:
-          color = "#34c38f";
-      }
-      return (
-        <span
-          style={{
-            fontSize: "12px",
-            display: "inlineBlock",
-            padding: "0.5rem 0.75rem",
-            fontWeight: "bold",
-            borderRadius: "0.5rem",
-            backgroundColor: color,
-            color: "#ffffff",
-            width: "max-content",
-          }}
-        >
-          #{value.value}
-        </span>
-      );
-    }
-  };
   const FileIcon = (value) => {
     const split = value && value.value.split(".");
     const file_name = value && value.value.split("/");
@@ -644,12 +555,13 @@ const DetailTicket = (props) => {
         order_by: "asc",
       });
       props.readUser({ size: 0, page_no: 0, search: "*" });
+      props.readTicketStatus();
       setReplyData({
         ticketCode: ticketId,
         usernamePengirim: username,
-        status: "Replied",
+        status: "Process",
       });
-      setCheckedSubmitAs([true, false, false, false]);
+      setCheckedSubmitAs([false, true, false, false]);
       editTicket && setIsEditTicket(true);
       closeTicket && setIsCloseTicket(true);
     } else {
@@ -831,25 +743,26 @@ const DetailTicket = (props) => {
                               }}
                               disabled={showEditTicket === false}
                             >
-                              {list_status.map((value, index) => (
-                                <option
-                                  key={index}
-                                  value={value && value.name}
-                                  onChange={(event) =>
-                                    onChangeStatus(event.target.value)
-                                  }
-                                  style={{
-                                    color: value.color,
-                                    fontWeight: "bold",
-                                  }}
-                                  selected={
-                                    detail_ticket &&
-                                    detail_ticket.status === value.name
-                                  }
-                                >
-                                  {value.name}
-                                </option>
-                              ))}
+                              {list_ticket_status &&
+                                list_ticket_status.map((value, index) => (
+                                  <option
+                                    key={index}
+                                    value={value && value.name}
+                                    onChange={(event) =>
+                                      onChangeStatus(event.target.value)
+                                    }
+                                    style={{
+                                      color: value.color,
+                                      fontWeight: "bold",
+                                    }}
+                                    selected={
+                                      detail_ticket &&
+                                      detail_ticket.status === value.name
+                                    }
+                                  >
+                                    {value.name}
+                                  </option>
+                                ))}
                             </select>
                           </div>
                         </FormGroup>
@@ -1347,47 +1260,53 @@ const DetailTicket = (props) => {
                                 <div
                                   style={{
                                     display: "grid",
-                                    gridTemplateColumns: "repeat(4, 1fr)",
+                                    gridTemplateColumns: "repeat(3, 1fr)",
                                     columnGap: "1rem",
                                   }}
                                 >
-                                  {list_reply_status.map((value, index) => (
-                                    <ul
-                                      className="sub-menu"
-                                      aria-expanded="true"
-                                      style={{ listStyle: "none" }}
-                                      key={index}
-                                    >
-                                      <li>
-                                        <div className="has-arrow">
-                                          <div className="custom-control custom-checkbox mb-3">
-                                            <input
-                                              type="checkbox"
-                                              className="custom-control-input"
-                                              id="CustomCheck1"
-                                              onChange={() => false}
-                                              checked={
-                                                checkedSubmitAs &&
-                                                checkedSubmitAs[index]
-                                              }
-                                            />
-                                            <label
-                                              className="custom-control-label"
-                                              style={{ color: value.color }}
-                                              onClick={() =>
-                                                onChangeSubmitAs(
-                                                  value.name,
-                                                  index
-                                                )
-                                              }
-                                            >
-                                              <span>{value.name}</span>
-                                            </label>
-                                          </div>
-                                        </div>
-                                      </li>
-                                    </ul>
-                                  ))}
+                                  {list_ticket_status &&
+                                    list_ticket_status.map(
+                                      (value, index) =>
+                                        value.name !== "New" && (
+                                          <ul
+                                            className="sub-menu"
+                                            aria-expanded="true"
+                                            style={{ listStyle: "none" }}
+                                            key={index}
+                                          >
+                                            <li>
+                                              <div className="has-arrow">
+                                                <div className="custom-control custom-checkbox mb-3">
+                                                  <input
+                                                    type="checkbox"
+                                                    className="custom-control-input"
+                                                    id="CustomCheck1"
+                                                    onChange={() => false}
+                                                    checked={
+                                                      checkedSubmitAs &&
+                                                      checkedSubmitAs[index]
+                                                    }
+                                                  />
+                                                  <label
+                                                    className="custom-control-label"
+                                                    style={{
+                                                      color: value.color,
+                                                    }}
+                                                    onClick={() =>
+                                                      onChangeSubmitAs(
+                                                        value.name,
+                                                        index
+                                                      )
+                                                    }
+                                                  >
+                                                    <span>{value.name}</span>
+                                                  </label>
+                                                </div>
+                                              </div>
+                                            </li>
+                                          </ul>
+                                        )
+                                    )}
                                 </div>
                               </FormGroup>
                             </Col>
@@ -1515,9 +1434,11 @@ const mapStatetoProps = (state) => {
   } = state.Ticket;
   const { list_category } = state.Category;
   const { list_user } = state.User;
+  const { list_ticket_status } = state.TicketStatus;
   return {
     list_category,
     list_user,
+    list_ticket_status,
     detail_ticket,
     list_reply_ticket,
     response_code_ticket,
@@ -1534,6 +1455,7 @@ const mapDispatchToProps = (dispatch) =>
       readCategory,
       readUser,
       replyTicket,
+      readTicketStatus,
     },
     dispatch
   );

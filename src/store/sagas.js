@@ -12,7 +12,8 @@ import RoleSaga from "./pages/role/saga";
 import PermissionSaga from "./pages/permission/saga";
 import TicketSaga from "./pages/ticket/saga";
 import CategorySaga from "./pages/category/saga";
-import Reportaga from "./pages/report/saga";
+import ReportSaga from "./pages/report/saga";
+import TicketStatusSaga from "./pages/ticketStatus/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -28,6 +29,7 @@ export default function* rootSaga() {
     CaptchaSaga(),
     TicketSaga(),
     CategorySaga(),
-    Reportaga(),
+    ReportSaga(),
+    TicketStatusSaga(),
   ]);
 }

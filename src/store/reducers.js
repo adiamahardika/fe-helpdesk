@@ -8,6 +8,7 @@ import Permission from "./pages/permission/reducer";
 import Ticket from "./pages/ticket/reducer";
 import Category from "./pages/category/reducer";
 import Report from "./pages/report/reducer";
+import TicketStatus from "./pages/ticketStatus/reducer";
 
 // Authentication
 import Login from "./auth/login/reducer";
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   Ticket,
   Category,
   Report,
+  TicketStatus,
 });
 
 export default rootReducer;

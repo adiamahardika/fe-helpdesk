@@ -5,6 +5,7 @@ export * from "./pages/role/actions";
 export * from "./pages/ticket/actions";
 export * from "./pages/category/actions";
 export * from "./pages/report/actions";
+export * from "./pages/ticketStatus/actions";
 
 // Authentication module
 export * from "./auth/register/actions";
