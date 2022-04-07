@@ -184,16 +184,10 @@ const Ticket = (props) => {
         case "New":
           color = "#f46a6a";
           break;
-        case "Waiting Reply":
-          color = "#f1b44c";
-          break;
-        case "Replied":
+        case "Process":
           color = "#556ee6";
           break;
-        case "In Progress":
-          color = "#34c38f";
-          break;
-        case "Resolved":
+        case "Finish":
           color = "#34c38f";
           break;
         case "On Hold":

@@ -32,11 +32,7 @@ require("dotenv").config();
 const EditCategory = (props) => {
   const message = props.message_category;
   const response_code = props.response_code_category;
-  const list_category = props.list_category;
   const detail_category = props.detail_category;
-  const parent_1 = props.parent_1;
-  const parent_2 = props.parent_2;
-  const parent_3 = props.parent_3;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
