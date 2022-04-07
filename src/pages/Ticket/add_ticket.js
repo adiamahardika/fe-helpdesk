@@ -78,12 +78,6 @@ const AddTicket = (props) => {
   const [customchk2, setcustomchk2] = useState(true);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
-  const [mainValue, setMainValue] = useState(null);
-  const [subLevel1Value, setSubLevel1Value] = useState(null);
-  const [subLevel2Value, setSubLevel2Value] = useState(null);
-  const [showSubLevel1, setShowSubLevel1] = useState(false);
-  const [showSubLevel2, setShowSubLevel2] = useState(false);
-  const [showSubLevel3, setShowSubLevel3] = useState(false);
   const [ticketCode, setTicketCode] = useState(null);
   const [additionalInput1, setAdditionalInput1] = useState(null);
   const [additionalInput2, setAdditionalInput2] = useState(null);
@@ -322,7 +316,7 @@ const AddTicket = (props) => {
     }
   };
   const ButtonSubmitCreate = () => {
-    if (data && Object.keys(data).length >= 13 && validEmail) {
+    if (data && Object.keys(data).length >= 14 && validEmail) {
       return (
         <button
           type="button"
@@ -570,7 +564,7 @@ const AddTicket = (props) => {
                             Category <span style={{ color: "red" }}>*</span>
                           </label>
                           <Row className="mb-2">
-                            <Col md={3}>
+                            <Col md={4}>
                               <div>
                                 <select
                                   name="category"
@@ -583,12 +577,6 @@ const AddTicket = (props) => {
                                         event.target.value
                                       ).id.toString(),
                                     }),
-                                    setMainValue(
-                                      JSON.parse(event.target.value).codeLevel
-                                    ),
-                                    setShowSubLevel1(true),
-                                    setShowSubLevel2(false),
-                                    setShowSubLevel3(false),
                                     setAdditionalInput1({
                                       ...additionalInput1,
                                       answer: null,
@@ -626,278 +614,17 @@ const AddTicket = (props) => {
                                     Select Category
                                   </option>
                                   {list_category &&
-                                    list_category.map(
-                                      (value, index) =>
-                                        value.parent === "0" && (
-                                          <option
-                                            key={index}
-                                            value={
-                                              value && JSON.stringify(value)
-                                            }
-                                          >
-                                            {value.name}
-                                          </option>
-                                        )
-                                    )}
+                                    list_category.map((value, index) => (
+                                      <option
+                                        key={index}
+                                        value={value && JSON.stringify(value)}
+                                      >
+                                        {value.name}
+                                      </option>
+                                    ))}
                                 </select>
                               </div>
                             </Col>
-                            {showSubLevel1 && (
-                              <Col md={3}>
-                                <div>
-                                  <select
-                                    name="category"
-                                    className="form-control"
-                                    defaultValue={mainValue}
-                                    onChange={(event) => (
-                                      setData({
-                                        ...data,
-                                        category: JSON.parse(
-                                          event.target.value
-                                        ).id.toString(),
-                                      }),
-                                      setSubLevel1Value(
-                                        JSON.parse(event.target.value).codeLevel
-                                      ),
-                                      event.target.value === mainValue
-                                        ? (setShowSubLevel2(false),
-                                          setAdditionalInput1({
-                                            ...additionalInput1,
-                                            answer: null,
-                                            sl1AdditionalInput1:
-                                              additionalInput1.mainAdditionalInput1,
-                                            additionalInput1:
-                                              additionalInput1.mainAdditionalInput1,
-                                          }),
-                                          setAdditionalInput2({
-                                            ...additionalInput2,
-                                            answer: null,
-                                            sl1AdditionalInput2:
-                                              additionalInput2.mainAdditionalInput2,
-                                            additionalInput2:
-                                              additionalInput2.mainAdditionalInput2,
-                                          }),
-                                          setAdditionalInput3({
-                                            ...additionalInput3,
-                                            answer: null,
-                                            sl1AdditionalInput3:
-                                              additionalInput3.mainAdditionalInput3,
-                                            additionalInput3:
-                                              additionalInput3.mainAdditionalInput3,
-                                          }))
-                                        : (setShowSubLevel2(true),
-                                          setAdditionalInput1({
-                                            ...additionalInput1,
-                                            answer: null,
-                                            sl1AdditionalInput1: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput1,
-                                            additionalInput1: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput1,
-                                          }),
-                                          setAdditionalInput2({
-                                            ...additionalInput2,
-                                            answer: null,
-                                            sl1AdditionalInput2: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput2,
-                                            additionalInput2: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput2,
-                                          }),
-                                          setAdditionalInput3({
-                                            ...additionalInput3,
-                                            answer: null,
-                                            sl1AdditionalInput3: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput3,
-                                            additionalInput3: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput3,
-                                          })),
-                                      setShowSubLevel3(false),
-                                      setDirty()
-                                    )}
-                                  >
-                                    <option value={mainValue}>-</option>
-                                    {list_category &&
-                                      list_category.map(
-                                        (value, index) =>
-                                          mainValue === value.parent && (
-                                            <option
-                                              key={index}
-                                              value={
-                                                value && JSON.stringify(value)
-                                              }
-                                            >
-                                              {value.name}
-                                            </option>
-                                          )
-                                      )}
-                                  </select>
-                                </div>
-                              </Col>
-                            )}
-                            {showSubLevel2 && (
-                              <Col md={3}>
-                                <div>
-                                  <select
-                                    name="category"
-                                    className="form-control"
-                                    defaultValue={subLevel1Value}
-                                    onChange={(event) => (
-                                      setData({
-                                        ...data,
-                                        category: JSON.parse(
-                                          event.target.value
-                                        ).id.toString(),
-                                      }),
-                                      setSubLevel2Value(
-                                        JSON.parse(event.target.value).codeLevel
-                                      ),
-                                      event.target.value === subLevel1Value
-                                        ? (setShowSubLevel3(false),
-                                          setAdditionalInput1({
-                                            ...additionalInput1,
-                                            answer: null,
-                                            sl2AdditionalInput1:
-                                              additionalInput1.sl1AdditionalInput1,
-                                            additionalInput1:
-                                              additionalInput1.sl1AdditionalInput1,
-                                          }),
-                                          setAdditionalInput2({
-                                            ...additionalInput2,
-                                            answer: null,
-                                            sl2AdditionalInput2:
-                                              additionalInput2.sl1AdditionalInput2,
-                                            additionalInput2:
-                                              additionalInput2.sl1AdditionalInput2,
-                                          }),
-                                          setAdditionalInput3({
-                                            ...additionalInput3,
-                                            answer: null,
-                                            sl2AdditionalInput3:
-                                              additionalInput3.sl1AdditionalInput3,
-                                            additionalInput3:
-                                              additionalInput3.sl1AdditionalInput3,
-                                          }))
-                                        : (setShowSubLevel3(true),
-                                          setAdditionalInput1({
-                                            ...additionalInput1,
-                                            answer: null,
-                                            sl2AdditionalInput1: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput1,
-                                            additionalInput1: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput1,
-                                          }),
-                                          setAdditionalInput2({
-                                            ...additionalInput2,
-                                            answer: null,
-                                            sl2AdditionalInput2: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput2,
-                                            additionalInput2: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput2,
-                                          }),
-                                          setAdditionalInput3({
-                                            ...additionalInput3,
-                                            answer: null,
-                                            sl2AdditionalInput3: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput3,
-                                            additionalInput3: JSON.parse(
-                                              event.target.value
-                                            ).additionalInput3,
-                                          })),
-                                      setDirty()
-                                    )}
-                                  >
-                                    <option value={subLevel1Value}>-</option>
-                                    {list_category &&
-                                      list_category.map(
-                                        (value, index) =>
-                                          subLevel1Value === value.parent && (
-                                            <option
-                                              key={index}
-                                              value={
-                                                value && JSON.stringify(value)
-                                              }
-                                            >
-                                              {value.name}
-                                            </option>
-                                          )
-                                      )}
-                                  </select>
-                                </div>
-                              </Col>
-                            )}
-                            {showSubLevel3 && (
-                              <Col md={3}>
-                                <div>
-                                  <select
-                                    name="category"
-                                    className="form-control"
-                                    defaultValue={subLevel2Value}
-                                    onChange={(event) => (
-                                      setData({
-                                        ...data,
-                                        category: JSON.parse(
-                                          event.target.value
-                                        ).id.toString(),
-                                      }),
-                                      setAdditionalInput1({
-                                        ...additionalInput1,
-                                        answer: null,
-                                        additionalInput1:
-                                          event.target.value === subLevel2Value
-                                            ? additionalInput1.sl2AdditionalInput1
-                                            : JSON.parse(event.target.value)
-                                                .additionalInput1,
-                                      }),
-                                      setAdditionalInput2({
-                                        ...additionalInput2,
-                                        answer: null,
-                                        additionalInput2:
-                                          event.target.value === subLevel2Value
-                                            ? additionalInput2.sl2AdditionalInput2
-                                            : JSON.parse(event.target.value)
-                                                .additionalInput2,
-                                      }),
-                                      setAdditionalInput3({
-                                        ...additionalInput3,
-                                        answer: null,
-                                        additionalInput3:
-                                          event.target.value === subLevel2Value
-                                            ? additionalInput3.sl2AdditionalInput3
-                                            : JSON.parse(event.target.value)
-                                                .additionalInput3,
-                                      }),
-                                      setDirty()
-                                    )}
-                                  >
-                                    <option value={subLevel2Value}>-</option>
-                                    {list_category &&
-                                      list_category.map(
-                                        (value, index) =>
-                                          subLevel2Value === value.parent && (
-                                            <option
-                                              key={index}
-                                              value={
-                                                value && JSON.stringify(value)
-                                              }
-                                            >
-                                              {value.name}
-                                            </option>
-                                          )
-                                      )}
-                                  </select>
-                                </div>
-                              </Col>
-                            )}
                           </Row>
                         </FormGroup>
                       </Col>
