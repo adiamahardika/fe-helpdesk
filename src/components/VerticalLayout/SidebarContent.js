@@ -23,6 +23,7 @@ const SidebarContent = (props) => {
   const [isViewUsers, setIsViewUsers] = useState(true);
   const [isViewRoles, setIsViewRoles] = useState(true);
   const [isViewCategory, setIsViewCategory] = useState(true);
+  const [isGenerateReport, setIsGenerateReport] = useState(true);
 
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -38,11 +39,15 @@ const SidebarContent = (props) => {
     let viewTicket = permissions.find(
       (value) => value.code === code_all_permissions.view_ticket
     );
+    let generateReport = permissions.find(
+      (value) => value.code === code_all_permissions.generate_report
+    );
 
     viewUsers ? setIsViewUsers(true) : setIsViewUsers(false);
     viewRoles ? setIsViewRoles(true) : setIsViewRoles(false);
     viewCategory ? setIsViewCategory(true) : setIsViewCategory(false);
     viewTicket ? setIsViewTicket(true) : setIsViewTicket(false);
+    generateReport ? setIsGenerateReport(true) : setIsGenerateReport(false);
 
     var pathName = props.location.pathname;
     const initMenu = () => {
@@ -94,7 +99,7 @@ const SidebarContent = (props) => {
     if (isViewRoles || isViewUsers) {
       return (
         <li>
-          <Link to="/#" className="has-arrow waves-effect">
+          <Link to={routes.users} className="has-arrow waves-effect">
             <i className="bx bxs-cog"></i>
             <span>{props.t("Settings")}</span>
           </Link>
@@ -137,12 +142,14 @@ const SidebarContent = (props) => {
               </Link>
             </li>
           )}
-          <li>
-            <Link to={routes.report} className="waves-effect">
-              <i className="bx bxs-report"></i>
-              <span>{props.t("Report")}</span>
-            </Link>
-          </li>
+          {isGenerateReport && (
+            <li>
+              <Link to={routes.report} className="waves-effect">
+                <i className="bx bxs-report"></i>
+                <span>{props.t("Report")}</span>
+              </Link>
+            </li>
+          )}
           <SettingsMenu />
         </ul>
       </div>

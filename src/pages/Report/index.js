@@ -173,42 +173,50 @@ const Report = (props) => {
   };
 
   useEffect(() => {
-    let year = new Date().getFullYear();
-    let month = "" + (new Date().getMonth() + 1);
-    let date = "" + new Date().getDate();
-    if (month.length < 2) month = "0" + month;
-    if (date.length < 2) date = "0" + date;
-    let today = year + "-" + month + "-" + date;
-    let priorityArray = [];
-    let statusArray = [];
-    let item = {
-      assignedTo: "",
-      usernamePembuat: "",
-      category: [],
-      priority: priorityArray,
-      status: statusArray,
-      startDate: today,
-      endDate: today,
-    };
+    let generateReport = permissions.find(
+      (value) => value.code === code_all_permissions.generate_report
+    );
 
-    general_constant.priority.map((value) => {
-      priorityArray.push(value.name);
-    });
-    general_constant.status.map((value) => {
-      statusArray.push(value.name);
-    });
+    if (generateReport) {
+      let year = new Date().getFullYear();
+      let month = "" + (new Date().getMonth() + 1);
+      let date = "" + new Date().getDate();
+      if (month.length < 2) month = "0" + month;
+      if (date.length < 2) date = "0" + date;
+      let today = year + "-" + month + "-" + date;
+      let priorityArray = [];
+      let statusArray = [];
+      let item = {
+        assignedTo: "",
+        usernamePembuat: "",
+        category: [],
+        priority: priorityArray,
+        status: statusArray,
+        startDate: today,
+        endDate: today,
+      };
 
-    props.readReport(item);
-    props.readCategory({
-      size: 0,
-      page_no: 0,
-      sort_by: "name",
-      order_by: "asc",
-      is_check_all: true,
-    });
-    props.readUser({ size: 0, page_no: 0, search: "*" });
-    setData(item);
-    setToday(today);
+      general_constant.priority.map((value) => {
+        priorityArray.push(value.name);
+      });
+      general_constant.status.map((value) => {
+        statusArray.push(value.name);
+      });
+
+      props.readReport(item);
+      props.readCategory({
+        size: 0,
+        page_no: 0,
+        sort_by: "name",
+        order_by: "asc",
+        is_check_all: true,
+      });
+      props.readUser({ size: 0, page_no: 0, search: "*" });
+      setData(item);
+      setToday(today);
+    } else {
+      history.push(routes.ticket);
+    }
   }, []);
 
   useEffect(() => {

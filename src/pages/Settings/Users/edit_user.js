@@ -252,7 +252,7 @@ const EditUser = (props) => {
                           errorMessage="Type name"
                           validate={{
                             required: { value: true },
-                            maxLength: { value: 16 },
+                            maxLength: { value: 25 },
                           }}
                           value={selectedData && selectedData.name}
                           onChange={onChangeSelectedData}

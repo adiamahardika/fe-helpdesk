@@ -125,5 +125,15 @@
         "code": "3.4"
       }
     ]
+  },
+  {
+    "name": "Report",
+    "code": "4",
+    "sub_level_1": [
+      {
+        "name": "Generate Report",
+        "code": "4.1"
+      }
+    ]
   }
 ]

@@ -201,7 +201,7 @@ const AddUser = (props) => {
                           errorMessage="Username cannot contain special character and whitespace"
                           validate={{
                             required: { value: true },
-                            maxLength: { value: 16 },
+                            maxLength: { value: 25 },
                             pattern: { value: "^[A-Za-z0-9]+S*$" },
                           }}
                           onChange={(event) =>
@@ -218,7 +218,7 @@ const AddUser = (props) => {
                           errorMessage="Enter Name"
                           validate={{
                             required: { value: true },
-                            maxLength: { value: 16 },
+                            maxLength: { value: 25 },
                           }}
                           onChange={onChangeData}
                         />
