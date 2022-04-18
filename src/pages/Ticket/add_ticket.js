@@ -54,7 +54,7 @@ const AddTicket = (props) => {
   let response_code = props.response_code_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
-  const captcha = props.captcha;
+  const captcha_id = props.captcha_id;
   const image_captcha = props.image_captcha;
   const loading = props.loading;
   const permissions = JSON.parse(
@@ -260,7 +260,31 @@ const AddTicket = (props) => {
   };
 
   const onSubmitCreate = async () => {
-    if (isAssigningTicket || captchaValidation === captcha) {
+    let valid_captcha = false;
+    if (captchaValidation && captchaValidation.verifyValue.length > 0) {
+      await fetch(`${process.env.REACT_APP_API}/v1/captcha/verify`, {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(captchaValidation),
+      })
+        .then((response) => response.json())
+        .then(async (value) => {
+          if (value.is_valid === true) {
+            valid_captcha = true;
+          } else {
+            setCaptchaMessage(value.status.description[0]);
+            setCaptchaValidation({
+              ...captchaValidation,
+              captchaId: captcha_id,
+              verifyValue: null,
+            });
+            props.readCaptcha(captchaRequest);
+          }
+        });
+    }
+
+    if (isAssigningTicket || valid_captcha) {
       const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
       setTicketCode(ticket_code);
       const additional1 =
@@ -311,12 +335,15 @@ const AddTicket = (props) => {
       props.createTicket(request);
       setIsShowSweetAlert(setTimeout(true, 1500));
       setPristine();
-    } else {
-      setCaptchaMessage("Captcha Not Match");
     }
   };
   const ButtonSubmitCreate = () => {
-    if (data && Object.keys(data).length >= 14 && validEmail) {
+    if (
+      data &&
+      Object.keys(data).length >= 14 &&
+      validEmail &&
+      captchaValidation
+    ) {
       return (
         <button
           type="button"
@@ -369,7 +396,7 @@ const AddTicket = (props) => {
             Ticket has successfully created!
           </SweetAlert>
         );
-      } else {
+      } else if (!loading) {
         value = (
           <SweetAlert
             title={general_constant.error_message}
@@ -1116,7 +1143,11 @@ const AddTicket = (props) => {
                               errorMessage="This field cannot be empty"
                               required
                               onChange={(event) => {
-                                setCaptchaValidation(event.target.value);
+                                setCaptchaValidation({
+                                  ...captchaValidation,
+                                  captchaId: captcha_id,
+                                  verifyValue: event.target.value,
+                                });
                               }}
                             />
                           </div>
@@ -1237,14 +1268,14 @@ const mapStatetoProps = (state) => {
   const { list_category } = state.Category;
   const { list_user } = state.User;
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
-  const { captcha, image_captcha } = state.Captcha;
+  const { captcha_id, image_captcha } = state.Captcha;
   return {
     list_category,
     list_user,
     response_code_ticket,
     message_ticket,
     loading,
-    captcha,
+    captcha_id,
     image_captcha,
   };
 };
