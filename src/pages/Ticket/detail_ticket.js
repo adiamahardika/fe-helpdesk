@@ -337,9 +337,12 @@ const DetailTicket = (props) => {
     reply_request.append("ticketCode", ticketId);
     reply_request.append("isi", replyData.isi);
     reply_request.append("usernamePengirim", replyData.usernamePengirim);
-    reply_request.append("attachment1", replyData.attachment1);
-    reply_request.append("attachment2", replyData.attachment2);
+    selectedFiles1 &&
+      reply_request.append("attachment1", replyData.attachment1);
+    selectedFiles2 &&
+      reply_request.append("attachment2", replyData.attachment2);
     reply_request.append("status", ticket_status);
+    reply_request.append("emailNotification", detail_ticket.emailNotification);
     props.replyTicket(reply_request, ticketId);
     setReplyData({
       ticketCode: ticketId,
@@ -350,7 +353,6 @@ const DetailTicket = (props) => {
     setSelectedFiles2(null);
     setPristine();
   };
-  console.log(replyData);
   const ButtonSubmitReply = () => {
     if (
       replyData &&
@@ -1116,6 +1118,7 @@ const DetailTicket = (props) => {
                                               className="btn btn-light waves-effect waves-light align-middle"
                                               onClick={() => {
                                                 setSelectedFiles1(null);
+                                                delete replyData.attachment1;
                                               }}
                                             >
                                               <i
@@ -1219,6 +1222,7 @@ const DetailTicket = (props) => {
                                               className="btn btn-light waves-effect waves-light align-middle"
                                               onClick={() => {
                                                 setSelectedFiles2(null);
+                                                delete replyData.attachment2;
                                               }}
                                             >
                                               <i

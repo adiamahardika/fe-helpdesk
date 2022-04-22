@@ -324,10 +324,8 @@ const AddTicket = (props) => {
       request.append("prioritas", data.prioritas);
       request.append("assignedTo", data.assignedTo);
       request.append("userPembuat", data.userPembuat);
-      data.attachment1 !== null &&
-        request.append("attachment1", data.attachment1);
-      data.attachment1 !== null &&
-        request.append("attachment2", data.attachment2);
+      selectedFiles1 && request.append("attachment1", data.attachment1);
+      selectedFiles2 && request.append("attachment2", data.attachment2);
       request.append("ticketCode", ticket_code);
       request.append("email", data.email);
       request.append("judul", data.judul);
@@ -877,6 +875,7 @@ const AddTicket = (props) => {
                                           className="btn btn-light waves-effect waves-light align-middle"
                                           onClick={() => {
                                             setSelectedFiles1(null);
+                                            delete data.attachment1;
                                           }}
                                         >
                                           <i
@@ -977,6 +976,7 @@ const AddTicket = (props) => {
                                           className="btn btn-light waves-effect waves-light align-middle"
                                           onClick={() => {
                                             setSelectedFiles2(null);
+                                            delete data.attachment2;
                                           }}
                                         >
                                           <i
