@@ -261,7 +261,11 @@ const AddTicket = (props) => {
 
   const onSubmitCreate = async () => {
     let valid_captcha = false;
-    if (captchaValidation && captchaValidation.verifyValue.length > 0) {
+    if (
+      !isAssigningTicket &&
+      captchaValidation &&
+      captchaValidation.verifyValue.length > 0
+    ) {
       await fetch(`${process.env.REACT_APP_API}/v1/captcha/verify`, {
         method: "POST",
         mode: "cors",
@@ -331,6 +335,7 @@ const AddTicket = (props) => {
       request.append("category", data.category);
       request.append("lokasi", data.lokasi);
       request.append("isi", isi);
+      request.append("emailNotification", data.emailNotification);
 
       props.createTicket(request);
       setIsShowSweetAlert(setTimeout(true, 1500));
@@ -461,6 +466,10 @@ const AddTicket = (props) => {
         emailNotification: "true",
       });
       setOptionColor("#34c38f");
+      setCaptchaValidation({
+        captchaId: null,
+        verifyValue: null,
+      });
       assigningTicket && setIsAssigningTicket(true);
     } else {
       history.push(routes.ticket);

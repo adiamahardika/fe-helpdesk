@@ -333,9 +333,6 @@ const DetailTicket = (props) => {
   const onSubmitReply = async (event) => {
     event.preventDefault();
     let ticket_status = "Process";
-    if (detail_ticket && detail_ticket.usernamePembuat === username) {
-      ticket_status = "Waiting Reply";
-    }
     let reply_request = new FormData();
     reply_request.append("ticketCode", ticketId);
     reply_request.append("isi", replyData.isi);
@@ -353,11 +350,12 @@ const DetailTicket = (props) => {
     setSelectedFiles2(null);
     setPristine();
   };
+  console.log(replyData);
   const ButtonSubmitReply = () => {
     if (
       replyData &&
       replyData.isi !== "" &&
-      Object.keys(replyData).length >= 8
+      Object.keys(replyData).length >= 4
     ) {
       return (
         <button
