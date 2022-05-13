@@ -21,7 +21,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { saveAs } from "file-saver";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -348,11 +348,13 @@ const DetailTicket = (props) => {
       ticketCode: ticketId,
       usernamePengirim: username,
       status: "Process",
+      isi: "",
     });
     setSelectedFiles1(null);
     setSelectedFiles2(null);
     setPristine();
   };
+
   const ButtonSubmitReply = () => {
     if (
       replyData &&
@@ -360,16 +362,18 @@ const DetailTicket = (props) => {
       Object.keys(replyData).length >= 4
     ) {
       return (
-        <button
-          type="button"
-          className="btn btn-primary waves-effect waves-light"
-          onClick={(event) => {
-            onSubmitReply(event);
-          }}
-        >
-          <i className="bx bxs-send font-size-16 align-middle mr-2"></i>
-          Send
-        </button>
+        <a href={`#reply-${list_reply_ticket && list_reply_ticket.length - 1}`}>
+          <button
+            type="button"
+            className="btn btn-primary waves-effect waves-light"
+            onClick={(event) => {
+              onSubmitReply(event);
+            }}
+          >
+            <i className="bx bxs-send font-size-16 align-middle mr-2"></i>
+            Send
+          </button>
+        </a>
       );
     } else {
       return (
@@ -560,6 +564,7 @@ const DetailTicket = (props) => {
         ticketCode: ticketId,
         usernamePengirim: username,
         status: "Process",
+        isi: "",
       });
       setCheckedSubmitAs([false, true, false, false]);
       editTicket && setIsEditTicket(true);
@@ -916,6 +921,7 @@ const DetailTicket = (props) => {
                     list_reply_ticket.map((value, index) => (
                       <Row
                         key={index}
+                        id={`reply-${index + 1}`}
                         style={{
                           borderBottomColor: "#cfcfcf",
                           borderBottomStyle: `${
@@ -1005,6 +1011,7 @@ const DetailTicket = (props) => {
                                 validate={{
                                   required: { value: true },
                                 }}
+                                value={replyData && replyData.isi}
                                 onChange={(event) => (
                                   setReplyData({
                                     ...replyData,

@@ -671,8 +671,9 @@ const Ticket = (props) => {
                       <tr>
                         <th>No</th>
                         <th>Ticket Code</th>
+                        <th>Terminal Id</th>
                         <th>Status</th>
-                        <th>Priority - Judul</th>
+                        <th>Priority</th>
                         <th>Category</th>
                         <th>Last Update</th>
                         <th>Actions</th>
@@ -687,9 +688,10 @@ const Ticket = (props) => {
                                 <div>{index + 1}</div>
                               </th>
                               <td>{value.ticketCode}</td>
+                              <td>{value.terminalId}</td>
                               <StatusLabel value={value.status} />
                               <td>
-                                <span
+                                {/* <span
                                   style={{
                                     textOverflow: "ellipsis",
                                     overflow: "hidden",
@@ -697,10 +699,9 @@ const Ticket = (props) => {
                                     width: "150px",
                                     display: "block",
                                   }}
-                                >
-                                  <PriorityLabel value={value.prioritas} />-{" "}
-                                  {value.judul}
-                                </span>
+                                > */}
+                                <PriorityLabel value={value.prioritas} />
+                                {/* </span> */}
                               </td>
                               <td>
                                 <span
