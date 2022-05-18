@@ -26,11 +26,8 @@
   ],
   "status": [
     { "name": "New", "color": "#f46a6a" },
-    { "name": "Waiting Reply", "color": "#f1b44c" },
-    { "name": "Replied", "color": "#556ee6" },
-    { "name": "In Progress", "color": "#34c38f" },
-    { "name": "Resolved", "color": "#34c38f" },
-    { "name": "On Hold", "color": "#343a40" },
-    { "name": "Visit", "color": "#343a40" }
+    { "name": "Process", "color": "#556ee6" },
+    { "name": "Finish", "color": "#34c38f" },
+    { "name": "On Hold", "color": "#343a40" }
   ]
 }

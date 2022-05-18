@@ -90,15 +90,7 @@ const Report = (props) => {
   const [checkAllCategory, setCheckAllCategory] = useState(true);
   const [showSort, setShowSort] = useState(false);
   const [today, setToday] = useState(null);
-  const [statusChecked, setStatusChecked] = useState([
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-  ]);
+  const [statusChecked, setStatusChecked] = useState([true, true, true, true]);
   const [priorityChecked, setPriorityChecked] = useState([
     true,
     true,
@@ -137,6 +129,7 @@ const Report = (props) => {
     props.checkCategory(index);
     props.readReport({ ...data, category: array });
     setData({ ...data, category: array });
+    props.readReport({ ...data, category: array });
   };
   const handleCheckStatus = (value, index) => {
     let array = [...statusChecked];
@@ -152,6 +145,7 @@ const Report = (props) => {
     }
     props.readReport({ ...data, status: status });
     setData({ ...data, status: status });
+    props.readReport({ ...data, status: status });
     setStatusChecked(array);
   };
   const handleCheckPriority = (value, index) => {
@@ -169,6 +163,7 @@ const Report = (props) => {
 
     props.readReport({ ...data, priority: priority });
     setData({ ...data, priority: priority });
+    props.readReport({ ...data, priority: priority });
     setPriorityChecked(array);
   };
 
@@ -219,10 +214,6 @@ const Report = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    props.readReport(data);
-  }, [data]);
-
   return (
     <React.Fragment>
       <div className="page-content">
@@ -247,9 +238,13 @@ const Report = (props) => {
                           id="example-date-input"
                           max={today}
                           defaultValue={today}
-                          onChange={(event) =>
-                            setData({ ...data, startDate: event.target.value })
-                          }
+                          onChange={(event) => (
+                            setData({ ...data, startDate: event.target.value }),
+                            props.readReport({
+                              ...data,
+                              startDate: event.target.value,
+                            })
+                          )}
                         />
                       </div>
                     </Col>
@@ -268,15 +263,19 @@ const Report = (props) => {
                           max={today}
                           min={data && data.start}
                           defaultValue={today}
-                          onChange={(event) =>
-                            setData({ ...data, endDate: event.target.value })
-                          }
+                          onChange={(event) => (
+                            setData({ ...data, endDate: event.target.value }),
+                            props.readReport({
+                              ...data,
+                              endDate: event.target.value,
+                            })
+                          )}
                         />
                       </div>
                     </Col>
                   </Row>
                   <Row>
-                    <Col md={10}>
+                    <Col md={6}>
                       <div className="form-group">
                         <label
                           htmlFor="example-datetime-local-input"
