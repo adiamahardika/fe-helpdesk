@@ -921,13 +921,13 @@ const Ticket = (props) => {
                       <td></td>
                     </tr>
                     <tr>
-                      <th>Time Worked</th>
-                      <td>{selectedData && selectedData.totalWaktu}</td>
+                      <th>Assigned To</th>
+                      <td>{selectedData && selectedData.assignedTo}</td>
                       <td></td>
                     </tr>
                     <tr>
-                      <th>Last Replier</th>
-                      <td>{selectedData && selectedData.usernamePembalas}</td>
+                      <th>Time Worked</th>
+                      <td>{selectedData && selectedData.totalWaktu}</td>
                       <td></td>
                     </tr>
                     <tr>

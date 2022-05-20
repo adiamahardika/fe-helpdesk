@@ -625,12 +625,6 @@ const DetailTicket = (props) => {
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Replies</strong>{" "}
-                      {list_reply_ticket && list_reply_ticket.length - 1}
-                    </Col>
-                  </Row>
-                  <Row className="align-items-center mb-2">
-                    <Col className="d-flex" style={{ flexFlow: "column" }}>
                       <strong>Reply On</strong>
                       {detail_ticket &&
                         parseFullDate(
@@ -859,7 +853,7 @@ const DetailTicket = (props) => {
                                 list_user.map((value, index) => (
                                   <option
                                     key={index}
-                                    value={value.name}
+                                    value={value.username}
                                     onChange={(event) =>
                                       setReplyData({
                                         ...replyData,
@@ -868,7 +862,8 @@ const DetailTicket = (props) => {
                                     }
                                     selected={
                                       detail_ticket &&
-                                      detail_ticket.assignedTo === value.name
+                                      detail_ticket.assignedTo ===
+                                        value.username
                                     }
                                   >
                                     {value.name}

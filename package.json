@@ -1,6 +1,6 @@
 {
   "name": "myg-ticketing",
-  "homepage": "https://10.49.2.128/ticketing/",
+  "homepage": "https://app.trilogipersada.com/ticketing/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
