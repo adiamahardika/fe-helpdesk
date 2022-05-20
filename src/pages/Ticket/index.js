@@ -21,10 +21,9 @@ import {
   checkCategory,
   uncheckCategory,
 } from "../../store/pages/category/actions";
-import { readTicketStatus } from "../../store/pages/ticketStatus/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { parseFullDate } from "../../helpers/index";
+import { getShortDate, parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -38,47 +37,10 @@ import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
 require("dotenv").config();
 
-const priority = [
-  {
-    name: "Low",
-    color: "#34c38f",
-  },
-  {
-    name: "Medium",
-    color: "#f1b44c",
-  },
-  {
-    name: "High",
-    color: "#f46a6a",
-  },
-  {
-    name: "Critical",
-    color: "#9400d3",
-  },
-];
-// const sortItem = [
-//   {
-//     name: "Last Update",
-//     sort_by: "tglDiperbarui",
-//     sort_type: "DESC",
-//   },
-//   {
-//     name: "Last Update",
-//     sort_by: "tglDiperbarui",
-//     sort_type: "ASC",
-//   },
-//   {
-//     name: "Subject",
-//     sort_by: "judul",
-//     sort_type: "ASC",
-//   },
-// ];
-
 const Ticket = (props) => {
   const list_ticket = props.list_ticket;
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
-  const list_ticket_status = props.list_ticket_status;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const total_pages_ticket = props.total_pages_ticket;
@@ -266,6 +228,8 @@ const Ticket = (props) => {
       (value) => value.code === code_all_permissions.view_assigned_to_me_ticket
     );
     if (viewTicket) {
+      let start = new Date().setDate(new Date().getDate() - 30);
+
       let item = {
         assignedTo: "",
         usernamePembuat: "",
@@ -277,6 +241,8 @@ const Ticket = (props) => {
         sortBy: "tglDiperbarui",
         sortType: "desc",
         status: "",
+        startDate: getShortDate(start),
+        endDate: getShortDate(new Date()),
       };
       if (!viewAllTicket && viewSentTicket) {
         item = { ...item, usernamePembuat: username };
@@ -285,7 +251,6 @@ const Ticket = (props) => {
         item = { ...item, assignedTo: username };
         setActiveTicketSideNav("assigned_to_me");
       }
-      props.readTicketStatus();
       props.readTicket(item);
       props.readCategory({
         size: 0,
@@ -426,32 +391,31 @@ const Ticket = (props) => {
                       All
                     </span>
                   </Link>
-                  {list_ticket_status &&
-                    list_ticket_status.map((value, index) => (
-                      <Link
-                        to="#"
-                        key={index}
-                        onClick={() => (
-                          props.readTicket({ ...data, status: value.name }),
-                          setData({ ...data, status: value.name })
-                        )}
+                  {general_constant.status.map((value, index) => (
+                    <Link
+                      to="#"
+                      key={index}
+                      onClick={() => (
+                        props.readTicket({ ...data, status: value.name }),
+                        setData({ ...data, status: value.name })
+                      )}
+                    >
+                      <span
+                        className="mdi mdi-arrow-right-drop-circle float-right"
+                        style={{ color: value.color }}
+                      ></span>
+                      <span
+                        style={{
+                          fontWeight:
+                            data && data.status === value.name
+                              ? "bold"
+                              : "normal",
+                        }}
                       >
-                        <span
-                          className="mdi mdi-arrow-right-drop-circle float-right"
-                          style={{ color: value.color }}
-                        ></span>
-                        <span
-                          style={{
-                            fontWeight:
-                              data && data.status === value.name
-                                ? "bold"
-                                : "normal",
-                          }}
-                        >
-                          {value.name}
-                        </span>
-                      </Link>
-                    ))}
+                        {value.name}
+                      </span>
+                    </Link>
+                  ))}
                 </div>
               </Card>
             </Col>
@@ -460,13 +424,22 @@ const Ticket = (props) => {
                 <Row className="mb-3 d-flex align-items-end">
                   <Col>
                     <Row className="d-flex align-items-end">
-                      <Col md={4}>
+                      <Col
+                        md={6}
+                        style={{
+                          display: "grid",
+                          justifyItems: "flex-start",
+                          alignItems: "flex-end",
+                          gridAutoFlow: "column",
+                          columnGap: "0.5rem",
+                        }}
+                      >
                         <Dropdown
                           isOpen={category}
                           toggle={() => {
                             setCategory(true);
                           }}
-                          className="btn-group mr-2 mb-2 mb-sm-0"
+                          className="btn-group"
                         >
                           <DropdownToggle
                             className="btn btn-primary waves-light waves-effect dropdown-toggle d-flex align-items-center"
@@ -539,46 +512,66 @@ const Ticket = (props) => {
                             </div>
                           </DropdownMenu>
                         </Dropdown>
-                        {/* <Dropdown
-                            isOpen={showSort}
-                            toggle={() => {
-                              setShowSort(!showSort);
-                            }}
-                            className="btn-group mr-2 mb-2 mb-sm-0"
+                        <div className="form-group mb-0">
+                          <label
+                            htmlFor="example-datetime-local-input"
+                            style={{ fontWeight: 500 }}
                           >
-                            <DropdownToggle
-                              className="btn btn-primary waves-light waves-effect dropdown-toggle"
-                              tag="i"
-                            >
-                              <i className="bx bx-sort"></i>{" "}
-                              <i className="mdi mdi-chevron-down ml-1"></i>
-                            </DropdownToggle>
-                            <DropdownMenu>
-                              {sortItem.map((value, index) => (
-                                <DropdownItem
-                                  to="#"
-                                  key={index}
-                                  onClick={(event) => {
-                                    setData({
-                                      ...data,
-                                      sortBy: value.sort_by,
-                                      sortType: value.sort_type,
-                                    });
-                                    props.readTicket({
-                                      ...data,
-                                      sortBy: value.sort_by,
-                                      sortType: value.sort_type,
-                                    });
-                                  }}
-                                >
-                                  {value.name} ({value.sort_type})
-                                </DropdownItem>
-                              ))}
-                            </DropdownMenu>
-                          </Dropdown> */}
+                            Start Date
+                          </label>
+                          <input
+                            className="form-control"
+                            type="date"
+                            id="example-date-input"
+                            min={getShortDate(
+                              new Date().setFullYear(
+                                new Date().getFullYear() - 1
+                              )
+                            )}
+                            max={data && data.endDate}
+                            defaultValue={data && data.startDate}
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                startDate: event.target.value,
+                              }),
+                              props.readTicket({
+                                ...data,
+                                startDate: event.target.value,
+                              })
+                            )}
+                          />
+                        </div>
+
+                        <div className="form-group mb-0">
+                          <label
+                            htmlFor="example-datetime-local-input"
+                            style={{ fontWeight: 500 }}
+                          >
+                            End Date
+                          </label>
+                          <input
+                            className="form-control"
+                            type="date"
+                            id="example-date-input"
+                            min={data && data.startDate}
+                            max={data && data.endDate}
+                            defaultValue={data && data.endDate}
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                endDate: event.target.value,
+                              }),
+                              props.readTicket({
+                                ...data,
+                                endDate: event.target.value,
+                              })
+                            )}
+                          />
+                        </div>
                       </Col>
                       <Col
-                        md={8}
+                        md={6}
                         className="d-flex flex-row justify-content-end align-items-end"
                       >
                         <div className="form-group mb-0">
@@ -641,7 +634,7 @@ const Ticket = (props) => {
                       <span className="d-none d-sm-block">All</span>
                     </NavLink>
                   </NavItem>
-                  {priority.map((value, index) => (
+                  {general_constant.priority.map((value, index) => (
                     <NavItem key={index}>
                       <NavLink
                         style={{ cursor: "pointer" }}
@@ -961,12 +954,10 @@ const mapStatetoProps = (state) => {
     active_page_ticket,
   } = state.Ticket;
   const { list_category, list_checked_category } = state.Category;
-  const { list_ticket_status } = state.TicketStatus;
   return {
     list_ticket,
     list_category,
     list_checked_category,
-    list_ticket_status,
     response_code_ticket,
     message_ticket,
     page_ticket,
@@ -983,7 +974,6 @@ const mapDispatchToProps = (dispatch) =>
       readCategory,
       checkCategory,
       uncheckCategory,
-      readTicketStatus,
     },
     dispatch
   );

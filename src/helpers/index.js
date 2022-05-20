@@ -60,7 +60,7 @@ export const parseDate = (time) => {
 };
 
 export const parseDateAndMonth = (time) => {
-  let date = new Date(time);
+  let date = time;
   let monthNames = [
     "Jan",
     "Feb",
@@ -92,4 +92,15 @@ export const parseToRupiah = (number) => {
       .reverse()
       .join("")
   );
+};
+
+export const getShortDate = (time) => {
+  let parse = new Date(time);
+  let year = parse.getFullYear();
+  let month = "" + (parse.getMonth() + 1);
+  let date = "" + parse.getDate();
+  if (month.length < 2) month = "0" + month;
+  if (date.length < 2) date = "0" + date;
+
+  return year + "-" + month + "-" + date;
 };
