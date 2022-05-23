@@ -16,6 +16,7 @@ import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
+import { getShortDate } from "../../helpers";
 require("dotenv").config();
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -40,7 +41,8 @@ const Report = (props) => {
   const history = useHistory();
 
   const [checkAllCategory, setCheckAllCategory] = useState(true);
-  const [showSort, setShowSort] = useState(false);
+  const [checkAllPriority, setCheckAllPriority] = useState(true);
+  const [checkAllStatus, setCheckAllStatus] = useState(true);
   const [today, setToday] = useState(null);
   const [statusChecked, setStatusChecked] = useState([true, true, true, true]);
   const [priorityChecked, setPriorityChecked] = useState([
@@ -83,6 +85,24 @@ const Report = (props) => {
     setData({ ...data, category: array });
     props.readReport({ ...data, category: array });
   };
+  const handleCheckedAllStatus = async () => {
+    let reqStatus = [];
+    let checked = [];
+    general_constant.status.map((value) => {
+      if (!checkAllStatus === true) {
+        reqStatus.push(value.name);
+        checked.push(true);
+      } else {
+        reqStatus = [];
+        checked.push(false);
+      }
+    });
+
+    setData({ ...data, status: reqStatus });
+    setCheckAllStatus(!checkAllStatus);
+    setStatusChecked(checked);
+    props.readReport({ ...data, status: reqStatus });
+  };
   const handleCheckStatus = (value, index) => {
     let array = [...statusChecked];
     array[index] = !statusChecked[index];
@@ -95,10 +115,34 @@ const Report = (props) => {
     } else {
       status.splice(findIndex, 1);
     }
+    if (array.every((value) => value === true)) {
+      setCheckAllStatus(true);
+    } else {
+      setCheckAllStatus(false);
+    }
+
     props.readReport({ ...data, status: status });
     setData({ ...data, status: status });
     props.readReport({ ...data, status: status });
     setStatusChecked(array);
+  };
+  const handleCheckedAllPriority = async () => {
+    let reqPriority = [];
+    let checked = [];
+    general_constant.priority.map((value) => {
+      if (!checkAllPriority === true) {
+        reqPriority.push(value.name);
+        checked.push(true);
+      } else {
+        reqPriority = [];
+        checked.push(false);
+      }
+    });
+
+    setData({ ...data, priority: reqPriority });
+    setCheckAllPriority(!checkAllPriority);
+    setPriorityChecked(checked);
+    props.readReport({ ...data, priority: reqPriority });
   };
   const handleCheckPriority = (value, index) => {
     let array = [...priorityChecked];
@@ -111,6 +155,11 @@ const Report = (props) => {
       priority.push(value);
     } else {
       priority.splice(findIndex, 1);
+    }
+    if (array.every((value) => value === true)) {
+      setCheckAllPriority(true);
+    } else {
+      setCheckAllPriority(false);
     }
 
     props.readReport({ ...data, priority: priority });
@@ -125,12 +174,8 @@ const Report = (props) => {
     );
 
     if (generateReport) {
-      let year = new Date().getFullYear();
-      let month = "" + (new Date().getMonth() + 1);
-      let date = "" + new Date().getDate();
-      if (month.length < 2) month = "0" + month;
-      if (date.length < 2) date = "0" + date;
-      let today = year + "-" + month + "-" + date;
+      let start = new Date().setDate(new Date().getDate() - 30);
+
       let priorityArray = [];
       let statusArray = [];
       let item = {
@@ -139,8 +184,8 @@ const Report = (props) => {
         category: [],
         priority: priorityArray,
         status: statusArray,
-        startDate: today,
-        endDate: today,
+        startDate: getShortDate(start),
+        endDate: getShortDate(new Date()),
       };
 
       general_constant.priority.map((value) => {
@@ -188,8 +233,11 @@ const Report = (props) => {
                           className="form-control"
                           type="date"
                           id="example-date-input"
-                          max={today}
-                          defaultValue={today}
+                          min={getShortDate(
+                            new Date().setMonth(new Date().getMonth() - 1)
+                          )}
+                          max={data && data.endDate}
+                          defaultValue={data && data.startDate}
                           onChange={(event) => (
                             setData({ ...data, startDate: event.target.value }),
                             props.readReport({
@@ -212,9 +260,9 @@ const Report = (props) => {
                           className="form-control"
                           type="date"
                           id="example-date-input"
-                          max={today}
-                          min={data && data.start}
-                          defaultValue={today}
+                          min={data && data.startDate}
+                          max={data && data.endDate}
+                          defaultValue={data && data.endDate}
                           onChange={(event) => (
                             setData({ ...data, endDate: event.target.value }),
                             props.readReport({
@@ -235,6 +283,25 @@ const Report = (props) => {
                         >
                           Status
                         </label>
+                        <div style={{ margin: "4px 0" }}>
+                          <div className="custom-control custom-checkbox">
+                            <input
+                              type="checkbox"
+                              className="custom-control-input"
+                              id="CustomCheck1"
+                              onChange={() => false}
+                              checked={checkAllStatus}
+                            />
+                            <label
+                              className="custom-control-label"
+                              onClick={() => {
+                                handleCheckedAllStatus();
+                              }}
+                            >
+                              Check All
+                            </label>
+                          </div>
+                        </div>
                         <div
                           style={{
                             display: "grid",
@@ -276,7 +343,26 @@ const Report = (props) => {
                           style={{ fontWeight: "bold" }}
                         >
                           Priority
-                        </label>
+                        </label>{" "}
+                        <div style={{ margin: "4px 0" }}>
+                          <div className="custom-control custom-checkbox">
+                            <input
+                              type="checkbox"
+                              className="custom-control-input"
+                              id="CustomCheck1"
+                              onChange={() => false}
+                              checked={checkAllPriority}
+                            />
+                            <label
+                              className="custom-control-label"
+                              onClick={() => {
+                                handleCheckedAllPriority();
+                              }}
+                            >
+                              Check All
+                            </label>
+                          </div>
+                        </div>
                         <div
                           style={{
                             display: "grid",
