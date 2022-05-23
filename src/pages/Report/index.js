@@ -233,9 +233,6 @@ const Report = (props) => {
                           className="form-control"
                           type="date"
                           id="example-date-input"
-                          min={getShortDate(
-                            new Date().setMonth(new Date().getMonth() - 1)
-                          )}
                           max={data && data.endDate}
                           defaultValue={data && data.startDate}
                           onChange={(event) => (
@@ -261,7 +258,7 @@ const Report = (props) => {
                           type="date"
                           id="example-date-input"
                           min={data && data.startDate}
-                          max={data && data.endDate}
+                          max={getShortDate(new Date())}
                           defaultValue={data && data.endDate}
                           onChange={(event) => (
                             setData({ ...data, endDate: event.target.value }),
