@@ -9,66 +9,18 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { readUser } from "../../store/pages/users/actions";
 import { useHistory } from "react-router";
-import { CSVLink } from "react-csv";
+import ReactExport from "react-export-excel";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
-import SweetAlert from "react-bootstrap-sweetalert";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
 require("dotenv").config();
 
-const headers = [
-  {
-    label: "Ticket Id",
-    key: "ticketCode",
-  },
-  {
-    label: "Terminal Id",
-    key: "terminalId",
-  },
-  {
-    label: "Location",
-    key: "lokasi",
-  },
-  {
-    label: "Email",
-    key: "email",
-  },
-  {
-    label: "Owner",
-    key: "usernamePembuat",
-  },
-  {
-    label: "Submitted",
-    key: "tglDibuat",
-  },
-  {
-    label: "Time Worked",
-    key: "totalWaktu",
-  },
-  {
-    label: "Category",
-    key: "category",
-  },
-  {
-    label: "Status",
-    key: "status",
-  },
-  {
-    label: "Updated",
-    key: "tglDiperbarui",
-  },
-  {
-    label: "Last Replier",
-    key: "usernamePembalas",
-  },
-  {
-    label: "Subject",
-    key: "judul",
-  },
-];
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const Report = (props) => {
   const list_report = props.list_report;
@@ -494,22 +446,41 @@ const Report = (props) => {
                   </Row>
                   <Row>
                     <Col className="d-flex justify-content-end">
-                      <CSVLink
-                        data={list_report && list_report}
-                        headers={headers}
-                        separator={";"}
-                        filename={`Ticket_Report_${data && data.startDate}_${
-                          data && data.endDate
-                        }.csv`}
+                      <ExcelFile
+                        element={
+                          <button
+                            type="button"
+                            className="btn btn-success waves-effect waves-light"
+                          >
+                            <i className="bx bxs-file-export font-size-16 align-middle mr-2"></i>{" "}
+                            Export .xlsx
+                          </button>
+                        }
                       >
-                        <button
-                          type="button"
-                          className="btn btn-success waves-effect waves-light"
+                        <ExcelSheet
+                          data={list_report && list_report}
+                          name={`${data && data.startDate}_${
+                            data && data.endDate
+                          }`}
                         >
-                          <i className="bx bxs-file-export font-size-16 align-middle mr-2"></i>{" "}
-                          Export .csv
-                        </button>
-                      </CSVLink>
+                          <ExcelColumn label="Ticket Id" value="ticketCode" />
+                          <ExcelColumn label="Terminal Id" value="terminalId" />
+                          <ExcelColumn label="Location" value="lokasi" />
+                          <ExcelColumn label="Email" value="email" />
+                          <ExcelColumn label="Owner" value="usernamePembuat" />
+                          <ExcelColumn label="Submitted" value="tglDibuat" />
+                          <ExcelColumn label="Time Worked" value="totalWaktu" />
+                          <ExcelColumn label="Category" value="category" />
+                          <ExcelColumn label="Status" value="status" />
+                          <ExcelColumn label="Updated" value="tglDiperbarui" />
+                          <ExcelColumn
+                            label="Last Replier"
+                            value="usernamePembalas"
+                          />
+                          <ExcelColumn label="Subject" value="judul" />
+                          <ExcelColumn label="Isi" value="isi" />
+                        </ExcelSheet>
+                      </ExcelFile>
                     </Col>
                   </Row>
                 </CardBody>
