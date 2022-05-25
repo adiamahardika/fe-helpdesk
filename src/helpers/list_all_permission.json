@@ -133,6 +133,14 @@
       {
         "name": "Generate Report",
         "code": "4.1"
+      },
+      {
+        "name": "Filter Created By",
+        "code": "4.2"
+      },
+      {
+        "name": "Filter Assigned To",
+        "code": "4.3"
       }
     ]
   }

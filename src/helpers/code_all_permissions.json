@@ -29,5 +29,7 @@
   "edit_category": "3.3",
   "delete_category": "3.4",
   "report": "4",
-  "generate_report": "4.1"
+  "generate_report": "4.1",
+  "filter_created_by": "4.2",
+  "filter_assigned_to": "4.3"
 }

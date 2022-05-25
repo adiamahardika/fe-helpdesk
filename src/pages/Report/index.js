@@ -40,6 +40,8 @@ const Report = (props) => {
   const username = sessionStorage.getItem("username");
   const history = useHistory();
 
+  const [isFilterCreatedBy, setIsFilterCreatedBy] = useState(false);
+  const [isFilterAssignedTo, setIsFilterAssignedTo] = useState(false);
   const [checkAllCategory, setCheckAllCategory] = useState(true);
   const [checkAllPriority, setCheckAllPriority] = useState(true);
   const [checkAllStatus, setCheckAllStatus] = useState(true);
@@ -51,8 +53,8 @@ const Report = (props) => {
     true,
     true,
   ]);
-
   const [data, setData] = useState(null);
+
   const handleCheckedAllCategory = async () => {
     let array = [];
     await list_category.map((value, index) => {
@@ -172,6 +174,12 @@ const Report = (props) => {
     let generateReport = permissions.find(
       (value) => value.code === code_all_permissions.generate_report
     );
+    let filterCreatedBy = permissions.find(
+      (value) => value.code === code_all_permissions.filter_created_by
+    );
+    let filterAssignedTo = permissions.find(
+      (value) => value.code === code_all_permissions.filter_assigned_to
+    );
 
     if (generateReport) {
       let start = new Date().setDate(new Date().getDate() - 30);
@@ -180,7 +188,7 @@ const Report = (props) => {
       let statusArray = [];
       let item = {
         assignedTo: "",
-        usernamePembuat: "",
+        usernamePembuat: filterCreatedBy ? "" : username,
         category: [],
         priority: priorityArray,
         status: statusArray,
@@ -206,6 +214,8 @@ const Report = (props) => {
       props.readUser({ size: 0, page_no: 0, search: "*" });
       setData(item);
       setToday(today);
+      filterCreatedBy && setIsFilterCreatedBy(true);
+      filterAssignedTo && setIsFilterAssignedTo(true);
     } else {
       history.push(routes.ticket);
     }
@@ -459,73 +469,77 @@ const Report = (props) => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col md={4}>
-                      <div className="form-group">
-                        <label
-                          htmlFor="example-datetime-local-input"
-                          style={{ fontWeight: "bold" }}
-                        >
-                          Create by
-                        </label>
-                        <select
-                          name="assignedTo"
-                          className="form-control"
-                          defaultValue=""
-                          onChange={(event) => (
-                            setData({
-                              ...data,
-                              usernamePembuat: event.target.value,
-                            }),
-                            props.readReport({
-                              ...data,
-                              usernamePembuat: event.target.value,
-                            })
-                          )}
-                        >
-                          <option value="">All</option>
-                          {list_user &&
-                            list_user.map((value, index) => (
-                              <option key={index} value={value.username}>
-                                {value.name}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    </Col>
-                    <Col md={4}>
-                      <div className="form-group">
-                        <label
-                          htmlFor="example-datetime-local-input"
-                          style={{ fontWeight: "bold" }}
-                        >
-                          Assigned to
-                        </label>
-                        <select
-                          name="assignedTo"
-                          className="form-control"
-                          defaultValue=""
-                          onChange={(event) => (
-                            setData({
-                              ...data,
-                              assignedTo: event.target.value,
-                            }),
-                            props.readReport({
-                              ...data,
-                              assignedTo: event.target.value,
-                            })
-                          )}
-                        >
-                          <option value="">All</option>
-                          <option value="Unassigned">Unassigned</option>
-                          {list_user &&
-                            list_user.map((value, index) => (
-                              <option key={index} value={value.username}>
-                                {value.name}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    </Col>
+                    {isFilterCreatedBy && (
+                      <Col md={4}>
+                        <div className="form-group">
+                          <label
+                            htmlFor="example-datetime-local-input"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            Created by
+                          </label>
+                          <select
+                            name="assignedTo"
+                            className="form-control"
+                            defaultValue=""
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                usernamePembuat: event.target.value,
+                              }),
+                              props.readReport({
+                                ...data,
+                                usernamePembuat: event.target.value,
+                              })
+                            )}
+                          >
+                            <option value="">All</option>
+                            {list_user &&
+                              list_user.map((value, index) => (
+                                <option key={index} value={value.username}>
+                                  {value.name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </Col>
+                    )}
+                    {isFilterAssignedTo && (
+                      <Col md={4}>
+                        <div className="form-group">
+                          <label
+                            htmlFor="example-datetime-local-input"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            Assigned to
+                          </label>
+                          <select
+                            name="assignedTo"
+                            className="form-control"
+                            defaultValue=""
+                            onChange={(event) => (
+                              setData({
+                                ...data,
+                                assignedTo: event.target.value,
+                              }),
+                              props.readReport({
+                                ...data,
+                                assignedTo: event.target.value,
+                              })
+                            )}
+                          >
+                            <option value="">All</option>
+                            <option value="Unassigned">Unassigned</option>
+                            {list_user &&
+                              list_user.map((value, index) => (
+                                <option key={index} value={value.username}>
+                                  {value.name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </Col>
+                    )}
                   </Row>
                   <Row>
                     <Col className="d-flex justify-content-end">
