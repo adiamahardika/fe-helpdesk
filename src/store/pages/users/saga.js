@@ -10,6 +10,7 @@ import {
   UPDATE_USER_PROFILE,
   CHANGE_PASSWORD,
   UPDATE_USER_STATUS,
+  READ_USER_MULTIPLE_SELECT,
 } from "./actionTypes";
 import {
   createUserReject,
@@ -30,6 +31,8 @@ import {
   changePasswordReject,
   updateUserStatusFulfilled,
   updateUserStatusReject,
+  readUserMultipleSelectReject,
+  readUserMultipleSelectFulfilled,
 } from "./actions";
 import { postMethod, getMethod, putMethod, deleteMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
@@ -106,6 +109,14 @@ function* updateUserStatus({ payload: data }) {
     yield put(updateUserStatusReject(response));
   }
 }
+function* readUserMultipleSelect({ payload: data }) {
+  const response = yield call(getMethod, data);
+  if (response.status.responseCode === general_constant.success_response_code) {
+    yield put(readUserMultipleSelectFulfilled(response));
+  } else {
+    yield put(readUserMultipleSelectReject(response));
+  }
+}
 
 export function* watchReadUser() {
   yield takeLatest(READ_USER, readUser);
@@ -134,6 +145,9 @@ export function* watchChangePassword() {
 export function* watchUpdateUserStatus() {
   yield takeLatest(UPDATE_USER_STATUS, updateUserStatus);
 }
+export function* watchReadUserMultipleSelect() {
+  yield takeLatest(READ_USER_MULTIPLE_SELECT, readUserMultipleSelect);
+}
 
 function* UserSaga() {
   yield all([
@@ -146,6 +160,7 @@ function* UserSaga() {
     fork(watchResetPassword),
     fork(watchChangePassword),
     fork(watchUpdateUserStatus),
+    fork(watchReadUserMultipleSelect),
   ]);
 }
 

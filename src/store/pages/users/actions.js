@@ -26,6 +26,9 @@ import {
   UPDATE_USER_STATUS,
   UPDATE_USER_STATUS_REJECT,
   UPDATE_USER_STATUS_FULFILLED,
+  READ_USER_MULTIPLE_SELECT,
+  READ_USER_MULTIPLE_SELECT_REJECT,
+  READ_USER_MULTIPLE_SELECT_FULFILLED,
 } from "./actionTypes";
 
 export const createUser = (value) => {
@@ -248,5 +251,29 @@ export const updateUserStatusFulfilled = (payload) => {
   return {
     type: UPDATE_USER_STATUS_FULFILLED,
     payload: payload,
+  };
+};
+
+export const readUserMultipleSelect = (value) => {
+  let data = {
+    url: `/v1/user/get-group-by-role`,
+  };
+  return {
+    type: READ_USER_MULTIPLE_SELECT,
+    payload: data,
+  };
+};
+
+export const readUserMultipleSelectReject = (payload) => {
+  return {
+    type: READ_USER_MULTIPLE_SELECT_REJECT,
+    payload: payload,
+  };
+};
+
+export const readUserMultipleSelectFulfilled = (data) => {
+  return {
+    type: READ_USER_MULTIPLE_SELECT_FULFILLED,
+    payload: data,
   };
 };

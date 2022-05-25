@@ -26,11 +26,15 @@ import {
   UPDATE_USER_STATUS,
   UPDATE_USER_STATUS_REJECT,
   UPDATE_USER_STATUS_FULFILLED,
+  READ_USER_MULTIPLE_SELECT,
+  READ_USER_MULTIPLE_SELECT_REJECT,
+  READ_USER_MULTIPLE_SELECT_FULFILLED,
 } from "./actionTypes";
 
 const INIT_STATE = {
   response_code_user: null,
   list_user: null,
+  list_user_multiple_select: null,
   user_detail: null,
   message_user: null,
   active_page_user: null,
@@ -212,6 +216,26 @@ const User = (state = INIT_STATE, action) => {
     case UPDATE_USER_STATUS_FULFILLED:
       return {
         ...state,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
+        loading: false,
+      };
+    case READ_USER_MULTIPLE_SELECT:
+      return {
+        ...state,
+        loading: true,
+      };
+    case READ_USER_MULTIPLE_SELECT_REJECT:
+      return {
+        ...state,
+        response_code_user: action.payload.status.responseCode,
+        message_user: action.payload.status.description[0],
+        loading: false,
+      };
+    case READ_USER_MULTIPLE_SELECT_FULFILLED:
+      return {
+        ...state,
+        list_user_multiple_select: action.payload.listUser,
         response_code_user: action.payload.status.responseCode,
         message_user: action.payload.status.description[0],
         loading: false,

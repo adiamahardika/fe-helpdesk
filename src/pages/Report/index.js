@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, Col, Row } from "reactstrap";
+import { Container, Card, CardBody, Col, Row, FormGroup } from "reactstrap";
 import { readReport } from "../../store/pages/report/actions";
 import {
   readCategory,
@@ -7,16 +7,21 @@ import {
 } from "../../store/pages/category/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { readUser } from "../../store/pages/users/actions";
+import {
+  readUser,
+  readUserMultipleSelect,
+} from "../../store/pages/users/actions";
 import { useHistory } from "react-router";
+import { getShortDate } from "../../helpers";
+import Select from "react-select";
 import ReactExport from "react-export-excel";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import CryptoJS from "crypto-js";
+import makeAnimated from "react-select/animated";
 import "../../assets/css/pagination.css";
-import { getShortDate } from "../../helpers";
 require("dotenv").config();
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -26,9 +31,10 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 const Report = (props) => {
   const list_report = props.list_report;
   const list_user = props.list_user;
+  const list_user_multiple_select = props.list_user_multiple_select;
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
-  const message = props.message_report;
+  const loading = props.loading;
   const response_code = props.response_code_report;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
@@ -39,6 +45,7 @@ const Report = (props) => {
 
   const username = sessionStorage.getItem("username");
   const history = useHistory();
+  const animatedComponents = makeAnimated();
 
   const [isFilterCreatedBy, setIsFilterCreatedBy] = useState(false);
   const [isFilterAssignedTo, setIsFilterAssignedTo] = useState(false);
@@ -54,6 +61,7 @@ const Report = (props) => {
     true,
   ]);
   const [data, setData] = useState(null);
+  const [selectedCreatedBy, setSelectedCreatedBy] = useState(null);
 
   const handleCheckedAllCategory = async () => {
     let array = [];
@@ -169,6 +177,17 @@ const Report = (props) => {
     props.readReport({ ...data, priority: priority });
     setPriorityChecked(array);
   };
+  const handleMultipleCreatedBy = (value) => {
+    let created_by = [];
+
+    value.map((item) => {
+      created_by.push(item.value);
+    });
+
+    setSelectedCreatedBy(value);
+    setData({ ...data, usernamePembuat: created_by });
+    props.readReport({ ...data, usernamePembuat: created_by });
+  };
 
   useEffect(() => {
     let generateReport = permissions.find(
@@ -188,7 +207,7 @@ const Report = (props) => {
       let statusArray = [];
       let item = {
         assignedTo: "",
-        usernamePembuat: filterCreatedBy ? "" : username,
+        usernamePembuat: filterCreatedBy ? [] : [username],
         category: [],
         priority: priorityArray,
         status: statusArray,
@@ -212,6 +231,7 @@ const Report = (props) => {
         is_check_all: true,
       });
       props.readUser({ size: 0, page_no: 0, search: "*" });
+      props.readUserMultipleSelect();
       setData(item);
       setToday(today);
       filterCreatedBy && setIsFilterCreatedBy(true);
@@ -471,7 +491,7 @@ const Report = (props) => {
                   <Row>
                     {isFilterCreatedBy && (
                       <Col md={4}>
-                        <div className="form-group">
+                        {/* <div className="form-group">
                           <label
                             htmlFor="example-datetime-local-input"
                             style={{ fontWeight: "bold" }}
@@ -501,7 +521,27 @@ const Report = (props) => {
                                 </option>
                               ))}
                           </select>
-                        </div>
+                        </div> */}
+                        <FormGroup className="mb-0 templating-select select2-container">
+                          <label className="control-label">Created by</label>
+                          <Select
+                            style={{ height: "max-content" }}
+                            placeholder="All"
+                            value={selectedCreatedBy}
+                            isMulti={true}
+                            onChange={(event) => {
+                              handleMultipleCreatedBy(event);
+                            }}
+                            options={
+                              list_user_multiple_select &&
+                              list_user_multiple_select
+                            }
+                            // classNamePrefix="select2-selection"
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                            isLoading={loading}
+                          />
+                        </FormGroup>
                       </Col>
                     )}
                     {isFilterAssignedTo && (
@@ -594,12 +634,13 @@ const mapStatetoProps = (state) => {
   const { list_report, message_report, response_code_report, loading } =
     state.Report;
   const { list_category, list_checked_category } = state.Category;
-  const { list_user } = state.User;
+  const { list_user, list_user_multiple_select } = state.User;
   return {
     list_report,
     list_category,
     list_checked_category,
     list_user,
+    list_user_multiple_select,
     response_code_report,
     message_report,
     loading,
@@ -613,6 +654,7 @@ const mapDispatchToProps = (dispatch) =>
       readCategory,
       checkCategory,
       readUser,
+      readUserMultipleSelect,
     },
     dispatch
   );
