@@ -14,6 +14,7 @@ import {
 import { readCategory } from "../../store/pages/category/actions";
 import { readUser } from "../../store/pages/users/actions";
 import { createTicket } from "../../store/pages/ticket/actions";
+import { readArea } from "../../store/pages/area/actions";
 import { readCaptcha } from "../../store/auth/captcha/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -30,30 +31,12 @@ import Dropzone from "react-dropzone";
 import CryptoJS from "crypto-js";
 require("dotenv").config();
 
-const priority = [
-  {
-    name: "Low",
-    color: "#34c38f",
-  },
-  {
-    name: "Medium",
-    color: "#f1b44c",
-  },
-  {
-    name: "High",
-    color: "#f46a6a",
-  },
-  {
-    name: "Critical",
-    color: "#9400d3",
-  },
-];
-
 const AddTicket = (props) => {
   let message = props.message_ticket;
   let response_code = props.response_code_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
+  const list_area = props.list_area;
   const captcha_id = props.captcha_id;
   const image_captcha = props.image_captcha;
   const loading = props.loading;
@@ -425,6 +408,11 @@ const AddTicket = (props) => {
       (value) => value.code === code_all_permissions.assigning_ticket
     );
     if (addTicket) {
+      props.readArea({
+        areaCode: "",
+        areaName: "",
+        status: "",
+      });
       props.readCategory({
         size: 0,
         page_no: 0,
@@ -562,7 +550,7 @@ const AddTicket = (props) => {
                             <select
                               name="priority"
                               className="form-control"
-                              defaultValue={priority[0]}
+                              defaultValue={general_constant.priority[0]}
                               onChange={(event) =>
                                 onChangeOption(event.target.value)
                               }
@@ -571,7 +559,7 @@ const AddTicket = (props) => {
                                 fontWeight: "bold",
                               }}
                             >
-                              {priority.map((value, index) => (
+                              {general_constant.priority.map((value, index) => (
                                 <option
                                   key={index}
                                   value={value.name}
@@ -1276,11 +1264,13 @@ const AddTicket = (props) => {
 const mapStatetoProps = (state) => {
   const { list_category } = state.Category;
   const { list_user } = state.User;
+  const { list_area } = state.Area;
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
   const { captcha_id, image_captcha } = state.Captcha;
   return {
     list_category,
     list_user,
+    list_area,
     response_code_ticket,
     message_ticket,
     loading,
@@ -1296,6 +1286,7 @@ const mapDispatchToProps = (dispatch) =>
       createTicket,
       readUser,
       readCaptcha,
+      readArea,
     },
     dispatch
   );

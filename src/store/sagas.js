@@ -14,6 +14,7 @@ import TicketSaga from "./pages/ticket/saga";
 import CategorySaga from "./pages/category/saga";
 import ReportSaga from "./pages/report/saga";
 import TicketStatusSaga from "./pages/ticketStatus/saga";
+import AreaSaga from "./pages/area/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -31,5 +32,6 @@ export default function* rootSaga() {
     CategorySaga(),
     ReportSaga(),
     TicketStatusSaga(),
+    AreaSaga(),
   ]);
 }

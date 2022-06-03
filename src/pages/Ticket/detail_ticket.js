@@ -539,6 +539,15 @@ const DetailTicket = (props) => {
       </button>
     );
   };
+  const StatusLabel = (value) => {
+    if (value) {
+      let index = general_constant.status.findIndex(
+        (item) => item.name === value.value
+      );
+      let color = index >= 0 ? general_constant.status[index].color : "#343a40";
+      return <h5 style={{ color: color }}>{value.value}</h5>;
+    }
+  };
 
   useEffect(() => {
     let detailTicket = permissions.find(
@@ -896,7 +905,7 @@ const DetailTicket = (props) => {
             <Col md={9}>
               <Card className="pr-2 pl-2">
                 <CardBody>
-                  <Row className="mb-3">
+                  <Row>
                     <Col>
                       <h4>{detail_ticket && detail_ticket.judul}</h4>
                     </Col>
@@ -910,6 +919,13 @@ const DetailTicket = (props) => {
                       >
                         <i className="bx bxs-printer font-size-24 align-middle"></i>
                       </span>
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col>
+                      <StatusLabel
+                        value={detail_ticket && detail_ticket.status}
+                      />
                     </Col>
                   </Row>
                   {list_reply_ticket &&
