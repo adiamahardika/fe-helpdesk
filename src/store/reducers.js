@@ -10,6 +10,7 @@ import Category from "./pages/category/reducer";
 import Report from "./pages/report/reducer";
 import TicketStatus from "./pages/ticketStatus/reducer";
 import Area from "./pages/area/reducer";
+import Regional from "./pages/regional/reducer";
 
 // Authentication
 import Login from "./auth/login/reducer";
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   Report,
   TicketStatus,
   Area,
+  Regional,
 });
 
 export default rootReducer;
