@@ -9,6 +9,7 @@ export * from "./pages/ticketStatus/actions";
 export * from "./pages/area/actions";
 export * from "./pages/regional/actions";
 export * from "./pages/grapari/actions";
+export * from "./pages/terminal/actions";
 
 // Authentication module
 export * from "./auth/register/actions";

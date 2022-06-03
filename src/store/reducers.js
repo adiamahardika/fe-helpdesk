@@ -12,6 +12,7 @@ import TicketStatus from "./pages/ticketStatus/reducer";
 import Area from "./pages/area/reducer";
 import Regional from "./pages/regional/reducer";
 import Grapari from "./pages/grapari/reducer";
+import Terminal from "./pages/terminal/reducer";
 
 // Authentication
 import Login from "./auth/login/reducer";
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   Area,
   Regional,
   Grapari,
+  Terminal,
 });
 
 export default rootReducer;

@@ -17,6 +17,7 @@ import { createTicket } from "../../store/pages/ticket/actions";
 import { readArea } from "../../store/pages/area/actions";
 import { readRegional } from "../../store/pages/regional/actions";
 import { readGrapari } from "../../store/pages/grapari/actions";
+import { readTerminal } from "../../store/pages/terminal/actions";
 import { readCaptcha } from "../../store/auth/captcha/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -41,6 +42,8 @@ const AddTicket = (props) => {
   const list_area = props.list_area;
   const list_regional = props.list_regional;
   const list_grapari = props.list_grapari;
+  const list_terminal = props.list_terminal;
+  console.log(list_terminal);
   const captcha_id = props.captcha_id;
   const image_captcha = props.image_captcha;
   const loading = props.loading;
@@ -427,6 +430,13 @@ const AddTicket = (props) => {
         regional: "",
         grapariId: "",
         status: "Active",
+      });
+      props.readTerminal({
+        terminalId: "",
+        areaCode: "",
+        regional: "",
+        grapariId: "",
+        status: "A",
       });
       props.readCategory({
         size: 0,
@@ -1282,6 +1292,7 @@ const mapStatetoProps = (state) => {
   const { list_area } = state.Area;
   const { list_regional } = state.Regional;
   const { list_grapari } = state.Grapari;
+  const { list_terminal } = state.Terminal;
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
   const { captcha_id, image_captcha } = state.Captcha;
   return {
@@ -1290,6 +1301,7 @@ const mapStatetoProps = (state) => {
     list_area,
     list_regional,
     list_grapari,
+    list_terminal,
     response_code_ticket,
     message_ticket,
     loading,
@@ -1308,6 +1320,7 @@ const mapDispatchToProps = (dispatch) =>
       readArea,
       readRegional,
       readGrapari,
+      readTerminal,
     },
     dispatch
   );

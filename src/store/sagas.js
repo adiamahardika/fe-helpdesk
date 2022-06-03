@@ -17,6 +17,7 @@ import TicketStatusSaga from "./pages/ticketStatus/saga";
 import AreaSaga from "./pages/area/saga";
 import RegionalSaga from "./pages/regional/saga";
 import GrapariSaga from "./pages/grapari/saga";
+import TerminalSaga from "./pages/terminal/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -37,5 +38,6 @@ export default function* rootSaga() {
     AreaSaga(),
     RegionalSaga(),
     GrapariSaga(),
+    TerminalSaga(),
   ]);
 }
