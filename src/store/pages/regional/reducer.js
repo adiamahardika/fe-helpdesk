@@ -6,6 +6,7 @@ import {
 
 const INIT_STATE = {
   list_regional: null,
+  option_regional: [],
   response_code_regional: null,
   message_regional: null,
   loading: false,
@@ -16,6 +17,7 @@ const Regional = (state = INIT_STATE, action) => {
     case READ_REGIONAL:
       return {
         ...state,
+        option_regional: [],
         loading: true,
       };
     case READ_REGIONAL_REJECT:
@@ -26,6 +28,14 @@ const Regional = (state = INIT_STATE, action) => {
         loading: false,
       };
     case READ_REGIONAL_FULFILLED:
+      if (state.option_regional.length <= 0) {
+        action.payload.content.map((value) => {
+          return state.option_regional.push({
+            label: value.regional,
+            value: value.regional,
+          });
+        });
+      }
       return {
         ...state,
         list_regional: action.payload.content,

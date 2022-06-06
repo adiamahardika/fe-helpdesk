@@ -10,6 +10,7 @@ import {
   Modal,
   Button,
   Alert,
+  Label,
 } from "reactstrap";
 import { readCategory } from "../../store/pages/category/actions";
 import { readUser } from "../../store/pages/users/actions";
@@ -32,6 +33,7 @@ import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import Dropzone from "react-dropzone";
 import CryptoJS from "crypto-js";
+import Select from "react-select";
 require("dotenv").config();
 
 const AddTicket = (props) => {
@@ -39,11 +41,10 @@ const AddTicket = (props) => {
   let response_code = props.response_code_ticket;
   const list_category = props.list_category;
   const list_user = props.list_user;
-  const list_area = props.list_area;
-  const list_regional = props.list_regional;
-  const list_grapari = props.list_grapari;
-  const list_terminal = props.list_terminal;
-  console.log(list_terminal);
+  const option_area = props.option_area;
+  const option_regional = props.option_regional;
+  const option_grapari = props.option_grapari;
+  const option_terminal = props.option_terminal;
   const captcha_id = props.captcha_id;
   const image_captcha = props.image_captcha;
   const loading = props.loading;
@@ -53,6 +54,9 @@ const AddTicket = (props) => {
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
+  const area_code = JSON.parse(sessionStorage.getItem("areaCode"));
+  const regional = JSON.parse(sessionStorage.getItem("regional"));
+  const grapari_id = JSON.parse(sessionStorage.getItem("grapariId"));
   const username = sessionStorage.getItem("username");
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
@@ -75,6 +79,14 @@ const AddTicket = (props) => {
   const [isAssigningTicket, setIsAssigningTicket] = useState(false);
   const [captchaValidation, setCaptchaValidation] = useState(null);
   const [captchaMessage, setCaptchaMessage] = useState(null);
+  const [selectedArea, setSelectedArea] = useState(null);
+  const [requestArea, setRequestArea] = useState(null);
+  const [selectedRegional, setSelectedRegional] = useState(null);
+  const [requestRegional, setRequestRegional] = useState(null);
+  const [selectedGrapari, setSelectedGrapari] = useState(null);
+  const [requestGrapari, setRequestGrapari] = useState(null);
+  const [selectedTerminal, setSelectedTerminal] = useState(null);
+  const [requestTerminal, setRequestTerminal] = useState(null);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -333,7 +345,7 @@ const AddTicket = (props) => {
   const ButtonSubmitCreate = () => {
     if (
       data &&
-      Object.keys(data).length >= 14 &&
+      Object.keys(data).length >= 17 &&
       validEmail &&
       captchaValidation
     ) {
@@ -415,29 +427,41 @@ const AddTicket = (props) => {
       (value) => value.code === code_all_permissions.assigning_ticket
     );
     if (addTicket) {
-      props.readArea({
-        areaCode: "",
+      let reqArea = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
         areaName: "",
         status: "A",
-      });
-      props.readRegional({
-        areaCode: "",
-        regional: "",
+      };
+      props.readArea(reqArea);
+      setRequestArea(reqArea);
+
+      let reqRegional = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
         status: "A",
-      });
-      props.readGrapari({
-        areaCode: "",
-        regional: "",
-        grapariId: "",
+      };
+      props.readRegional(reqRegional);
+      setRequestRegional(reqRegional);
+
+      let reqGrapari = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        grapariId: grapari_id && grapari_id[0] !== "0" ? grapari_id : [],
         status: "Active",
-      });
-      props.readTerminal({
-        terminalId: "",
-        areaCode: "",
-        regional: "",
-        grapariId: "",
+      };
+      props.readGrapari(reqGrapari);
+      setRequestGrapari(reqGrapari);
+
+      let reqTerminal = {
+        terminalId: [],
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        grapariId: grapari_id && grapari_id[0] !== "0" ? grapari_id : [],
         status: "A",
-      });
+      };
+      props.readTerminal(reqTerminal);
+      setRequestTerminal(reqTerminal);
+
       props.readCategory({
         size: 0,
         page_no: 0,
@@ -505,7 +529,69 @@ const AddTicket = (props) => {
                 <Row className="justify-content-center">
                   <Col md={8}>
                     <Row>
-                      <Col md={5}>
+                      {area_code && (
+                        <Col md={5}>
+                          <FormGroup className="select2-container">
+                            <Label>
+                              Area <span style={{ color: "red" }}>*</span>
+                            </Label>
+                            <Select
+                              value={selectedArea}
+                              onChange={(event) => {
+                                setSelectedArea(event);
+                                props.readRegional({
+                                  ...requestRegional,
+                                  areaCode: [event.value],
+                                });
+                                props.readGrapari({
+                                  ...requestGrapari,
+                                  areaCode: [event.value],
+                                });
+                                props.readTerminal({
+                                  ...requestTerminal,
+                                  areaCode: [event.value],
+                                });
+                                setData({
+                                  ...data,
+                                  areaCode: event.value,
+                                });
+                              }}
+                              options={option_area}
+                              classNamePrefix="select2-selection"
+                            />
+                          </FormGroup>
+                        </Col>
+                      )}
+                      {regional && (
+                        <Col md={5}>
+                          <FormGroup className="select2-container">
+                            <Label>
+                              Regional <span style={{ color: "red" }}>*</span>
+                            </Label>
+                            <Select
+                              value={selectedRegional}
+                              onChange={(event) => {
+                                setSelectedRegional(event);
+                                props.readGrapari({
+                                  ...requestGrapari,
+                                  regional: [event.value],
+                                });
+                                props.readTerminal({
+                                  ...requestTerminal,
+                                  regional: [event.value],
+                                });
+                                setData({
+                                  ...data,
+                                  regional: event.value,
+                                });
+                              }}
+                              options={option_regional}
+                              classNamePrefix="select2-selection"
+                            />
+                          </FormGroup>
+                        </Col>
+                      )}
+                      {/* <Col md={5}>
                         <FormGroup className="select2-container">
                           <label className="control-label">
                             Location <span style={{ color: "red" }}>*</span>
@@ -540,9 +626,56 @@ const AddTicket = (props) => {
                             onChange={onChangeData}
                           />
                         </FormGroup>
-                      </Col>
+                      </Col> */}
                     </Row>
                     <Row>
+                      {grapari_id && (
+                        <Col md={5}>
+                          <FormGroup className="select2-container">
+                            <Label>
+                              Grapari <span style={{ color: "red" }}>*</span>
+                            </Label>
+                            <Select
+                              value={selectedGrapari}
+                              onChange={(event) => {
+                                setSelectedGrapari(event);
+                                props.readTerminal({
+                                  ...requestTerminal,
+                                  grapariId: [event.value],
+                                });
+                                setData({
+                                  ...data,
+                                  grapariId: event.value,
+                                });
+                              }}
+                              options={option_grapari}
+                              classNamePrefix="select2-selection"
+                            />
+                          </FormGroup>
+                        </Col>
+                      )}
+                      <Col md={5}>
+                        <FormGroup className="select2-container">
+                          <Label>
+                            Terminal <span style={{ color: "red" }}>*</span>
+                          </Label>
+                          <Select
+                            value={selectedTerminal}
+                            onChange={(event) => {
+                              setSelectedTerminal(event);
+                              setData({
+                                ...data,
+                                terminalId: event.value,
+                                lokasi: event.label,
+                              });
+                            }}
+                            options={option_terminal}
+                            classNamePrefix="select2-selection"
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
                       <Col md={8}>
                         <FormGroup className="select2-container">
                           <label className="control-label">
@@ -1289,19 +1422,19 @@ const AddTicket = (props) => {
 const mapStatetoProps = (state) => {
   const { list_category } = state.Category;
   const { list_user } = state.User;
-  const { list_area } = state.Area;
-  const { list_regional } = state.Regional;
-  const { list_grapari } = state.Grapari;
-  const { list_terminal } = state.Terminal;
+  const { option_area } = state.Area;
+  const { option_regional } = state.Regional;
+  const { option_grapari } = state.Grapari;
+  const { option_terminal } = state.Terminal;
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
   const { captcha_id, image_captcha } = state.Captcha;
   return {
     list_category,
     list_user,
-    list_area,
-    list_regional,
-    list_grapari,
-    list_terminal,
+    option_area,
+    option_regional,
+    option_grapari,
+    option_terminal,
     response_code_ticket,
     message_ticket,
     loading,

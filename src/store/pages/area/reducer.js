@@ -6,6 +6,7 @@ import {
 
 const INIT_STATE = {
   list_area: null,
+  option_area: [],
   response_code_area: null,
   message_area: null,
   loading: false,
@@ -16,6 +17,7 @@ const Area = (state = INIT_STATE, action) => {
     case READ_AREA:
       return {
         ...state,
+        option_area: [],
         loading: true,
       };
     case READ_AREA_REJECT:
@@ -26,6 +28,14 @@ const Area = (state = INIT_STATE, action) => {
         loading: false,
       };
     case READ_AREA_FULFILLED:
+      if (state.option_area.length <= 0) {
+        action.payload.content.map((value) => {
+          return state.option_area.push({
+            label: value.areaName,
+            value: value.areaCode,
+          });
+        });
+      }
       return {
         ...state,
         list_area: action.payload.content,

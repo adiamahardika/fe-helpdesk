@@ -6,6 +6,7 @@ import {
 
 const INIT_STATE = {
   list_grapari: null,
+  option_grapari: [],
   response_code_grapari: null,
   message_grapari: null,
   loading: false,
@@ -16,6 +17,7 @@ const Area = (state = INIT_STATE, action) => {
     case READ_GRAPARI:
       return {
         ...state,
+        option_grapari: [],
         loading: true,
       };
     case READ_GRAPARI_REJECT:
@@ -26,6 +28,14 @@ const Area = (state = INIT_STATE, action) => {
         loading: false,
       };
     case READ_GRAPARI_FULFILLED:
+      if (state.option_grapari.length <= 0) {
+        action.payload.content.map((value) => {
+          return state.option_grapari.push({
+            label: value.name,
+            value: value.grapariId,
+          });
+        });
+      }
       return {
         ...state,
         list_grapari: action.payload.content,

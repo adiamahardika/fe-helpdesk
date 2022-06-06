@@ -6,6 +6,7 @@ import {
 
 const INIT_STATE = {
   list_terminal: null,
+  option_terminal: [],
   response_code_terminal: null,
   message_terminal: null,
   loading: false,
@@ -16,6 +17,7 @@ const Terminal = (state = INIT_STATE, action) => {
     case READ_TERMINAL:
       return {
         ...state,
+        option_terminal: [],
         loading: true,
       };
     case READ_TERMINAL_REJECT:
@@ -26,6 +28,14 @@ const Terminal = (state = INIT_STATE, action) => {
         loading: false,
       };
     case READ_TERMINAL_FULFILLED:
+      if (state.option_terminal.length <= 0) {
+        action.payload.content.map((value) => {
+          return state.option_terminal.push({
+            label: value.terminalName + " (" + value.terminalId + ")",
+            value: value.terminalId,
+          });
+        });
+      }
       return {
         ...state,
         list_terminal: action.payload.content,

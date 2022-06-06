@@ -57,10 +57,31 @@ const Login = (props) => {
             value.status.responseCode === general_constant.success_response_code
           ) {
             const decode = jwt.decode(value.response.accessToken);
+            let area_code = value.response.areaCode;
+            let regional = value.response.regional;
+            let grapari_id = value.response.grapariId;
+
+            if (area_code[0] === "") {
+              area_code = null;
+            }
+            if (area_code && regional[0] === "") {
+              regional = [];
+            } else if (regional[0] === "") {
+              regional = null;
+            }
+            if (regional && grapari_id[0] === "") {
+              grapari_id = [];
+            } else if (grapari_id[0] === "") {
+              grapari_id = null;
+            }
+
             sessionStorage.setItem("signatureKey", decode.signature_key);
             sessionStorage.setItem("accessToken", value.response.accessToken);
             sessionStorage.setItem("username", value.response.username);
             sessionStorage.setItem("name", value.response.name);
+            sessionStorage.setItem("areaCode", JSON.stringify(area_code));
+            sessionStorage.setItem("regional", JSON.stringify(regional));
+            sessionStorage.setItem("grapariId", JSON.stringify(grapari_id));
             sessionStorage.setItem(
               "permission",
               CryptoJS.AES.encrypt(
