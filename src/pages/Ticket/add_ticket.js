@@ -45,6 +45,7 @@ const AddTicket = (props) => {
   const option_regional = props.option_regional;
   const option_grapari = props.option_grapari;
   const option_terminal = props.option_terminal;
+  const list_terminal = props.list_terminal;
   const captcha_id = props.captcha_id;
   const image_captcha = props.image_captcha;
   const loading = props.loading;
@@ -260,6 +261,22 @@ const AddTicket = (props) => {
       setValidEmail(false);
     }
   };
+  const onChangeTerminal = (event) => {
+    let index =
+      list_terminal &&
+      list_terminal.findIndex((value) => value.terminalId === event.value);
+    let terminal = list_terminal && list_terminal[index];
+
+    setSelectedTerminal(event);
+    setData({
+      ...data,
+      areaCode: terminal.area,
+      regional: terminal.regional,
+      grapariId: terminal.grapariId,
+      terminalId: event.value,
+      lokasi: terminal.terminalName,
+    });
+  };
 
   const onSubmitCreate = async () => {
     let valid_captcha = false;
@@ -331,8 +348,11 @@ const AddTicket = (props) => {
       request.append("ticketCode", ticket_code);
       request.append("email", data.email);
       request.append("judul", data.judul);
-      request.append("terminalId", data.terminalId);
       request.append("category", data.category);
+      request.append("areaCode", data.areaCode);
+      request.append("regional", data.regional);
+      request.append("grapariId", data.grapariId);
+      request.append("terminalId", data.terminalId);
       request.append("lokasi", data.lokasi);
       request.append("isi", isi);
       request.append("emailNotification", data.emailNotification);
@@ -539,6 +559,9 @@ const AddTicket = (props) => {
                               value={selectedArea}
                               onChange={(event) => {
                                 setSelectedArea(event);
+                                setSelectedRegional(null);
+                                setSelectedGrapari(null);
+                                setSelectedTerminal(null);
                                 props.readRegional({
                                   ...requestRegional,
                                   areaCode: [event.value],
@@ -551,10 +574,11 @@ const AddTicket = (props) => {
                                   ...requestTerminal,
                                   areaCode: [event.value],
                                 });
-                                setData({
-                                  ...data,
-                                  areaCode: event.value,
-                                });
+                                delete data.areaCode;
+                                delete data.regional;
+                                delete data.grapariId;
+                                delete data.terminalId;
+                                delete data.lokasi;
                               }}
                               options={option_area}
                               classNamePrefix="select2-selection"
@@ -572,6 +596,8 @@ const AddTicket = (props) => {
                               value={selectedRegional}
                               onChange={(event) => {
                                 setSelectedRegional(event);
+                                setSelectedGrapari(null);
+                                setSelectedTerminal(null);
                                 props.readGrapari({
                                   ...requestGrapari,
                                   regional: [event.value],
@@ -580,10 +606,10 @@ const AddTicket = (props) => {
                                   ...requestTerminal,
                                   regional: [event.value],
                                 });
-                                setData({
-                                  ...data,
-                                  regional: event.value,
-                                });
+                                delete data.regional;
+                                delete data.grapariId;
+                                delete data.terminalId;
+                                delete data.lokasi;
                               }}
                               options={option_regional}
                               classNamePrefix="select2-selection"
@@ -639,14 +665,14 @@ const AddTicket = (props) => {
                               value={selectedGrapari}
                               onChange={(event) => {
                                 setSelectedGrapari(event);
+                                setSelectedTerminal(null);
                                 props.readTerminal({
                                   ...requestTerminal,
                                   grapariId: [event.value],
                                 });
-                                setData({
-                                  ...data,
-                                  grapariId: event.value,
-                                });
+                                delete data.grapariId;
+                                delete data.terminalId;
+                                delete data.lokasi;
                               }}
                               options={option_grapari}
                               classNamePrefix="select2-selection"
@@ -662,12 +688,7 @@ const AddTicket = (props) => {
                           <Select
                             value={selectedTerminal}
                             onChange={(event) => {
-                              setSelectedTerminal(event);
-                              setData({
-                                ...data,
-                                terminalId: event.value,
-                                lokasi: event.label,
-                              });
+                              onChangeTerminal(event);
                             }}
                             options={option_terminal}
                             classNamePrefix="select2-selection"
@@ -1425,12 +1446,13 @@ const mapStatetoProps = (state) => {
   const { option_area } = state.Area;
   const { option_regional } = state.Regional;
   const { option_grapari } = state.Grapari;
-  const { option_terminal } = state.Terminal;
+  const { option_terminal, list_terminal } = state.Terminal;
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
   const { captcha_id, image_captcha } = state.Captcha;
   return {
     list_category,
     list_user,
+    list_terminal,
     option_area,
     option_regional,
     option_grapari,

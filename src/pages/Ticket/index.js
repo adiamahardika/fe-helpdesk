@@ -668,7 +668,7 @@ const Ticket = (props) => {
                         <th>Status</th>
                         <th>Priority</th>
                         <th>Category</th>
-                        <th>Last Update</th>
+                        <th>Submitted</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -716,7 +716,7 @@ const Ticket = (props) => {
                                     display: "block",
                                   }}
                                 >
-                                  {parseFullDate(value.tglDiperbarui)}
+                                  {parseFullDate(value.tglDibuat)}
                                 </span>
                               </td>
                               <td>
@@ -830,6 +830,7 @@ const Ticket = (props) => {
               removeBodyCss();
               setSelectedData(null);
             }}
+            size="lg"
           >
             <div
               className="modal-header"
@@ -861,79 +862,110 @@ const Ticket = (props) => {
               </button>
             </div>
             <div className="modal-body">
-              <div className="table-responsive">
-                <Table className="table table-centered">
-                  <tbody>
-                    <tr>
-                      <th>Ticket Id</th>
-                      <td>{selectedData && selectedData.ticketCode}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Terminal Id</th>
-                      <td>{selectedData && selectedData.terminalId}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Location</th>
-                      <td>{selectedData && selectedData.lokasi}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Email</th>
-                      <td>{selectedData && selectedData.email}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Submitted</th>
-                      <td>
-                        {selectedData && parseFullDate(selectedData.tglDibuat)}
-                      </td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Category</th>
-                      <td>{selectedData && selectedData.category}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Subject</th>
-                      <td>{selectedData && selectedData.judul}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Status</th>
-                      <StatusLabel
-                        value={selectedData && selectedData.status}
-                      />
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Owner</th>
-                      <td>{selectedData && selectedData.usernamePembuat}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Assigned To</th>
-                      <td>{selectedData && selectedData.assignedTo}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Time Worked</th>
-                      <td>{selectedData && selectedData.totalWaktu}</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th>Updated</th>
-                      <td>
-                        {selectedData &&
-                          parseFullDate(selectedData.tglDiperbarui)}
-                      </td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </div>
+              <Row>
+                <Col>
+                  <div className="table-responsive">
+                    <Table className="table table-centered">
+                      <tbody>
+                        <tr>
+                          <th>Ticket Id</th>
+                          <td>{selectedData && selectedData.ticketCode}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Status</th>
+                          <StatusLabel
+                            value={selectedData && selectedData.status}
+                          />
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Submitted</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.tglDibuat)}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Category</th>
+                          <td>{selectedData && selectedData.category}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Subject</th>
+                          <td>{selectedData && selectedData.judul}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Email</th>
+                          <td>{selectedData && selectedData.email}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Owner</th>
+                          <td>
+                            {selectedData && selectedData.usernamePembuat}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Assigned To</th>
+                          <td>{selectedData && selectedData.assignedTo}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Time Worked</th>
+                          <td>{selectedData && selectedData.totalWaktu}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Updated</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.tglDiperbarui)}
+                          </td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </Col>
+                <Col>
+                  {" "}
+                  <div className="table-responsive">
+                    <Table className="table table-centered">
+                      <tbody>
+                        <tr>
+                          <th>Area</th>
+                          <td>{selectedData && selectedData.areaName}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Regional</th>
+                          <td>{selectedData && selectedData.regional}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Grapari</th>
+                          <td>{selectedData && selectedData.grapariName}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Location</th>
+                          <td>{selectedData && selectedData.lokasi}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Terminal Id</th>
+                          <td>{selectedData && selectedData.terminalId}</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </Col>
+              </Row>
             </div>
           </Modal>
           <ShowSweetAlert />
