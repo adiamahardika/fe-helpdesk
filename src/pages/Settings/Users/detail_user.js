@@ -50,6 +50,7 @@ const DetailUser = (props) => {
   );
 
   const [updateUserData, setUpdateUserData] = useState(null);
+  console.log(updateUserData);
   const [updateStatusData, setUpdateStatusData] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
   const [modalResetPassword, setModalResetPassword] = useState(false);
@@ -133,7 +134,10 @@ const DetailUser = (props) => {
       user_detail.roles.map((value) => (role_id = value.id));
       setUpdateUserData(
         user_detail && {
-          ...user_detail,
+          id: user_detail.id,
+          name: user_detail.name,
+          email: user_detail.email,
+          phone: user_detail.phone,
           role: role_id.toString(),
         }
       );
@@ -182,7 +186,7 @@ const DetailUser = (props) => {
   const ButtonSubmitUpdateUser = () => {
     if (
       updateUserData &&
-      Object.keys(updateUserData).length >= 7 &&
+      Object.keys(updateUserData).length >= 5 &&
       Object.values(updateUserData).every((value) => value !== "") &&
       validEmail === true
     ) {
@@ -285,7 +289,7 @@ const DetailUser = (props) => {
                             style={{ backgroundColor: "#ced4da" }}
                             name="username"
                             label="Username"
-                            value={updateUserData && updateUserData.username}
+                            value={user_detail && user_detail.username}
                             disabled
                           />
                         </Col>
@@ -404,10 +408,7 @@ const DetailUser = (props) => {
                       </tr>
                       <tr>
                         <th>Role</th>
-                        <td>
-                          {user_detail &&
-                            user_detail.roles.map((value) => value.name)}
-                        </td>
+                        <td>{user_detail && user_detail.roles[0].name}</td>
                         <td></td>
                       </tr>
                       <tr>
