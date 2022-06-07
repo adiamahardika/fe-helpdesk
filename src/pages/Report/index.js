@@ -601,14 +601,17 @@ const Report = (props) => {
                           }`}
                         >
                           <ExcelColumn label="Ticket Id" value="ticketCode" />
-                          <ExcelColumn label="Terminal Id" value="terminalId" />
+                          <ExcelColumn label="Category" value="category" />
+                          <ExcelColumn label="Status" value="status" />
+                          <ExcelColumn label="Area" value="areaName" />
+                          <ExcelColumn label="Regional" value="regional" />
+                          <ExcelColumn label="Grapari" value="grapariName" />
                           <ExcelColumn label="Location" value="lokasi" />
+                          <ExcelColumn label="Terminal Id" value="terminalId" />
                           <ExcelColumn label="Email" value="email" />
                           <ExcelColumn label="Owner" value="usernamePembuat" />
                           <ExcelColumn label="Submitted" value="tglDibuat" />
                           <ExcelColumn label="Time Worked" value="totalWaktu" />
-                          <ExcelColumn label="Category" value="category" />
-                          <ExcelColumn label="Status" value="status" />
                           <ExcelColumn label="Updated" value="tglDiperbarui" />
                           <ExcelColumn
                             label="Last Replier"
