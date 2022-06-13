@@ -332,7 +332,7 @@ const DetailTicket = (props) => {
 
   const onSubmitReply = async (event) => {
     event.preventDefault();
-    let ticket_status = "Process";
+    let ticket_status = isCloseTicket ? replyData.status : detail_ticket.status;
     let reply_request = new FormData();
     reply_request.append("ticketCode", ticketId);
     reply_request.append("isi", replyData.isi);
