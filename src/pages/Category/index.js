@@ -112,155 +112,116 @@ const Category = (props) => {
           <Breadcrumbs title={"Category"} breadcrumbItem={"Category"} />
           <Card>
             <CardBody>
-              <Row className="mb-3 d-flex align-items-end">
-                <Col className="d-flex justify-content-end">
-                  {isAddCategory && (
-                    <Link to={routes.add_category}>
-                      <button
-                        type="button"
-                        className="btn btn-primary waves-effect waves-light"
+              <Row className="justify-content-center">
+                <Col md={8}>
+                  <Row className="mb-3 d-flex align-items-end">
+                    <Col className="d-flex justify-content-end">
+                      {isAddCategory && (
+                        <Link to={routes.add_category}>
+                          <button
+                            type="button"
+                            className="btn btn-primary waves-effect waves-light"
+                          >
+                            <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
+                            New
+                          </button>
+                        </Link>
+                      )}
+                    </Col>
+                  </Row>
+                  <div className="table-responsive">
+                    <Table className="table table-centered table-striped">
+                      <thead>
+                        <tr>
+                          <th>No</th>
+                          <th>Name</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {list_category &&
+                          list_category.map((value, index) => {
+                            return (
+                              <tr key={value.id}>
+                                <th scope="row">
+                                  <div>{index + 1}</div>
+                                </th>
+                                <td>{value.name}</td>
+                                <td>
+                                  <Link
+                                    to={{
+                                      pathname: routes.edit_category,
+                                      search: `?id=${value.id}`,
+                                    }}
+                                  >
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary waves-effect waves-light"
+                                      style={{ minWidth: "max-content" }}
+                                    >
+                                      <i className="bx bxs-edit font-size-16 align-middle"></i>
+                                    </button>
+                                  </Link>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </Table>
+                  </div>
+                  {list_category && list_category.length > 0 && (
+                    <Row className="d-flex align-items-end">
+                      <Col md="6">
+                        <div className="form-group mb-0 d-flex flex-row align-items-end">
+                          <label>Show Data</label>
+                          <div className="ml-2">
+                            <select
+                              className="form-control"
+                              defaultValue={10}
+                              onChange={(event) => (
+                                setData({
+                                  ...data,
+                                  size: parseInt(event.target.value),
+                                  pageNo: 0,
+                                }),
+                                props.readCategory({
+                                  ...data,
+                                  size: parseInt(event.target.value),
+                                  pageNo: 0,
+                                })
+                              )}
+                            >
+                              <option value={10}>10</option>
+                              <option value={25}>25</option>
+                              <option value={50}>50</option>
+                              <option value={100}>100</option>
+                            </select>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col
+                        className="justify-content-end"
+                        style={{ display: "grid" }}
                       >
-                        <i className="bx bx-edit-alt font-size-16 align-middle mr-2"></i>{" "}
-                        New
-                      </button>
-                    </Link>
+                        <ReactPaginate
+                          previousLabel={"previous"}
+                          nextLabel={"next"}
+                          breakLabel={"..."}
+                          breakClassName={"break-me"}
+                          pageCount={total_pages_category}
+                          marginPagesDisplayed={1}
+                          pageRangeDisplayed={5}
+                          forcePage={active_page_category}
+                          onPageChange={handlePageClick}
+                          containerClassName={"pagination"}
+                          subContainerClassName={"pages pagination"}
+                          activeClassName={"active"}
+                        />
+                      </Col>
+                    </Row>
                   )}
                 </Col>
               </Row>
-              <div className="table-responsive">
-                <Table className="table table-centered table-striped">
-                  <thead>
-                    <tr>
-                      <th>No</th>
-                      <th>Name</th>
-                      <th>Add. Question 1</th>
-                      <th>Add. Question 2</th>
-                      <th>Add. Question 3</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {list_category &&
-                      list_category.map((value, index) => {
-                        return (
-                          <tr key={value.id}>
-                            <th scope="row">
-                              <div>{index + 1}</div>
-                            </th>
-                            <td>{value.name}</td>
-                            <td>
-                              <span
-                                style={{
-                                  textOverflow: "ellipsis",
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  width: "200px",
-                                  display: "block",
-                                }}
-                              >
-                                {value.additionalInput1}
-                              </span>
-                            </td>
-                            <td>
-                              <span
-                                style={{
-                                  textOverflow: "ellipsis",
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  width: "200px",
-                                  display: "block",
-                                }}
-                              >
-                                {value.additionalInput2}
-                              </span>
-                            </td>
-                            <td>
-                              <span
-                                style={{
-                                  textOverflow: "ellipsis",
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  width: "200px",
-                                  display: "block",
-                                }}
-                              >
-                                {value.additionalInput3}
-                              </span>
-                            </td>
-
-                            <td>
-                              <Link
-                                to={{
-                                  pathname: routes.edit_category,
-                                  search: `?code=${value.codeLevel}`,
-                                }}
-                              >
-                                <button
-                                  type="button"
-                                  className="btn btn-primary waves-effect waves-light"
-                                  style={{ minWidth: "max-content" }}
-                                >
-                                  <i className="bx bxs-edit font-size-16 align-middle"></i>
-                                </button>
-                              </Link>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </Table>
-              </div>
-              {list_category && list_category.length > 0 && (
-                <Row className="d-flex align-items-end">
-                  <Col md="6">
-                    <div className="form-group mb-0 d-flex flex-row align-items-end">
-                      <label>Show Data</label>
-                      <div className="ml-2">
-                        <select
-                          className="form-control"
-                          defaultValue={10}
-                          onChange={(event) => (
-                            setData({
-                              ...data,
-                              size: parseInt(event.target.value),
-                              pageNo: 0,
-                            }),
-                            props.readCategory({
-                              ...data,
-                              size: parseInt(event.target.value),
-                              pageNo: 0,
-                            })
-                          )}
-                        >
-                          <option value={10}>10</option>
-                          <option value={25}>25</option>
-                          <option value={50}>50</option>
-                          <option value={100}>100</option>
-                        </select>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col
-                    className="justify-content-end"
-                    style={{ display: "grid" }}
-                  >
-                    <ReactPaginate
-                      previousLabel={"previous"}
-                      nextLabel={"next"}
-                      breakLabel={"..."}
-                      breakClassName={"break-me"}
-                      pageCount={total_pages_category}
-                      marginPagesDisplayed={1}
-                      pageRangeDisplayed={5}
-                      forcePage={active_page_category}
-                      onPageChange={handlePageClick}
-                      containerClassName={"pagination"}
-                      subContainerClassName={"pages pagination"}
-                      activeClassName={"active"}
-                    />
-                  </Col>
-                </Row>
-              )}
             </CardBody>
           </Card>
           <Modal

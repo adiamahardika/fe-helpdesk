@@ -74,9 +74,6 @@ const AddTicket = (props) => {
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
   const [ticketCode, setTicketCode] = useState(null);
-  const [additionalInput1, setAdditionalInput1] = useState(null);
-  const [additionalInput2, setAdditionalInput2] = useState(null);
-  const [additionalInput3, setAdditionalInput3] = useState(null);
   const [isAssigningTicket, setIsAssigningTicket] = useState(false);
   const [captchaValidation, setCaptchaValidation] = useState(null);
   const [captchaMessage, setCaptchaMessage] = useState(null);
@@ -88,6 +85,8 @@ const AddTicket = (props) => {
   const [requestGrapari, setRequestGrapari] = useState(null);
   const [selectedTerminal, setSelectedTerminal] = useState(null);
   const [requestTerminal, setRequestTerminal] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  console.log(selectedCategory);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -310,33 +309,8 @@ const AddTicket = (props) => {
     if (isAssigningTicket || valid_captcha) {
       const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
       setTicketCode(ticket_code);
-      const additional1 =
-        additionalInput1 && additionalInput1.answer
-          ? additionalInput1.additionalInput1 +
-            `: ` +
-            additionalInput1.answer +
-            "\n"
-          : "";
 
-      const additional2 =
-        additionalInput2 && additionalInput2.answer
-          ? additionalInput2.additionalInput2 +
-            `: ` +
-            additionalInput2.answer +
-            "\n"
-          : "";
-
-      const additional3 =
-        additionalInput3 && additionalInput3.answer
-          ? additionalInput3.additionalInput3 +
-            `: ` +
-            additionalInput3.answer +
-            "\n"
-          : "";
-
-      const isi = `${additional1} ${additional2} ${additional3} ${
-        data && data.isi
-      }`;
+      const isi = `${data && data.isi}`;
 
       let request = new FormData();
       request.append("status", data.status);
@@ -778,36 +752,9 @@ const AddTicket = (props) => {
                                         event.target.value
                                       ).id.toString(),
                                     }),
-                                    setAdditionalInput1({
-                                      ...additionalInput1,
-                                      answer: null,
-                                      mainAdditionalInput1: JSON.parse(
-                                        event.target.value
-                                      ).additionalInput1,
-                                      additionalInput1: JSON.parse(
-                                        event.target.value
-                                      ).additionalInput1,
-                                    }),
-                                    setAdditionalInput2({
-                                      ...additionalInput2,
-                                      answer: null,
-                                      mainAdditionalInput2: JSON.parse(
-                                        event.target.value
-                                      ).additionalInput2,
-                                      additionalInput2: JSON.parse(
-                                        event.target.value
-                                      ).additionalInput2,
-                                    }),
-                                    setAdditionalInput3({
-                                      ...additionalInput3,
-                                      answer: null,
-                                      mainAdditionalInput3: JSON.parse(
-                                        event.target.value
-                                      ).additionalInput3,
-                                      additionalInput3: JSON.parse(
-                                        event.target.value
-                                      ).additionalInput3,
-                                    }),
+                                    setSelectedCategory(
+                                      JSON.parse(event.target.value)
+                                    ),
                                     setDirty()
                                   )}
                                 >
@@ -830,84 +777,50 @@ const AddTicket = (props) => {
                         </FormGroup>
                       </Col>
                     </Row>
-                    {additionalInput1 &&
-                      additionalInput1.additionalInput1 !== "-" && (
-                        <Row>
-                          <Col md={6}>
-                            <FormGroup className="select2-container">
-                              <label className="control-label">
-                                {additionalInput1.additionalInput1}
-                              </label>
-                              <AvField
-                                name={additionalInput1.additionalInput1}
-                                label=""
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                onChange={(event) =>
-                                  setAdditionalInput1({
-                                    ...additionalInput1,
-                                    answer: event.target.value,
-                                  })
-                                }
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      )}
-                    {additionalInput2 &&
-                      additionalInput2.additionalInput2 !== "-" && (
-                        <Row>
-                          <Col md={6}>
-                            <FormGroup className="select2-container">
-                              <label className="control-label">
-                                {additionalInput2.additionalInput2}
-                              </label>
-                              <AvField
-                                name={additionalInput2.additionalInput2}
-                                label=""
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                onChange={(event) =>
-                                  setAdditionalInput2({
-                                    ...additionalInput2,
-                                    answer: event.target.value,
-                                  })
-                                }
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      )}
-                    {additionalInput3 &&
-                      additionalInput3.additionalInput3 !== "-" && (
-                        <Row>
-                          <Col md={6}>
-                            <FormGroup className="select2-container">
-                              <label className="control-label">
-                                {additionalInput3.additionalInput3}
-                              </label>
-                              <AvField
-                                name={additionalInput3.additionalInput3}
-                                label=""
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                onChange={(event) =>
-                                  setAdditionalInput3({
-                                    ...additionalInput3,
-                                    answer: event.target.value,
-                                  })
-                                }
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      )}
+                    <Row>
+                      <Col>
+                        <FormGroup className="select2-container">
+                          <label className="control-label">
+                            Sub Category <span style={{ color: "red" }}>*</span>
+                          </label>
+                          <Row className="mb-2">
+                            <Col md={4}>
+                              <div>
+                                <select
+                                  name="category"
+                                  className="form-control"
+                                  defaultValue="0"
+                                  onChange={(event) => (
+                                    setData({
+                                      ...data,
+                                      category: JSON.parse(
+                                        event.target.value
+                                      ).id.toString(),
+                                    }),
+                                    setDirty()
+                                  )}
+                                >
+                                  <option value="0" disabled>
+                                    Select Category
+                                  </option>
+                                  {selectedCategory &&
+                                    selectedCategory.subCategory.map(
+                                      (value, index) => (
+                                        <option
+                                          key={index}
+                                          value={value && JSON.stringify(value)}
+                                        >
+                                          {value.name}
+                                        </option>
+                                      )
+                                    )}
+                                </select>
+                              </div>
+                            </Col>
+                          </Row>
+                        </FormGroup>
+                      </Col>
+                    </Row>
                     <Row className="mt-3">
                       <Col>
                         <FormGroup className="select2-container">

@@ -42,7 +42,7 @@ const EditCategory = (props) => {
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
   const { search } = useLocation();
-  const { code } = queryString.parse(search);
+  const { id } = queryString.parse(search);
 
   const [data, setData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
@@ -173,7 +173,7 @@ const EditCategory = (props) => {
         sort_by: "codeLevel",
         order_by: "asc",
       });
-      props.readDetailCategory(code);
+      props.readDetailCategory(id);
 
       editCategory && setIsEditCategory(true);
       deleteCategory && setIsDeleteCategory(true);

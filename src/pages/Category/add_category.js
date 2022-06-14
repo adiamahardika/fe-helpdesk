@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, FormGroup, Row, Col } from "reactstrap";
+import {
+  Container,
+  Card,
+  CardBody,
+  FormGroup,
+  Row,
+  Col,
+  Label,
+} from "reactstrap";
 import {
   readCategory,
   createCategory,
@@ -31,7 +39,10 @@ const AddCategory = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
+  const [subCategory, setSubCategory] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
+  const [subCategoryLength, setSubCategoryLength] = useState(1);
+  const [allSubCategoryFilled, setAllSubCategoryFiller] = useState(false);
 
   const onChangeData = (event) => {
     setData({
@@ -40,18 +51,27 @@ const AddCategory = (props) => {
     });
     setDirty();
   };
+  const onChangeSubCategory = (event, index) => {
+    let sub_category = subCategory;
+    sub_category[index].name = event.target.value;
+    setSubCategory(sub_category);
+    setAllSubCategoryFiller(subCategory.every((value) => value.name !== ""));
+  };
+  const onChangePriority = (value, index) => {
+    let sub_category = subCategory;
+    sub_category[index].priority = value;
+    setSubCategory(sub_category);
+    setDirty();
+  };
 
   const onSubmitCreate = async () => {
-    props.createCategory(data);
+    props.createCategory({ ...data, subCategory: subCategory });
+    console.log({ ...data, subCategory: subCategory });
     setIsShowSweetAlert(true);
     setPristine();
   };
   const ButtonSubmitCreate = () => {
-    if (
-      data &&
-      Object.keys(data).length >= 5 &&
-      Object.values(data).every((value) => value !== "")
-    ) {
+    if (data && data.name !== "" && allSubCategoryFilled) {
       return (
         <button
           type="button"
@@ -126,12 +146,12 @@ const AddCategory = (props) => {
         sort_by: "name",
         order_by: "asc",
       });
-      setData({
-        parent: "0",
-        additionalInput1: "-",
-        additionalInput2: "-",
-        additionalInput3: "-",
-      });
+      setSubCategory([
+        {
+          name: "",
+          priority: "Low",
+        },
+      ]);
     } else {
       history.push(routes.ticket);
     }
@@ -169,79 +189,120 @@ const AddCategory = (props) => {
                           errorMessage="Enter Name"
                           validate={{
                             required: { value: true },
-                            maxLength: { value: 25 },
                           }}
                           onChange={onChangeData}
                         />
                       </Col>
                     </Row>
                     <Row>
-                      <Col>
-                        <FormGroup className="select2-container">
-                          <Row>
-                            <Col md={5}>
-                              <AvField
-                                name="additionalInput1"
-                                label="Additional Question 1"
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                onChange={(event) =>
-                                  setData({
-                                    ...data,
-                                    additionalInput1:
-                                      event.target.value === ""
-                                        ? "-"
-                                        : event.target.value,
-                                  })
-                                }
-                              />
+                      <Col md={4}>
+                        <Label className="col-form-label">Sub Category</Label>
+                      </Col>
+                      <Col md={3}>
+                        <Label className="col-form-label">Priority</Label>
+                      </Col>
+                    </Row>
+                    {subCategory &&
+                      subCategory.map((value, index) => (
+                        <Row className="d-flex align-items-start" key={index}>
+                          <Col md={4}>
+                            <AvField
+                              name="-"
+                              placeholder=""
+                              type="text"
+                              errorMessage="Enter Sub Category"
+                              validate={{
+                                required: { value: true },
+                              }}
+                              value={value.name}
+                              onChange={(event) =>
+                                onChangeSubCategory(event, index)
+                              }
+                            />
+                          </Col>
+                          <Col md={3}>
+                            <FormGroup className="select2-container">
+                              <div>
+                                <select
+                                  name="priority"
+                                  className="form-control"
+                                  defaultValue={
+                                    subCategory &&
+                                    subCategory[index].priority === value.name
+                                  }
+                                  style={{
+                                    fontWeight: "bold",
+                                  }}
+                                  onChange={(event) => {
+                                    onChangePriority(event.target.value, index);
+                                  }}
+                                >
+                                  {general_constant.priority.map((value) => (
+                                    <option
+                                      key={value.name}
+                                      value={value.name}
+                                      style={{
+                                        color: value.color,
+                                        fontWeight: "bold",
+                                      }}
+                                      selected={
+                                        subCategory &&
+                                        subCategory[index].priority ===
+                                          value.name
+                                      }
+                                    >
+                                      {value.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </FormGroup>
+                          </Col>{" "}
+                          {subCategoryLength > 1 && (
+                            <Col md={1}>
+                              <FormGroup className="select2-container">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger waves-effect waves-light"
+                                  style={{ minWidth: "max-content" }}
+                                  onClick={() => {
+                                    let sub_category = subCategory;
+                                    sub_category.splice(index, 1);
+                                    setSubCategory(sub_category);
+                                    setSubCategoryLength(subCategoryLength - 1);
+                                    setAllSubCategoryFiller(
+                                      subCategory.every(
+                                        (value) => value.name !== ""
+                                      )
+                                    );
+                                  }}
+                                >
+                                  <i className="bx bx-trash font-size-16 align-middle"></i>
+                                </button>
+                              </FormGroup>
                             </Col>
-                          </Row>
-                          <Row>
-                            <Col md={5}>
-                              <AvField
-                                name="additionalInput2"
-                                label="Additional Question 2"
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                onChange={(event) =>
-                                  setData({
-                                    ...data,
-                                    additionalInput2:
-                                      event.target.value === ""
-                                        ? "-"
-                                        : event.target.value,
-                                  })
-                                }
-                              />
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col md={5}>
-                              <AvField
-                                name="additionalInput3"
-                                label="Additional Question 3"
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                onChange={(event) =>
-                                  setData({
-                                    ...data,
-                                    additionalInput3:
-                                      event.target.value === ""
-                                        ? "-"
-                                        : event.target.value,
-                                  })
-                                }
-                              />
-                            </Col>
-                          </Row>
-                        </FormGroup>
+                          )}
+                        </Row>
+                      ))}
+                    <Row>
+                      <Col md={4}>
+                        <button
+                          type="button"
+                          className="btn btn-outline-primary waves-effect waves-light w-100 d-flex justify-content-center align-items-center"
+                          onClick={() => {
+                            let sub_category = subCategory;
+                            sub_category.push({
+                              name: "",
+                              priority: "Low",
+                            });
+                            setSubCategory(sub_category);
+                            setSubCategoryLength(subCategoryLength + 1);
+                            setAllSubCategoryFiller(false);
+                          }}
+                        >
+                          <i className="bx bxs-plus-square font-size-16 align-middle mr-1"></i>
+                          Add
+                        </button>
                       </Col>
                     </Row>
                   </AvForm>
