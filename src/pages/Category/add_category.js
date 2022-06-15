@@ -56,6 +56,7 @@ const AddCategory = (props) => {
     sub_category[index].name = event.target.value;
     setSubCategory(sub_category);
     setAllSubCategoryFiller(subCategory.every((value) => value.name !== ""));
+    setDirty();
   };
   const onChangePriority = (value, index) => {
     let sub_category = subCategory;

@@ -33,6 +33,7 @@ const EditCategory = (props) => {
   const message = props.message_category;
   const response_code = props.response_code_category;
   const detail_category = props.detail_category;
+  console.log(detail_category);
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
@@ -52,6 +53,8 @@ const EditCategory = (props) => {
   const [alertMessage, setAlertMessage] = useState(null);
   const [isEditCategory, setIsEditCategory] = useState(false);
   const [isDeleteCategory, setIsDeleteCategory] = useState(false);
+  const [subCategoryLength, setSubCategoryLength] = useState(1);
+  const [allSubCategoryFilled, setAllSubCategoryFiller] = useState(false);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -61,6 +64,25 @@ const EditCategory = (props) => {
     setData({
       ...data,
       [event.target.name]: event.target.value,
+    });
+    setDirty();
+  };
+  const onChangeSubCategory = (event, index) => {
+    let sub_category = data && data.subCategory;
+    sub_category[index].name = event.target.value;
+    setData({
+      ...data,
+      subCategory: sub_category,
+    });
+    setAllSubCategoryFiller(sub_category.every((value) => value.name !== ""));
+    setDirty();
+  };
+  const onChangePriority = (value, index) => {
+    let sub_category = data && data.subCategory;
+    sub_category[index].priority = value;
+    setData({
+      ...data,
+      subCategory: sub_category,
     });
     setDirty();
   };
@@ -77,7 +99,8 @@ const EditCategory = (props) => {
       data &&
       Object.keys(data).length >= 5 &&
       Object.values(data).every((value) => value !== "") &&
-      isEdit
+      isEdit &&
+      allSubCategoryFilled
     ) {
       return (
         <button
@@ -111,6 +134,7 @@ const EditCategory = (props) => {
           onClick={() => {
             setIsEdit(true);
             setData(detail_category);
+            setAllSubCategoryFiller(true);
           }}
         >
           <i className="bx bx-edit font-size-16 align-middle mr-2"></i>
@@ -131,8 +155,10 @@ const EditCategory = (props) => {
             confirmBtnBsStyle="success"
             onConfirm={() => {
               setIsShowSweetAlert(false);
+              setIsEdit(false);
               setData(null);
-              history.push(routes.category);
+              props.readDetailCategory(id);
+              history.push(`routes.edit_category?id=${id}`);
             }}
           >
             Category has successfully {alertMessage}!
@@ -198,33 +224,19 @@ const EditCategory = (props) => {
                   columnGap: "8px",
                 }}
               >
-                {isEdit ? (
+                {!isEdit && isDeleteCategory && (
                   <button
                     type="button"
-                    className="btn btn-outline-primary waves-effect waves-light d-flex align-items-center"
+                    className="btn btn-danger waves-effect waves-light d-flex align-items-center"
                     style={{ minWidth: "max-content" }}
                     onClick={() => {
-                      setIsEdit(false);
+                      setSelectedData(detail_category.id);
+                      setModalDelete(!modalDelete);
                     }}
                   >
-                    <i className="bx bx-x font-size-16 align-middle mr-2"></i>
-                    Cancel
+                    <i className="bx bx-trash font-size-16 align-middle mr-2"></i>
+                    Delete
                   </button>
-                ) : (
-                  isDeleteCategory && (
-                    <button
-                      type="button"
-                      className="btn btn-danger waves-effect waves-light d-flex align-items-center"
-                      style={{ minWidth: "max-content" }}
-                      onClick={() => {
-                        setSelectedData(detail_category.id);
-                        setModalDelete(!modalDelete);
-                      }}
-                    >
-                      <i className="bx bx-trash font-size-16 align-middle mr-2"></i>
-                      Delete
-                    </button>
-                  )
                 )}
                 {isEditCategory && <ButtonSubmit />}
               </div>
@@ -254,102 +266,123 @@ const EditCategory = (props) => {
                         />
                       </Col>
                     </Row>
-                    <Row>
-                      <Col>
-                        <FormGroup className="select2-container">
-                          <Row>
-                            <Col md={5}>
-                              <AvField
-                                name="additionalInput1"
-                                label="Additional Question 1"
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                value={
-                                  detail_category &&
-                                  detail_category.additionalInput1
-                                }
-                                style={{
-                                  backgroundColor:
-                                    isEdit === false ? "#ced4da" : "#ffffff",
-                                }}
-                                disabled={isEdit === false}
-                                onChange={(event) =>
-                                  setData({
-                                    ...data,
-                                    additionalInput1:
-                                      event.target.value === ""
-                                        ? "-"
-                                        : event.target.value,
-                                  })
-                                }
-                              />
+                    {detail_category &&
+                      detail_category.subCategory.map((value, index) => (
+                        <Row className="d-flex align-items-start" key={index}>
+                          <Col md={4}>
+                            <AvField
+                              name="-"
+                              placeholder=""
+                              type="text"
+                              errorMessage="Enter Sub Category"
+                              validate={{
+                                required: { value: true },
+                              }}
+                              disabled={isEdit === false}
+                              style={{
+                                backgroundColor:
+                                  isEdit === false ? "#ced4da" : "#ffffff",
+                              }}
+                              value={value.name}
+                              onChange={(event) =>
+                                onChangeSubCategory(event, index)
+                              }
+                            />
+                          </Col>
+                          <Col md={3}>
+                            <FormGroup className="select2-container">
+                              <div>
+                                <select
+                                  name="priority"
+                                  className="form-control"
+                                  style={{
+                                    fontWeight: "bold",
+                                    backgroundColor:
+                                      isEdit === false ? "#ced4da" : "#ffffff",
+                                  }}
+                                  disabled={isEdit === false}
+                                  onChange={(event) => {
+                                    onChangePriority(event.target.value, index);
+                                  }}
+                                >
+                                  {general_constant.priority.map((item) => (
+                                    <option
+                                      key={item.name}
+                                      value={item.name}
+                                      style={{
+                                        color: item.color,
+                                        fontWeight: "bold",
+                                      }}
+                                      selected={
+                                        detail_category &&
+                                        detail_category.subCategory[index]
+                                          .priority === item.name
+                                      }
+                                    >
+                                      {item.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </FormGroup>
+                          </Col>{" "}
+                          {isEdit && subCategoryLength > 1 && (
+                            <Col md={1}>
+                              <FormGroup className="select2-container">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger waves-effect waves-light"
+                                  style={{ minWidth: "max-content" }}
+                                  onClick={() => {
+                                    let sub_category = data && data.subCategory;
+                                    sub_category.splice(index, 1);
+                                    setData({
+                                      ...data,
+                                      subCategory: sub_category,
+                                    });
+                                    setSubCategoryLength(subCategoryLength - 1);
+                                    setAllSubCategoryFiller(
+                                      data &&
+                                        data.subCategory.every(
+                                          (value) => value.name !== ""
+                                        )
+                                    );
+                                  }}
+                                >
+                                  <i className="bx bx-trash font-size-16 align-middle"></i>
+                                </button>
+                              </FormGroup>
                             </Col>
-                          </Row>
-                          <Row>
-                            <Col md={5}>
-                              <AvField
-                                name="additionalInput2"
-                                label="Additional Question 2"
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                value={
-                                  detail_category &&
-                                  detail_category.additionalInput2
-                                }
-                                style={{
-                                  backgroundColor:
-                                    isEdit === false ? "#ced4da" : "#ffffff",
-                                }}
-                                disabled={isEdit === false}
-                                onChange={(event) =>
-                                  setData({
-                                    ...data,
-                                    additionalInput2:
-                                      event.target.value === ""
-                                        ? "-"
-                                        : event.target.value,
-                                  })
-                                }
-                              />
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col md={5}>
-                              <AvField
-                                name="additionalInput3"
-                                label="Additional Question 3"
-                                type="text"
-                                validate={{
-                                  maxLength: { value: 50 },
-                                }}
-                                value={
-                                  detail_category &&
-                                  detail_category.additionalInput3
-                                }
-                                style={{
-                                  backgroundColor:
-                                    isEdit === false ? "#ced4da" : "#ffffff",
-                                }}
-                                disabled={isEdit === false}
-                                onChange={(event) =>
-                                  setData({
-                                    ...data,
-                                    additionalInput3:
-                                      event.target.value === ""
-                                        ? "-"
-                                        : event.target.value,
-                                  })
-                                }
-                              />
-                            </Col>
-                          </Row>
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                          )}
+                        </Row>
+                      ))}
+                    {isEdit && (
+                      <Row>
+                        <Col md={4}>
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary waves-effect waves-light w-100 d-flex justify-content-center align-items-center"
+                            onClick={() => {
+                              let sub_category = data && data.subCategory;
+                              sub_category.push({
+                                name: "",
+                                priority: "Low",
+                                idCategory: detail_category.id,
+                              });
+                              setData({
+                                ...data,
+                                subCategory: sub_category,
+                              });
+                              setSubCategoryLength(subCategoryLength + 1);
+                              setAllSubCategoryFiller(false);
+                            }}
+                          >
+                            <i className="bx bxs-plus-square font-size-16 align-middle mr-1"></i>
+                            Add
+                          </button>
+                        </Col>
+                      </Row>
+                    )}
                   </AvForm>
                 </Col>
               </Row>
