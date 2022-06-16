@@ -63,6 +63,8 @@ const AddTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
+  console.log(data);
+  console.log(data && Object.keys(data).length);
   const [captchaRequest, setCaptchaRequest] = useState(null);
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
@@ -78,15 +80,15 @@ const AddTicket = (props) => {
   const [captchaValidation, setCaptchaValidation] = useState(null);
   const [captchaMessage, setCaptchaMessage] = useState(null);
   const [selectedArea, setSelectedArea] = useState(null);
-  const [requestArea, setRequestArea] = useState(null);
   const [selectedRegional, setSelectedRegional] = useState(null);
   const [requestRegional, setRequestRegional] = useState(null);
   const [selectedGrapari, setSelectedGrapari] = useState(null);
+  console.log(selectedGrapari);
   const [requestGrapari, setRequestGrapari] = useState(null);
   const [selectedTerminal, setSelectedTerminal] = useState(null);
   const [requestTerminal, setRequestTerminal] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  console.log(selectedCategory);
+  const [showLainLain, setShowLainLain] = useState(false);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -222,28 +224,27 @@ const AddTicket = (props) => {
     });
     setDirty();
   };
-  const onChangeOption = async (value) => {
-    if (value) {
-      switch (value) {
-        case "High":
-          setOptionColor("#f46a6a");
-          break;
-        case "Medium":
-          setOptionColor("#f1b44c");
-          break;
-        case "Critical":
-          setOptionColor("#9400d3");
-          break;
-        case "Low":
-          setOptionColor("#34c38f");
-          break;
-        default:
-          setOptionColor("#34c38f");
-      }
+  const onChangeSubCategory = async (event) => {
+    if (event) {
+      let parse = JSON.parse(event.target.value);
+      let findIndex = general_constant.priority.findIndex(
+        (value) => value.name === parse.priority
+      );
+      setOptionColor(general_constant.priority[findIndex].color);
       setData({
         ...data,
-        prioritas: value,
+        subCategory: parse.name !== "Lain-lain" ? parse.name : "",
+        priority: parse.priority,
+        judul:
+          parse.name !== "Lain-lain"
+            ? selectedGrapari.label +
+              " " +
+              selectedCategory.name +
+              " " +
+              parse.name
+            : "",
       });
+      setShowLainLain(parse.name === "Lain-lain" ? true : false);
     }
     setDirty();
   };
@@ -323,6 +324,7 @@ const AddTicket = (props) => {
       request.append("email", data.email);
       request.append("judul", data.judul);
       request.append("category", data.category);
+      request.append("subCategory", data.subCategory);
       request.append("areaCode", data.areaCode);
       request.append("regional", data.regional);
       request.append("grapariId", data.grapariId);
@@ -339,7 +341,8 @@ const AddTicket = (props) => {
   const ButtonSubmitCreate = () => {
     if (
       data &&
-      Object.keys(data).length >= 17 &&
+      Object.keys(data).length >= 18 &&
+      data.judul !== "" &&
       validEmail &&
       captchaValidation
     ) {
@@ -427,7 +430,6 @@ const AddTicket = (props) => {
         status: "A",
       };
       props.readArea(reqArea);
-      setRequestArea(reqArea);
 
       let reqRegional = {
         areaCode: area_code && area_code[0] !== "0" ? area_code : [],
@@ -591,42 +593,6 @@ const AddTicket = (props) => {
                           </FormGroup>
                         </Col>
                       )}
-                      {/* <Col md={5}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Location <span style={{ color: "red" }}>*</span>
-                          </label>
-                          <AvField
-                            name="lokasi"
-                            label=""
-                            type="text"
-                            errorMessage="Location must be filled"
-                            validate={{
-                              required: { value: true },
-                              maxLength: { value: 25 },
-                            }}
-                            onChange={onChangeData}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col md={3}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Terminal Id <span style={{ color: "red" }}>*</span>
-                          </label>
-                          <AvField
-                            name="terminalId"
-                            label=""
-                            type="text"
-                            errorMessage="Terminal Id must be filled"
-                            validate={{
-                              required: { value: true },
-                              maxLength: { value: 25 },
-                            }}
-                            onChange={onChangeData}
-                          />
-                        </FormGroup>
-                      </Col> */}
                     </Row>
                     <Row>
                       {grapari_id && (
@@ -684,7 +650,7 @@ const AddTicket = (props) => {
                             errorMessage="Enter valid Email"
                             validate={{
                               required: { value: true },
-                              maxLength: { value: 30 },
+                              maxLength: { value: 50 },
                             }}
                             onChange={(event) =>
                               onValidateEmail(event.target.value)
@@ -694,52 +660,13 @@ const AddTicket = (props) => {
                       </Col>
                     </Row>
                     <Row className="mt-3">
-                      <Col md={3}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Priority <span style={{ color: "red" }}>*</span>
-                          </label>
-                          <div>
-                            <select
-                              name="priority"
-                              className="form-control"
-                              defaultValue={general_constant.priority[0]}
-                              onChange={(event) =>
-                                onChangeOption(event.target.value)
-                              }
-                              style={{
-                                color: optionColor,
-                                fontWeight: "bold",
-                              }}
-                            >
-                              {general_constant.priority.map((value, index) => (
-                                <option
-                                  key={index}
-                                  value={value.name}
-                                  onChange={(event) =>
-                                    onChangeOption(event.target.value)
-                                  }
-                                  style={{
-                                    color: value.color,
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  {value.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
                       <Col>
                         <FormGroup className="select2-container">
                           <label className="control-label">
                             Category <span style={{ color: "red" }}>*</span>
                           </label>
                           <Row className="mb-2">
-                            <Col md={4}>
+                            <Col md={5}>
                               <div>
                                 <select
                                   name="category"
@@ -778,32 +705,27 @@ const AddTicket = (props) => {
                       </Col>
                     </Row>
                     <Row>
-                      <Col>
+                      <Col md={8}>
                         <FormGroup className="select2-container">
                           <label className="control-label">
                             Sub Category <span style={{ color: "red" }}>*</span>
                           </label>
                           <Row className="mb-2">
-                            <Col md={4}>
+                            <Col>
                               <div>
                                 <select
                                   name="category"
                                   className="form-control"
                                   defaultValue="0"
-                                  onChange={(event) => (
-                                    setData({
-                                      ...data,
-                                      category: JSON.parse(
-                                        event.target.value
-                                      ).id.toString(),
-                                    }),
-                                    setDirty()
-                                  )}
+                                  onChange={(event) => {
+                                    onChangeSubCategory(event);
+                                  }}
                                 >
                                   <option value="0" disabled>
-                                    Select Category
+                                    Select Sub Category
                                   </option>
                                   {selectedCategory &&
+                                    selectedCategory.subCategory[0].id !== 0 &&
                                     selectedCategory.subCategory.map(
                                       (value, index) => (
                                         <option
@@ -814,31 +736,76 @@ const AddTicket = (props) => {
                                         </option>
                                       )
                                     )}
+                                  <option
+                                    value={JSON.stringify({
+                                      name: "Lain-lain",
+                                      priority: "Low",
+                                    })}
+                                  >
+                                    Lain-lain
+                                  </option>
                                 </select>
                               </div>
                             </Col>
                           </Row>
+                          <Row>
+                            <Col>
+                              {showLainLain && (
+                                <FormGroup className="select2-container mt-2">
+                                  <AvField
+                                    name="subCategory"
+                                    label=""
+                                    placeholder="ex: Mati total"
+                                    type="text"
+                                    errorMessage="Description must be filled!"
+                                    validate={{
+                                      required: { value: true },
+                                      maxLength: { value: 100 },
+                                    }}
+                                    onChange={(event) => {
+                                      setData({
+                                        ...data,
+                                        subCategory: event.target.value,
+                                        priority: "Low",
+                                        judul:
+                                          selectedGrapari.label +
+                                          " " +
+                                          selectedCategory.name +
+                                          " " +
+                                          event.target.value,
+                                      });
+                                    }}
+                                  />
+                                </FormGroup>
+                              )}
+                            </Col>
+                          </Row>
                         </FormGroup>
                       </Col>
+                      {data && data.subCategory && (
+                        <Col md={2} className="">
+                          <FormGroup className="select2-container">
+                            <label className="control-label">Priority</label>
+                            <FormGroup className="select2-container">
+                              <AvField
+                                name="priority"
+                                label=""
+                                value={data && data.priority}
+                                type="text"
+                                style={{
+                                  color: optionColor,
+                                  border: "none",
+                                }}
+                                className="p-0 font-weight-bold"
+                                disabled
+                              />
+                            </FormGroup>
+                          </FormGroup>
+                        </Col>
+                      )}
                     </Row>
                     <Row className="mt-3">
                       <Col>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Subject <span style={{ color: "red" }}>*</span>
-                          </label>
-                          <AvField
-                            name="judul"
-                            label=""
-                            type="text"
-                            errorMessage="Subject must be filled!"
-                            validate={{
-                              required: { value: true },
-                              maxLength: { value: 40 },
-                            }}
-                            onChange={onChangeData}
-                          />
-                        </FormGroup>
                         <FormGroup className="select2-container">
                           <label className="control-label">
                             Message <span style={{ color: "red" }}>*</span>
