@@ -63,8 +63,6 @@ const AddTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
-  console.log(data);
-  console.log(data && Object.keys(data).length);
   const [captchaRequest, setCaptchaRequest] = useState(null);
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
@@ -83,7 +81,6 @@ const AddTicket = (props) => {
   const [selectedRegional, setSelectedRegional] = useState(null);
   const [requestRegional, setRequestRegional] = useState(null);
   const [selectedGrapari, setSelectedGrapari] = useState(null);
-  console.log(selectedGrapari);
   const [requestGrapari, setRequestGrapari] = useState(null);
   const [selectedTerminal, setSelectedTerminal] = useState(null);
   const [requestTerminal, setRequestTerminal] = useState(null);
@@ -165,6 +162,16 @@ const AddTicket = (props) => {
         color = "#f1b44c";
         icon = "bx bxs-file-pdf";
         break;
+      case "mp4":
+        extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-videos";
+        break;
+      case "mkv":
+        extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-videos";
+        break;
 
       default:
         extensionCheck = false;
@@ -237,11 +244,9 @@ const AddTicket = (props) => {
         priority: parse.priority,
         judul:
           parse.name !== "Lain-lain"
-            ? selectedGrapari.label +
-              " " +
-              selectedCategory.name +
-              " " +
-              parse.name
+            ? selectedGrapari &&
+              selectedGrapari.label + " " + selectedCategory &&
+              selectedCategory.name + " " + parse.name
             : "",
       });
       setShowLainLain(parse.name === "Lain-lain" ? true : false);
@@ -768,11 +773,13 @@ const AddTicket = (props) => {
                                         subCategory: event.target.value,
                                         priority: "Low",
                                         judul:
+                                          selectedCategory &&
                                           selectedGrapari.label +
-                                          " " +
+                                            " " +
+                                            selectedCategory &&
                                           selectedCategory.name +
-                                          " " +
-                                          event.target.value,
+                                            " " +
+                                            event.target.value,
                                       });
                                     }}
                                   />
@@ -1308,7 +1315,7 @@ const AddTicket = (props) => {
               3. You may upload files ending with: <br />
               <strong>
                 .gif, .jpg, .png, .zip, .rar, .csv, .doc, .docx, .xls, .xlsx,
-                .txt, .pdf
+                .txt, .pdf, .mp4, .mkv
               </strong>
             </div>
           </Modal>

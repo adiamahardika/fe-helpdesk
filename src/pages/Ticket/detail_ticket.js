@@ -161,6 +161,16 @@ const DetailTicket = (props) => {
         color = "#f1b44c";
         icon = "bx bxs-file-pdf";
         break;
+      case "mp4":
+        extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-videos";
+        break;
+      case "mkv":
+        extensionCheck = true;
+        color = "#556ee6";
+        icon = "bx bxs-videos";
+        break;
 
       default:
         extensionCheck = false;
@@ -492,6 +502,16 @@ const DetailTicket = (props) => {
         color = "#34c38f";
         icon = "bx bxs-file-image";
         is_image = true;
+        break;
+      case "mp4":
+        color = "#556ee6";
+        icon = "bx bxs-videos";
+        is_image = false;
+        break;
+      case "mkv":
+        color = "#556ee6";
+        icon = "bx bxs-videos";
+        is_image = false;
         break;
       default:
         color = "#34c38f";
@@ -1432,7 +1452,7 @@ const DetailTicket = (props) => {
               3. You may upload files ending with: <br />
               <strong>
                 .jpg, .jpeg, .png, .zip, .rar, .csv, .doc, .docx, .xls, .xlsx,
-                .txt, .pdf
+                .txt, .pdf, .mp4, .mkv
               </strong>
             </div>
           </Modal>
