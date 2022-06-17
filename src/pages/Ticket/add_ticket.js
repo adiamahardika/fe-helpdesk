@@ -242,12 +242,6 @@ const AddTicket = (props) => {
         ...data,
         subCategory: parse.name !== "Lain-lain" ? parse.name : "",
         priority: parse.priority,
-        judul:
-          parse.name !== "Lain-lain"
-            ? selectedGrapari &&
-              selectedGrapari.label + " " + selectedCategory &&
-              selectedCategory.name + " " + parse.name
-            : "",
       });
       setShowLainLain(parse.name === "Lain-lain" ? true : false);
     }
@@ -315,7 +309,12 @@ const AddTicket = (props) => {
     if (isAssigningTicket || valid_captcha) {
       const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
       setTicketCode(ticket_code);
-
+      const judul =
+        selectedGrapari.label +
+        " " +
+        selectedCategory.name +
+        " " +
+        data.subCategory;
       const isi = `${data && data.isi}`;
 
       let request = new FormData();
@@ -327,7 +326,7 @@ const AddTicket = (props) => {
       selectedFiles2 && request.append("attachment2", data.attachment2);
       request.append("ticketCode", ticket_code);
       request.append("email", data.email);
-      request.append("judul", data.judul);
+      request.append("judul", judul);
       request.append("category", data.category);
       request.append("subCategory", data.subCategory);
       request.append("areaCode", data.areaCode);
@@ -346,8 +345,7 @@ const AddTicket = (props) => {
   const ButtonSubmitCreate = () => {
     if (
       data &&
-      Object.keys(data).length >= 18 &&
-      data.judul !== "" &&
+      Object.keys(data).length >= 17 &&
       validEmail &&
       captchaValidation
     ) {
@@ -772,14 +770,6 @@ const AddTicket = (props) => {
                                         ...data,
                                         subCategory: event.target.value,
                                         priority: "Low",
-                                        judul:
-                                          selectedCategory &&
-                                          selectedGrapari.label +
-                                            " " +
-                                            selectedCategory &&
-                                          selectedCategory.name +
-                                            " " +
-                                            event.target.value,
                                       });
                                     }}
                                   />
