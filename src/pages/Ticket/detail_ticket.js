@@ -654,25 +654,8 @@ const DetailTicket = (props) => {
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Reply On</strong>
-                      {detail_ticket &&
-                        parseFullDate(
-                          list_reply_ticket &&
-                            list_reply_ticket[list_reply_ticket.length - 1]
-                              .tglDibuat
-                        )}
-                    </Col>
-                  </Row>
-                  <Row className="align-items-center mb-2">
-                    <Col className="d-flex" style={{ flexFlow: "column" }}>
                       <strong>Submitted On</strong>
                       {detail_ticket && parseFullDate(detail_ticket.tglDibuat)}
-                    </Col>
-                  </Row>
-                  <Row className="align-items-center mb-2">
-                    <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Time Worked</strong>
-                      {detail_ticket && detail_ticket.totalWaktu}
                     </Col>
                   </Row>
                   <div

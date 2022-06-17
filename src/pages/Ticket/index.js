@@ -915,11 +915,6 @@ const Ticket = (props) => {
                           <td></td>
                         </tr>
                         <tr>
-                          <th>Time Worked</th>
-                          <td>{selectedData && selectedData.totalWaktu}</td>
-                          <td></td>
-                        </tr>
-                        <tr>
                           <th>Updated</th>
                           <td>
                             {selectedData &&
