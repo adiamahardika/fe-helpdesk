@@ -10,6 +10,7 @@ export * from "./pages/area/actions";
 export * from "./pages/regional/actions";
 export * from "./pages/grapari/actions";
 export * from "./pages/terminal/actions";
+export * from "./pages/emailNotif/actions";
 
 // Authentication module
 export * from "./auth/register/actions";

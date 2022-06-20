@@ -101,6 +101,16 @@
             "code": "2.2.4"
           }
         ]
+      },
+      {
+        "name": "Email Notif",
+        "code": "2.3",
+        "sub_level_2": [
+          {
+            "name": "View Email Notif",
+            "code": "2.3.1"
+          }
+        ]
       }
     ]
   },

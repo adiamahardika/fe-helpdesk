@@ -114,6 +114,9 @@ const SidebarContent = (props) => {
                 <Link to={routes.role}>{props.t("Role")}</Link>
               </li>
             )}
+            <li>
+              <Link to={routes.email_notif}>{props.t("Email Notif")}</Link>
+            </li>
           </ul>
         </li>
       );

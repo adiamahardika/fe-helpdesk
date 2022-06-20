@@ -18,6 +18,7 @@ import AreaSaga from "./pages/area/saga";
 import RegionalSaga from "./pages/regional/saga";
 import GrapariSaga from "./pages/grapari/saga";
 import TerminalSaga from "./pages/terminal/saga";
+import EmailNotifSaga from "./pages/emailNotif/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -39,5 +40,6 @@ export default function* rootSaga() {
     RegionalSaga(),
     GrapariSaga(),
     TerminalSaga(),
+    EmailNotifSaga(),
   ]);
 }

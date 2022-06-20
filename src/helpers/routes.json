@@ -8,6 +8,7 @@
   "role": "/ticketing/role/",
   "add_role": "/ticketing/add-role/",
   "edit_role": "/ticketing/edit-role/",
+  "email_notif": "/ticketing/email-notif/",
   "ticket": "/ticketing/ticket/",
   "add_ticket": "/ticketing/add-ticket/",
   "detail_ticket": "/ticketing/detail-ticket/",
