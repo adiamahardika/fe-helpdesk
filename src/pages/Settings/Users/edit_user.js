@@ -21,6 +21,7 @@ import general_constant from "../../../helpers/general_constant.json";
 import UnsavedChangesWarning from "../../../helpers/unsaved_changes_warning";
 import routes from "../../../helpers/routes.json";
 import CryptoJS from "crypto-js";
+import { emailValidation } from "../../../helpers";
 require("dotenv").config();
 
 const EditUser = (props) => {
@@ -58,17 +59,12 @@ const EditUser = (props) => {
     setDirty();
   };
   const onValidateEmail = (email) => {
-    let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setSelectedData({
       ...selectedData,
       email: email,
     });
+    setValidEmail(emailValidation(email));
     setDirty();
-    if (regex.test(email) === true) {
-      setValidEmail(true);
-    } else {
-      setValidEmail(false);
-    }
   };
 
   const onSubmitUpdate = async () => {

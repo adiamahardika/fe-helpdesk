@@ -21,6 +21,7 @@ import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
 import { readRole } from "../../store/pages/role/actions";
 import { useLocation } from "react-router-dom";
+import { emailValidation } from "../../helpers";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import SweetAlert from "react-bootstrap-sweetalert";
 import general_constant from "../../helpers/general_constant.json";
@@ -59,17 +60,12 @@ const Profile = (props) => {
     setDirty();
   };
   const onValidateEmail = (email) => {
-    let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setUpdateUserData({
       ...updateUserData,
       email: email,
     });
+    setValidEmail(emailValidation(email));
     setDirty();
-    if (regex.test(email) === true) {
-      setValidEmail(true);
-    } else {
-      setValidEmail(false);
-    }
   };
   const onValidateNewPassword = (value) => {
     let regex = /^[A-Za-z0-9]+$/;

@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
+import { emailValidation } from "../../../helpers";
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
 import code_all_permissions from "../../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -44,17 +45,12 @@ const AddUser = (props) => {
     setDirty();
   };
   const onValidateEmail = (email) => {
-    let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setData({
       ...data,
       email: email,
     });
+    setValidEmail(emailValidation(email));
     setDirty();
-    if (regex.test(email) === true) {
-      setValidEmail(true);
-    } else {
-      setValidEmail(false);
-    }
   };
   const onValidateUsername = (username) => {
     let regex = /^[A-Za-z0-9]+S*$/;
