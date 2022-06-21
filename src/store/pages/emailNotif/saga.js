@@ -10,6 +10,7 @@ import {
 import {
   CREATE_EMAIL_NOTIF,
   READ_EMAIL_NOTIF,
+  READ_DETAIL_EMAIL_NOTIF,
   UPDATE_EMAIL_NOTIF,
   DELETE_EMAIL_NOTIF,
 } from "./actionTypes";
@@ -18,6 +19,8 @@ import {
   createEmailNotifFulfilled,
   readEmailNotifReject,
   readEmailNotifFulfilled,
+  readDetailEmailNotifReject,
+  readDetailEmailNotifFulfilled,
   updateEmailNotifReject,
   updateEmailNotifFulfilled,
   deleteEmailNotifReject,
@@ -32,6 +35,14 @@ function* readEmailNotif({ payload: data }) {
     yield put(readEmailNotifFulfilled(response));
   } else {
     yield put(readEmailNotifReject(response));
+  }
+}
+function* readDetailEmailNotif({ payload: data }) {
+  const response = yield call(getMethod, data);
+  if (response.status.responseCode === general_constant.success_response_code) {
+    yield put(readDetailEmailNotifFulfilled(response));
+  } else {
+    yield put(readDetailEmailNotifReject(response));
   }
 }
 function* createEmailNotif({ payload: data }) {
@@ -62,6 +73,9 @@ function* deleteEmailNotif({ payload: data }) {
 export function* watchReadEmailNotif() {
   yield takeLatest(READ_EMAIL_NOTIF, readEmailNotif);
 }
+export function* watchReadDetailEmailNotif() {
+  yield takeLatest(READ_DETAIL_EMAIL_NOTIF, readDetailEmailNotif);
+}
 export function* watchCreateEmailNotif() {
   yield takeEvery(CREATE_EMAIL_NOTIF, createEmailNotif);
 }
@@ -75,6 +89,7 @@ export function* watchDeleteEmailNotif() {
 function* EmailNotifSaga() {
   yield all([
     fork(watchReadEmailNotif),
+    fork(watchReadDetailEmailNotif),
     fork(watchCreateEmailNotif),
     fork(watchUpdateEmailNotif),
     fork(watchDeleteEmailNotif),

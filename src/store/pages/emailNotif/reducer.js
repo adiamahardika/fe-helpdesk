@@ -5,6 +5,9 @@ import {
   READ_EMAIL_NOTIF,
   READ_EMAIL_NOTIF_REJECT,
   READ_EMAIL_NOTIF_FULFILLED,
+  READ_DETAIL_EMAIL_NOTIF,
+  READ_DETAIL_EMAIL_NOTIF_REJECT,
+  READ_DETAIL_EMAIL_NOTIF_FULFILLED,
   UPDATE_EMAIL_NOTIF,
   UPDATE_EMAIL_NOTIF_REJECT,
   UPDATE_EMAIL_NOTIF_FULFILLED,
@@ -16,7 +19,7 @@ import {
 const INIT_STATE = {
   response_code_email_notif: null,
   list_email_notif: null,
-  option_email_notif: [],
+  detail_email_notif: null,
   message_email_notif: null,
   loading: false,
 };
@@ -39,6 +42,26 @@ const EmailNotif = (state = INIT_STATE, action) => {
       return {
         ...state,
         list_email_notif: action.payload.emailNotif,
+        response_code_email_notif: action.payload.status.responseCode,
+        message_email_notif: action.payload.status.description[0],
+        loading: true,
+      };
+    case READ_DETAIL_EMAIL_NOTIF:
+      return {
+        ...state,
+        lading: true,
+      };
+    case READ_DETAIL_EMAIL_NOTIF_REJECT:
+      return {
+        ...state,
+        response_code_email_notif: action.payload.status.responseCode,
+        message_email_notif: action.payload.status.description[0],
+        loading: true,
+      };
+    case READ_DETAIL_EMAIL_NOTIF_FULFILLED:
+      return {
+        ...state,
+        detail_email_notif: action.payload.emailNotif[0],
         response_code_email_notif: action.payload.status.responseCode,
         message_email_notif: action.payload.status.description[0],
         loading: true,

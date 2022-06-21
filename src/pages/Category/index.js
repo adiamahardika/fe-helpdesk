@@ -8,7 +8,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { parseFullDate } from "../../helpers/index";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";

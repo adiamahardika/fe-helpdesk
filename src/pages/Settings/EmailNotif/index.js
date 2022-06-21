@@ -40,7 +40,7 @@ const EmailNotif = (props) => {
   const history = useHistory();
 
   const [addEmailNotif, setAddEmailNotif] = useState(true);
-  const [editEmailNotif, setEditEmailNotif] = useState(false);
+  const [editEmailNotif, setEditEmailNotif] = useState(true);
   const [deleteEmailNotif, setDeleteEmailNotif] = useState(false);
 
   const [modalDetail, setModalDetail] = useState(false);
@@ -235,7 +235,7 @@ const EmailNotif = (props) => {
                                   <Link
                                     to={{
                                       pathname: routes.edit_email_notif,
-                                      editEmailNotifValue: value,
+                                      search: `?id=${value.id}`,
                                     }}
                                   >
                                     <button

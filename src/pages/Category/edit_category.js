@@ -33,7 +33,6 @@ const EditCategory = (props) => {
   const message = props.message_category;
   const response_code = props.response_code_category;
   const detail_category = props.detail_category;
-  console.log(detail_category);
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),

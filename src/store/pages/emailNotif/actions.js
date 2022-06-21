@@ -5,6 +5,9 @@ import {
   READ_EMAIL_NOTIF,
   READ_EMAIL_NOTIF_REJECT,
   READ_EMAIL_NOTIF_FULFILLED,
+  READ_DETAIL_EMAIL_NOTIF,
+  READ_DETAIL_EMAIL_NOTIF_REJECT,
+  READ_DETAIL_EMAIL_NOTIF_FULFILLED,
   UPDATE_EMAIL_NOTIF,
   UPDATE_EMAIL_NOTIF_REJECT,
   UPDATE_EMAIL_NOTIF_FULFILLED,
@@ -58,6 +61,30 @@ export const readEmailNotifReject = (payload) => {
 export const readEmailNotifFulfilled = (data) => {
   return {
     type: READ_EMAIL_NOTIF_FULFILLED,
+    payload: data,
+  };
+};
+
+export const readDetailEmailNotif = (id) => {
+  let data = {
+    url: `/v1/email-notif/get/${id}`,
+  };
+  return {
+    type: READ_DETAIL_EMAIL_NOTIF,
+    payload: data,
+  };
+};
+
+export const readDetailEmailNotifReject = (payload) => {
+  return {
+    type: READ_DETAIL_EMAIL_NOTIF_REJECT,
+    payload: payload,
+  };
+};
+
+export const readDetailEmailNotifFulfilled = (data) => {
+  return {
+    type: READ_DETAIL_EMAIL_NOTIF_FULFILLED,
     payload: data,
   };
 };

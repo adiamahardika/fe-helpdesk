@@ -18,6 +18,7 @@ import AddRole from "../pages/Settings/Role/add_role";
 import EditRole from "../pages/Settings/Role/edit_role";
 import EmailNotif from "../pages/Settings/EmailNotif/index";
 import AddEmailNotif from "../pages/Settings/EmailNotif/add_email_notif";
+import EditEmailNotif from "../pages/Settings/EmailNotif/edit_email_notif";
 import Ticket from "../pages/Ticket/index";
 import AddTicket from "../pages/Ticket/add_ticket";
 import DetailTicket from "../pages/Ticket/detail_ticket";
@@ -46,6 +47,7 @@ const userRoutes = [
   { path: routes.report, component: Report },
   { path: routes.email_notif, component: EmailNotif },
   { path: routes.add_email_notif, component: AddEmailNotif },
+  { path: routes.edit_email_notif, component: EditEmailNotif },
 
   // this route should be at the end of all other routes
   {
