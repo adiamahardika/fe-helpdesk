@@ -142,7 +142,10 @@ const AddEmailNotif = (props) => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title={"EmailNotif"} breadcrumbItem={"Add EmailNotif"} />
+          <Breadcrumbs
+            title={"Email Notif"}
+            breadcrumbItem={"Edit Email Notif"}
+          />
           <Card>
             <CardBody>
               <Row className="justify-content-center">

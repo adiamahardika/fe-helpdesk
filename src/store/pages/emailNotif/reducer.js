@@ -121,7 +121,7 @@ const EmailNotif = (state = INIT_STATE, action) => {
         ...state,
         response_code_email_notif: action.payload.status.responseCode,
         message_email_notif: action.payload.status.description[0],
-        list_email_notif: action.payload.listEmailNotif,
+        list_email_notif: action.payload.emailNotif,
         loading: true,
       };
     default:
