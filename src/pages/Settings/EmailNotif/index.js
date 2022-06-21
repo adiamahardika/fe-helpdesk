@@ -39,7 +39,7 @@ const EmailNotif = (props) => {
   );
   const history = useHistory();
 
-  const [addEmailNotif, setAddEmailNotif] = useState(false);
+  const [addEmailNotif, setAddEmailNotif] = useState(true);
   const [editEmailNotif, setEditEmailNotif] = useState(false);
   const [deleteEmailNotif, setDeleteEmailNotif] = useState(false);
 

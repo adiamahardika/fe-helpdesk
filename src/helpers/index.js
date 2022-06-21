@@ -104,3 +104,9 @@ export const getShortDate = (time) => {
 
   return year + "-" + month + "-" + date;
 };
+
+export const emailValidation = (value) => {
+  let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return regex.test(value);
+};
