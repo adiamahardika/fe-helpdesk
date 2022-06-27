@@ -29,5 +29,105 @@
     { "name": "Process", "color": "#556ee6" },
     { "name": "Finish", "color": "#34c38f" },
     { "name": "On Hold", "color": "#343a40" }
+  ],
+  "file_extension": [
+    {
+      "name": "pdf",
+      "color": "#f1b44c",
+      "icon": "bx bxs-file-pdf",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "doc",
+      "color": "#556ee6",
+      "icon": "bx bxs-file-doc",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "docx",
+      "color": "#556ee6",
+      "icon": "bx bxs-file-doc",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "xlsx",
+      "color": "#34c38f",
+      "icon": "bx bxs-file",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "xls",
+      "color": "#34c38f",
+      "icon": "bx bxs-file",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "csv",
+      "color": "#34c38f",
+      "icon": "bx bxs-file",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "rar",
+      "color": "#f46a6a",
+      "icon": "bx bxs-file-archive",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "zip",
+      "color": "#f46a6a",
+      "icon": "bx bxs-file-archive",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "txt",
+      "color": "#556ee6",
+      "icon": "bx bxs-file-txt",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "jpeg",
+      "color": "#34c38f",
+      "icon": "bx bxs-file-image",
+      "is_image": true,
+      "extension_check": true
+    },
+    {
+      "name": "jpg",
+      "color": "#34c38f",
+      "icon": "bx bxs-file-image",
+      "is_image": true,
+      "extension_check": true
+    },
+    {
+      "name": "png",
+      "color": "#34c38f",
+      "icon": "bx bxs-file-image",
+      "is_image": true,
+      "extension_check": true
+    },
+    {
+      "name": "mp4",
+      "color": "#556ee6",
+      "icon": "bx bxs-videos",
+      "is_image": false,
+      "extension_check": true
+    },
+    {
+      "name": "mkv",
+      "color": "#556ee6",
+      "icon": "bx bxs-videos",
+      "is_image": false,
+      "extension_check": true
+    }
   ]
 }

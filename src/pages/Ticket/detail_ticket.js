@@ -36,24 +36,6 @@ import CryptoJS from "crypto-js";
 import "../../assets/css/pagination.css";
 require("dotenv").config();
 
-const list_priority = [
-  {
-    name: "Low",
-    color: "#34c38f",
-  },
-  {
-    name: "Medium",
-    color: "#f1b44c",
-  },
-  {
-    name: "High",
-    color: "#f46a6a",
-  },
-  {
-    name: "Critical",
-    color: "#9400d3",
-  },
-];
 const DetailTicket = (props) => {
   const detail_ticket = props.detail_ticket;
   const list_reply_ticket = props.list_reply_ticket;
@@ -100,82 +82,26 @@ const DetailTicket = (props) => {
     let reader = new FileReader();
     let split = files[0].type.split("/");
     let fileName = files[0].name.split(".");
+    const extension = fileName[fileName.length - 1].toLowerCase();
     let extensionCheck = false;
     let sizeCheck = false;
 
     if (files[0].size <= 2000000) {
       sizeCheck = true;
     }
-    switch (fileName[fileName.length - 1]) {
-      case "jpg":
-        extensionCheck = true;
-        break;
-      case "jpeg":
-        extensionCheck = true;
-        break;
-      case "png":
-        extensionCheck = true;
-        break;
-      case "zip":
-        extensionCheck = true;
-        color = "#f46a6a";
-        icon = "bx bxs-file-archive";
-        break;
-      case "rar":
-        extensionCheck = true;
-        color = "#f46a6a";
-        icon = "bx bxs-file-archive";
-        break;
-      case "csv":
-        extensionCheck = true;
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        break;
-      case "doc":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-file-doc";
-        break;
-      case "docx":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-file-doc";
-        break;
-      case "xls":
-        extensionCheck = true;
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        break;
-      case "xlsx":
-        extensionCheck = true;
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        break;
-      case "txt":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-file-txt";
-        break;
-      case "pdf":
-        extensionCheck = true;
-        color = "#f1b44c";
-        icon = "bx bxs-file-pdf";
-        break;
-      case "mp4":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-videos";
-        break;
-      case "mkv":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-videos";
-        break;
 
-      default:
-        extensionCheck = false;
-        color = "#556ee6";
-        icon = "bx bxs-file";
+    let findIndex = general_constant.file_extension.findIndex(
+      (item) => item.name === extension
+    );
+    if (findIndex >= 0) {
+      color = general_constant.file_extension[findIndex].color;
+      icon = general_constant.file_extension[findIndex].icon;
+      extensionCheck =
+        general_constant.file_extension[findIndex].extension_check;
+    } else {
+      extensionCheck = false;
+      color = "#556ee6";
+      icon = "bx bxs-file";
     }
 
     if (extensionCheck && sizeCheck) {
@@ -237,58 +163,22 @@ const DetailTicket = (props) => {
     });
 
     if (detail_ticket) {
-      switch (detail_ticket.status) {
-        case "New":
-          setStatusColor("#f46a6a");
-          break;
-        case "Process":
-          setStatusColor("#556ee6");
-          break;
-        case "Finish":
-          setStatusColor("#34c38f");
-          break;
-        case "On Hold":
-          setStatusColor("#343a40");
-          break;
-        default:
-          setStatusColor("#34c38f");
-      }
-      switch (detail_ticket.prioritas) {
-        case "High":
-          setPriorityColor("#f46a6a");
-          break;
-        case "Medium":
-          setPriorityColor("#f1b44c");
-          break;
-        case "Critical":
-          setPriorityColor("#9400d3");
-          break;
-        case "Low":
-          setPriorityColor("#34c38f");
-          break;
-        default:
-          setPriorityColor("#34c38f");
-      }
+      let findIndexPriority = general_constant.priority.findIndex(
+        (item) => item.name === detail_ticket.prioritas
+      );
+      let findIndexStatus = general_constant.status.findIndex(
+        (item) => item.name === detail_ticket.status
+      );
+      setPriorityColor(general_constant.priority[findIndexPriority].color);
+      setStatusColor(general_constant.status[findIndexStatus].color);
     }
   };
   const onChangeStatus = async (value) => {
     if (value) {
-      switch (value) {
-        case "New":
-          setStatusColor("#f46a6a");
-          break;
-        case "Process":
-          setStatusColor("#556ee6");
-          break;
-        case "Finish":
-          setStatusColor("#34c38f");
-          break;
-        case "On Hold":
-          setStatusColor("#343a40");
-          break;
-        default:
-          setStatusColor("#34c38f");
-      }
+      let findIndexStatus = general_constant.status.findIndex(
+        (item) => item.name === value
+      );
+      setStatusColor(general_constant.status[findIndexStatus].color);
       setEditData({
         ...editData,
         status: value,
@@ -298,22 +188,10 @@ const DetailTicket = (props) => {
   };
   const onChangePriority = async (value) => {
     if (value) {
-      switch (value) {
-        case "High":
-          setPriorityColor("#f46a6a");
-          break;
-        case "Medium":
-          setPriorityColor("#f1b44c");
-          break;
-        case "Critical":
-          setPriorityColor("#9400d3");
-          break;
-        case "Low":
-          setPriorityColor("#34c38f");
-          break;
-        default:
-          setPriorityColor("#34c38f");
-      }
+      let findIndex = general_constant.priority.findIndex(
+        (item) => item.name === value
+      );
+      setPriorityColor(general_constant.priority[findIndex].color);
       setEditData({
         ...editData,
         prioritas: value,
@@ -437,86 +315,23 @@ const DetailTicket = (props) => {
 
   const FileIcon = (value) => {
     const split = value && value.value.split(".");
+    const extension = split[split.length - 1].toLowerCase();
     const file_name = value && value.value.split("/");
     let is_image = false;
     let color = null;
     let icon = null;
 
-    switch (split[split.length - 1].toLowerCase()) {
-      case "pdf":
-        color = "#f1b44c";
-        icon = "bx bxs-file-pdf";
-        is_image = false;
-        break;
-      case "doc":
-        color = "#556ee6";
-        icon = "bx bxs-file-doc";
-        is_image = false;
-        break;
-      case "docx":
-        color = "#556ee6";
-        icon = "bx bxs-file-doc";
-        is_image = false;
-        break;
-      case "xlsx":
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        is_image = false;
-        break;
-      case "xls":
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        is_image = false;
-        break;
-      case "csv":
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        is_image = false;
-        break;
-      case "rar":
-        color = "#f46a6a";
-        icon = "bx bxs-file-archive";
-        is_image = false;
-        break;
-      case "zip":
-        color = "#f46a6a";
-        icon = "bx bxs-file-archive";
-        is_image = false;
-        break;
-      case "txt":
-        color = "#556ee6";
-        icon = "bx bxs-file-txt";
-        is_image = false;
-        break;
-      case "jpeg":
-        color = "#34c38f";
-        icon = "bx bxs-file-image";
-        is_image = true;
-        break;
-      case "jpg":
-        color = "#34c38f";
-        icon = "bx bxs-file-image";
-        is_image = true;
-        break;
-      case "png":
-        color = "#34c38f";
-        icon = "bx bxs-file-image";
-        is_image = true;
-        break;
-      case "mp4":
-        color = "#556ee6";
-        icon = "bx bxs-videos";
-        is_image = false;
-        break;
-      case "mkv":
-        color = "#556ee6";
-        icon = "bx bxs-videos";
-        is_image = false;
-        break;
-      default:
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        is_image = false;
+    let findIndex = general_constant.file_extension.findIndex(
+      (item) => item.name === extension
+    );
+    if (findIndex >= 0) {
+      color = general_constant.file_extension[findIndex].color;
+      icon = general_constant.file_extension[findIndex].icon;
+      is_image = general_constant.file_extension[findIndex].is_image;
+    } else {
+      color = "#34c38f";
+      icon = "bx bxs-file";
+      is_image = false;
     }
     return (
       <button
@@ -802,7 +617,7 @@ const DetailTicket = (props) => {
                               }}
                               disabled={showEditTicket === false}
                             >
-                              {list_priority.map((value, index) => (
+                              {general_constant.priority.map((value, index) => (
                                 <option
                                   key={index}
                                   value={value.name}
