@@ -380,7 +380,35 @@ const DetailTicket = (props) => {
         (item) => item.name === value.value
       );
       let color = index >= 0 ? general_constant.status[index].color : "#343a40";
-      return <h5 style={{ color: color }}>{value.value}</h5>;
+      return <h6 style={{ color: color }}>{value.value}</h6>;
+    }
+  };
+  const PriorityLabel = (value) => {
+    if (value) {
+      let index = general_constant.priority.findIndex(
+        (item) => item.name === value.value
+      );
+      let color =
+        index >= 0 ? general_constant.priority[index].color : "#343a40";
+
+      return (
+        <h6 style={{ color: color }}>
+          <span
+            className="badge"
+            style={{
+              fontSize: "12px",
+              display: "inlineBlock",
+              padding: "0.25rem 0.5rem",
+              fontWeight: "bold",
+              borderRadius: "0.5rem",
+              backgroundColor: color,
+              color: "#ffffff",
+            }}
+          >
+            {value.value}
+          </span>
+        </h6>
+      );
     }
   };
 
@@ -457,23 +485,41 @@ const DetailTicket = (props) => {
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Location</strong>
-                      {detail_ticket && detail_ticket.lokasi}
+                      Area
+                      <strong>{detail_ticket && detail_ticket.areaName}</strong>
                     </Col>
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Terminal Id</strong>
-                      {detail_ticket && detail_ticket.terminalId}
+                      Region
+                      <strong>
+                        {detail_ticket && detail_ticket.regional}{" "}
+                      </strong>
                     </Col>
                   </Row>
                   <Row className="align-items-center mb-2">
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
-                      <strong>Submitted On</strong>
-                      {detail_ticket && parseFullDate(detail_ticket.tglDibuat)}
+                      Grapari
+                      <strong>
+                        {detail_ticket && detail_ticket.grapariName}
+                      </strong>
                     </Col>
                   </Row>
-                  <div
+                  <Row className="align-items-center mb-2">
+                    <Col className="d-flex" style={{ flexFlow: "column" }}>
+                      Location
+                      <strong>{detail_ticket && detail_ticket.lokasi}</strong>
+                    </Col>
+                  </Row>
+                  <Row className="align-items-center mb-2">
+                    <Col className="d-flex" style={{ flexFlow: "column" }}>
+                      Terminal Id
+                      <strong>
+                        {detail_ticket && detail_ticket.terminalId}
+                      </strong>
+                    </Col>
+                  </Row>
+                  {/* <div
                     className="mt-3"
                     style={{
                       borderTopColor: "#cfcfcf",
@@ -716,7 +762,7 @@ const DetailTicket = (props) => {
                         </Col>
                       </Row>
                     )}
-                  </div>
+                  </div> */}
                 </CardBody>
               </Card>
             </Col>
@@ -739,39 +785,119 @@ const DetailTicket = (props) => {
                       </span>
                     </Col>
                   </Row>
-                  <Row className="mb-3">
+                  <Row className="justify-content-end">
                     <Col>
-                      <StatusLabel
-                        value={detail_ticket && detail_ticket.status}
-                      />
+                      <div className="text-right" style={{ fontSize: "12px" }}>
+                        {parseFullDate(
+                          list_reply_ticket && list_reply_ticket[0].tglDibuat
+                        )}
+                      </div>
                     </Col>
                   </Row>
-                  {list_reply_ticket &&
-                    list_reply_ticket.map((value, index) => (
-                      <Row
-                        key={index}
-                        id={`reply-${index + 1}`}
-                        style={{
-                          borderBottomColor: "#cfcfcf",
-                          borderBottomStyle: `${
-                            index === list_reply_ticket.length - 1
-                              ? `none`
-                              : `solid`
-                          }`,
-                          borderBottomWidth: "1px",
-                          paddingBottom: "1rem",
-                          marginTop: "1rem",
-                        }}
-                      >
-                        <Col md={1}>
-                          <div className="avatar-sm mx-auto mb-4">
-                            <span
-                              className={`avatar-title rounded-circle bg-soft-${
-                                value.usernamePengirim ===
-                                detail_ticket.usernamePembuat
-                                  ? "primary"
-                                  : "success"
+                  <Row className="mb-3">
+                    <Col md={3}>
+                      <Row>
+                        <Col>
+                          Status:
+                          <StatusLabel
+                            value={detail_ticket && detail_ticket.status}
+                          />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          Priority:
+                          <PriorityLabel
+                            value={detail_ticket && detail_ticket.prioritas}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col>
+                      <Row>
+                        <Col>
+                          Category:
+                          <h6>{detail_ticket && detail_ticket.categoryName}</h6>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          Sub Category:
+                          <h6>{detail_ticket && detail_ticket.subCategory}</h6>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col md={4}>
+                      <Row>
+                        <Col>
+                          Assign To:
+                          <h6>{detail_ticket && detail_ticket.assignedTo}</h6>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Row>
+                        <Col style={{ whiteSpace: "pre-line" }}>
+                          {list_reply_ticket && list_reply_ticket[0].isi}
+                        </Col>
+                      </Row>
+                      <Row className="justify-content-end">
+                        {list_reply_ticket &&
+                          list_reply_ticket[0].attachment1 !== "-" && (
+                            <FileIcon
+                              value={
+                                list_reply_ticket &&
+                                list_reply_ticket[0].attachment1
                               }
+                            />
+                          )}
+                        {list_reply_ticket &&
+                          list_reply_ticket[0].attachment2 !== "-" && (
+                            <FileIcon
+                              value={
+                                list_reply_ticket &&
+                                list_reply_ticket[0].attachment2
+                              }
+                            />
+                          )}
+                      </Row>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+              <Card className="pr-2 pl-2">
+                <CardBody>
+                  <CardTitle>Replies</CardTitle>
+                  {list_reply_ticket &&
+                    list_reply_ticket.map(
+                      (value, index) =>
+                        index > 0 && (
+                          <Row
+                            key={index}
+                            id={`reply-${index + 1}`}
+                            style={{
+                              borderBottomColor: "#cfcfcf",
+                              borderBottomStyle: `${
+                                index === list_reply_ticket.length - 1
+                                  ? `none`
+                                  : `solid`
+                              }`,
+                              borderBottomWidth: "1px",
+                              paddingBottom: "1rem",
+                              marginTop: "1rem",
+                            }}
+                          >
+                            <Col md={1}>
+                              <div className="avatar-sm mx-auto mb-4">
+                                <span
+                                  className={`avatar-title rounded-circle bg-soft-${
+                                    value.usernamePengirim ===
+                                    detail_ticket.usernamePembuat
+                                      ? "primary"
+                                      : "success"
+                                  }
                                      text-${
                                        value.usernamePengirim ===
                                        detail_ticket.usernamePembuat
@@ -779,41 +905,44 @@ const DetailTicket = (props) => {
                                          : "success"
                                      }
                                     font-size-16`}
-                            >
-                              {value.usernamePengirim.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                        </Col>
-                        <Col>
-                          <Row className="align-align-items-start">
+                                >
+                                  {value.usernamePengirim
+                                    .charAt(0)
+                                    .toUpperCase()}
+                                </span>
+                              </div>
+                            </Col>
                             <Col>
-                              <strong>From : </strong>
-                              <h6>{value.usernamePengirim}</h6>
+                              <Row className="align-align-items-start">
+                                <Col>
+                                  <strong>From : </strong>
+                                  <h6>{value.usernamePengirim}</h6>
+                                </Col>
+                                <div
+                                  className="text-right"
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  {parseFullDate(value.tglDibuat)}
+                                </div>
+                              </Row>
+                              <strong>Message :</strong>
+                              <Row>
+                                <Col style={{ whiteSpace: "pre-line" }}>
+                                  {value.isi}
+                                </Col>
+                              </Row>
+                              <Row className="justify-content-end">
+                                {value.attachment1 !== "-" && (
+                                  <FileIcon value={value.attachment1} />
+                                )}
+                                {value.attachment2 !== "-" && (
+                                  <FileIcon value={value.attachment2} />
+                                )}
+                              </Row>
                             </Col>
-                            <div
-                              className="text-right"
-                              style={{ fontSize: "12px" }}
-                            >
-                              {parseFullDate(value.tglDibuat)}
-                            </div>
                           </Row>
-                          <strong>Message :</strong>
-                          <Row>
-                            <Col style={{ whiteSpace: "pre-line" }}>
-                              {value.isi}
-                            </Col>
-                          </Row>
-                          <Row className="justify-content-end">
-                            {value.attachment1 !== "-" && (
-                              <FileIcon value={value.attachment1} />
-                            )}
-                            {value.attachment2 !== "-" && (
-                              <FileIcon value={value.attachment2} />
-                            )}
-                          </Row>
-                        </Col>
-                      </Row>
-                    ))}
+                        )
+                    )}
                 </CardBody>
               </Card>
               <Card className="d-print-none">

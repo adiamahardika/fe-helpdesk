@@ -1127,7 +1127,7 @@ const AddTicket = (props) => {
                                         list_user.map((value, index) => (
                                           <option
                                             key={index}
-                                            value={value.name}
+                                            value={value.username}
                                             onChange={(event) =>
                                               setData({
                                                 ...data,

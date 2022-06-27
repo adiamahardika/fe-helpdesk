@@ -706,7 +706,7 @@ const Ticket = (props) => {
                                     display: "block",
                                   }}
                                 >
-                                  {value.category}
+                                  {value.categoryName}
                                 </span>
                               </td>
                               <td>
@@ -889,7 +889,7 @@ const Ticket = (props) => {
                         </tr>
                         <tr>
                           <th>Category</th>
-                          <td>{selectedData && selectedData.category}</td>
+                          <td>{selectedData && selectedData.categoryName}</td>
                           <td></td>
                         </tr>
                         <tr>
