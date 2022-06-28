@@ -175,22 +175,26 @@ const EditTicket = (props) => {
     }
   }, []);
   useEffect(() => {
-    let findSubCategory =
-      list_sub_category &&
-      list_sub_category.findIndex(
-        (value) =>
-          value.name === detail_ticket.subCategory &&
-          value.idCategory === parseInt(detail_ticket.category)
-      );
-    let findCategory =
-      list_category &&
-      list_category.findIndex(
-        (value) =>
-          value.id === parseInt(detail_ticket && detail_ticket.category)
+    if (detail_ticket === null) {
+      props.readDetailTicket(ticketId);
+    } else {
+      let findSubCategory =
+        list_sub_category &&
+        list_sub_category.findIndex(
+          (value) =>
+            value.name === detail_ticket.subCategory &&
+            value.idCategory === parseInt(detail_ticket.category)
+        );
+      let findCategory =
+        list_category &&
+        list_category.findIndex(
+          (value) => value.id === parseInt(detail_ticket.category)
+        );
+      let findPriority = general_constant.priority.findIndex(
+        (value) => value.name === detail_ticket.prioritas
       );
 
-    setData(
-      detail_ticket && {
+      setData({
         prioritas: detail_ticket.prioritas,
         status: detail_ticket.status,
         ticketCode: ticketId,
@@ -199,18 +203,13 @@ const EditTicket = (props) => {
         email: detail_ticket.email,
         assignedTo: detail_ticket.assignedTo,
         usernamePembalas: detail_ticket.usernamePembalas,
-      }
-    );
-    findCategory > 0 && setSelectedCategory(list_category[findCategory]);
-    findSubCategory < 0 && setShowLainLain(true);
+      });
+      findPriority > 0 &&
+        setOptionColor(general_constant.priority[findPriority].color);
+      findCategory > 0 && setSelectedCategory(list_category[findCategory]);
+      findSubCategory < 0 && setShowLainLain(true);
+    }
   }, [detail_ticket, list_sub_category, list_category]);
-  // useEffect(() => {
-  //   let findPriority = general_constant.priority.findIndex(
-  //     (value) => value.name === detail_ticket && detail_ticket.prioritas
-  //   );
-  //   findPriority > 0 &&
-  //     setOptionColor(general_constant.priority[findPriority].color);
-  // }, [detail_ticket]);
 
   return (
     <React.Fragment>
@@ -268,6 +267,7 @@ const EditTicket = (props) => {
                                       subCategory: "",
                                       prioritas: "",
                                     }),
+                                    setShowLainLain(true),
                                     setSelectedCategory(
                                       JSON.parse(event.target.value)
                                     ),
@@ -320,9 +320,6 @@ const EditTicket = (props) => {
                                     onChangeSubCategory(event);
                                   }}
                                 >
-                                  <option value="0" disabled>
-                                    Select Sub Category
-                                  </option>
                                   <option
                                     value={JSON.stringify({
                                       name: "Lain-lain",
@@ -370,8 +367,9 @@ const EditTicket = (props) => {
                                       setData({
                                         ...data,
                                         subCategory: event.target.value,
-                                        priority: "Low",
+                                        prioritas: "Low",
                                       });
+                                      setOptionColor("#34c38f");
                                     }}
                                   />
                                 </FormGroup>
