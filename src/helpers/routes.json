@@ -14,6 +14,7 @@
   "ticket": "/ticketing/ticket/",
   "add_ticket": "/ticketing/add-ticket/",
   "detail_ticket": "/ticketing/detail-ticket/",
+  "edit_ticket": "/ticketing/edit-ticket/",
   "category": "/ticketing/category/",
   "add_category": "/ticketing/add-category/",
   "edit_category": "/ticketing/edit-category/",

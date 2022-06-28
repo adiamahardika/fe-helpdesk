@@ -649,7 +649,7 @@ const AddTicket = (props) => {
                             errorMessage="Enter valid Email"
                             validate={{
                               required: { value: true },
-                              maxLength: { value: 50 },
+                              maxLength: { value: 70 },
                             }}
                             onChange={(event) =>
                               onValidateEmail(event.target.value)

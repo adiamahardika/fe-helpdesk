@@ -21,6 +21,7 @@ import AddEmailNotif from "../pages/Settings/EmailNotif/add_email_notif";
 import EditEmailNotif from "../pages/Settings/EmailNotif/edit_email_notif";
 import Ticket from "../pages/Ticket/index";
 import AddTicket from "../pages/Ticket/add_ticket";
+import EditTicket from "../pages/Ticket/edit_ticket";
 import DetailTicket from "../pages/Ticket/detail_ticket";
 import Category from "../pages/Category/index";
 import AddCategory from "../pages/Category/add_category";
@@ -39,6 +40,7 @@ const userRoutes = [
   { path: routes.edit_role, component: EditRole },
   { path: routes.ticket, component: Ticket },
   { path: routes.add_ticket, component: AddTicket },
+  { path: routes.edit_ticket, component: EditTicket },
   { path: routes.detail_ticket, component: DetailTicket },
   { path: routes.category, component: Category },
   { path: routes.add_category, component: AddCategory },

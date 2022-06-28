@@ -769,20 +769,35 @@ const DetailTicket = (props) => {
             <Col md={9}>
               <Card className="pr-2 pl-2">
                 <CardBody>
-                  <Row>
+                  <Row className="mb-2">
                     <Col>
                       <h4>{detail_ticket && detail_ticket.judul}</h4>
                     </Col>
                     <Col
-                      md={1}
-                      className="justify-content-end d-flex d-print-none"
+                      md={3}
+                      className="justify-content-end d-flex d-print-none align-items-center"
                     >
                       <span
                         className="waves-effect text-right"
                         onClick={() => window.print()}
                       >
-                        <i className="bx bxs-printer font-size-24 align-middle"></i>
+                        <i className="bx bxs-printer font-size-24 align-middle mr-2"></i>
                       </span>
+                      <Link
+                        to={{
+                          pathname: routes.edit_ticket,
+                          search: `?ticketId=${ticketId}`,
+                          detailValue: ticketId,
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className="btn btn-primary waves-effect waves-light"
+                        >
+                          <i className="bx bx-edit font-size-16 align-middle mr-2"></i>
+                          Edit
+                        </button>
+                      </Link>
                     </Col>
                   </Row>
                   <Row className="justify-content-end">

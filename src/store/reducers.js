@@ -14,6 +14,7 @@ import Regional from "./pages/regional/reducer";
 import Grapari from "./pages/grapari/reducer";
 import Terminal from "./pages/terminal/reducer";
 import EmailNotif from "./pages/emailNotif/reducer";
+import SubCategory from "./pages/subCategory/reducer";
 
 // Authentication
 import Login from "./auth/login/reducer";
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   Grapari,
   Terminal,
   EmailNotif,
+  SubCategory,
 });
 
 export default rootReducer;
