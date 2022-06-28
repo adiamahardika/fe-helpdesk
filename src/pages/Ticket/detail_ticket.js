@@ -57,13 +57,10 @@ const DetailTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [replyData, setReplyData] = useState(null);
-  const [editData, setEditData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
-  const [showEditTicket, setShowEditTicket] = useState(false);
-  const [statusColor, setStatusColor] = useState(null);
-  const [priorityColor, setPriorityColor] = useState(null);
+
   const [checkedSubmitAs, setCheckedSubmitAs] = useState(null);
   const [isEditTicket, setIsEditTicket] = useState(false);
   const [isCloseTicket, setIsCloseTicket] = useState(false);
@@ -148,57 +145,6 @@ const DetailTicket = (props) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   };
-  const onShowEdit = () => {
-    setShowEditTicket(true);
-    setEditData({
-      judul: detail_ticket.judul,
-      prioritas: detail_ticket.prioritas,
-      status: detail_ticket.status,
-      ticketCode: detail_ticket.ticketCode,
-      category: detail_ticket.category,
-      lokasi: detail_ticket.lokasi,
-      terminalId: detail_ticket.terminalId,
-      email: detail_ticket.email,
-      assignedTo: detail_ticket.assignedTo,
-    });
-
-    if (detail_ticket) {
-      let findIndexPriority = general_constant.priority.findIndex(
-        (item) => item.name === detail_ticket.prioritas
-      );
-      let findIndexStatus = general_constant.status.findIndex(
-        (item) => item.name === detail_ticket.status
-      );
-      setPriorityColor(general_constant.priority[findIndexPriority].color);
-      setStatusColor(general_constant.status[findIndexStatus].color);
-    }
-  };
-  const onChangeStatus = async (value) => {
-    if (value) {
-      let findIndexStatus = general_constant.status.findIndex(
-        (item) => item.name === value
-      );
-      setStatusColor(general_constant.status[findIndexStatus].color);
-      setEditData({
-        ...editData,
-        status: value,
-      });
-    }
-    setDirty();
-  };
-  const onChangePriority = async (value) => {
-    if (value) {
-      let findIndex = general_constant.priority.findIndex(
-        (item) => item.name === value
-      );
-      setPriorityColor(general_constant.priority[findIndex].color);
-      setEditData({
-        ...editData,
-        prioritas: value,
-      });
-    }
-    setDirty();
-  };
   const onChangeSubmitAs = (value, index) => {
     let array = [];
     checkedSubmitAs.map((newValue, newIndex) => {
@@ -210,12 +156,6 @@ const DetailTicket = (props) => {
     });
     setCheckedSubmitAs(array);
     setReplyData({ ...replyData, status: value });
-  };
-  const onSubmitUpdate = async () => {
-    props.updateTicket(editData);
-    setIsShowSweetAlert(setTimeout(true, 1500));
-    setShowEditTicket(false);
-    setPristine();
   };
 
   const onSubmitReply = async (event) => {
@@ -454,20 +394,20 @@ const DetailTicket = (props) => {
             <Col md={3}>
               <Card>
                 <CardBody>
-                  <CardTitle className="mb-2">
-                    Ticket {detail_ticket && detail_ticket.ticketCode}
+                  <CardTitle className="mb-2 justify-content-center d-flex">
+                    <h3>{detail_ticket && detail_ticket.ticketCode}</h3>
                   </CardTitle>
                   <Row>
-                    <Col md={4}>
-                      <div className="avatar-sm mx-auto mb-4">
+                    <Col>
+                      <div className="avatar-xl mx-auto mb-4">
                         <span
                           className={
                             "avatar-title rounded-circle bg-soft-" +
                             "primary" +
                             " text-" +
-                            "primary" +
-                            " font-size-16"
+                            "primary"
                           }
+                          style={{ fontSize: "2rem" }}
                         >
                           {detail_ticket &&
                             detail_ticket.usernamePembuat
@@ -476,11 +416,16 @@ const DetailTicket = (props) => {
                         </span>
                       </div>
                     </Col>
-                    <Col>
-                      <Row>
+                  </Row>
+                  <Row className="mb-2">
+                    <Col
+                      className="d-flex"
+                      style={{ flexFlow: "column", overflowWrap: "anywhere" }}
+                    >
+                      <strong>
                         {detail_ticket && detail_ticket.usernamePembuat}
-                      </Row>
-                      <Row>{detail_ticket && detail_ticket.email}</Row>
+                      </strong>
+                      <strong>{detail_ticket && detail_ticket.email}</strong>
                     </Col>
                   </Row>
                   <Row className="align-items-center mb-2">
@@ -519,250 +464,6 @@ const DetailTicket = (props) => {
                       </strong>
                     </Col>
                   </Row>
-                  {/* <div
-                    className="mt-3"
-                    style={{
-                      borderTopColor: "#cfcfcf",
-                      borderTopStyle: "solid",
-                      borderTopWidth: "0.5px",
-                      paddingTop: "4px",
-                    }}
-                  >
-                    {isEditTicket && (
-                      <Row className="align-items-center d-print-none">
-                        <Col className="d-flex justify-content-end align-items-center">
-                          <span
-                            className="btn-link waves-effect text-right d-flex align-items-center"
-                            onClick={() => onShowEdit()}
-                          >
-                            Edit
-                            <i className="bx bxs-edit font-size-16 align-middle ml-1"></i>
-                          </span>
-                        </Col>
-                      </Row>
-                    )}
-                    <Row>
-                      <Col>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            <strong>Category</strong>
-                          </label>
-                          <div>
-                            <select
-                              name="category"
-                              className="form-control"
-                              onChange={(event) => (
-                                setEditData({
-                                  ...editData,
-                                  category: event.target.value,
-                                }),
-                                setDirty()
-                              )}
-                              style={{
-                                backgroundColor:
-                                  showEditTicket === false
-                                    ? "#ced4da"
-                                    : "#ffffff",
-                              }}
-                              disabled={showEditTicket === false}
-                            >
-                              {list_category &&
-                                list_category.map((value, index) => (
-                                  <option
-                                    key={index}
-                                    value={value && value.id.toString()}
-                                    onChange={(event) => (
-                                      setEditData({
-                                        ...editData,
-                                        category: event.target.value,
-                                      }),
-                                      setDirty()
-                                    )}
-                                    selected={
-                                      detail_ticket &&
-                                      detail_ticket.category ===
-                                        value.id.toString()
-                                    }
-                                  >
-                                    {value.name}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            <strong>Status</strong>
-                          </label>
-                          <div>
-                            <select
-                              name="category"
-                              className="form-control"
-                              onChange={(event) =>
-                                onChangeStatus(event.target.value)
-                              }
-                              style={{
-                                color: statusColor,
-                                fontWeight: "bold",
-                                backgroundColor:
-                                  showEditTicket === false
-                                    ? "#ced4da"
-                                    : "#ffffff",
-                              }}
-                              disabled={showEditTicket === false}
-                            >
-                              {list_ticket_status &&
-                                list_ticket_status.map((value, index) => (
-                                  <option
-                                    key={index}
-                                    value={value && value.name}
-                                    onChange={(event) =>
-                                      onChangeStatus(event.target.value)
-                                    }
-                                    style={{
-                                      color: value.color,
-                                      fontWeight: "bold",
-                                    }}
-                                    selected={
-                                      detail_ticket &&
-                                      detail_ticket.status === value.name
-                                    }
-                                  >
-                                    {value.name}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            <strong>Priority</strong>
-                          </label>
-                          <div>
-                            <select
-                              name="priority"
-                              className="form-control"
-                              onChange={(event) =>
-                                onChangePriority(event.target.value)
-                              }
-                              style={{
-                                color: priorityColor,
-                                fontWeight: "bold",
-                                backgroundColor:
-                                  showEditTicket === false
-                                    ? "#ced4da"
-                                    : "#ffffff",
-                              }}
-                              disabled={showEditTicket === false}
-                            >
-                              {general_constant.priority.map((value, index) => (
-                                <option
-                                  key={index}
-                                  value={value.name}
-                                  onChange={(event) =>
-                                    onChangePriority(event.target.value)
-                                  }
-                                  style={{
-                                    color: value.color,
-                                    fontWeight: "bold",
-                                  }}
-                                  selected={
-                                    detail_ticket &&
-                                    detail_ticket.prioritas === value.name
-                                  }
-                                >
-                                  {value.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        {" "}
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            <strong>Assign To</strong>
-                          </label>
-                          <div>
-                            <select
-                              name="assignedTo"
-                              className="form-control"
-                              defaultValue="Unassigned"
-                              onChange={(event) =>
-                                setEditData({
-                                  ...editData,
-                                  assignedTo: event.target.value,
-                                })
-                              }
-                              style={{
-                                backgroundColor:
-                                  showEditTicket === false
-                                    ? "#ced4da"
-                                    : "#ffffff",
-                              }}
-                              disabled={showEditTicket === false}
-                            >
-                              <option
-                                value="Unassigned"
-                                selected={
-                                  detail_ticket &&
-                                  detail_ticket.assignedTo === "Unassigned"
-                                }
-                              >
-                                Unassigned
-                              </option>
-                              {list_user &&
-                                list_user.map((value, index) => (
-                                  <option
-                                    key={index}
-                                    value={value.username}
-                                    onChange={(event) =>
-                                      setReplyData({
-                                        ...replyData,
-                                        assignedTo: event.target.value,
-                                      })
-                                    }
-                                    selected={
-                                      detail_ticket &&
-                                      detail_ticket.assignedTo ===
-                                        value.username
-                                    }
-                                  >
-                                    {value.name}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-
-                    {showEditTicket && (
-                      <Row className="d-print-none">
-                        <Col className="d-flex justify-content-end">
-                          <button
-                            type="button"
-                            className="btn btn-primary waves-effect waves-light"
-                            onClick={() => onSubmitUpdate()}
-                          >
-                            <i className="bx bx-save font-size-16 align-middle mr-2"></i>
-                            Save
-                          </button>
-                        </Col>
-                      </Row>
-                    )}
-                  </div> */}
                 </CardBody>
               </Card>
             </Col>
@@ -783,21 +484,23 @@ const DetailTicket = (props) => {
                       >
                         <i className="bx bxs-printer font-size-24 align-middle mr-2"></i>
                       </span>
-                      <Link
-                        to={{
-                          pathname: routes.edit_ticket,
-                          search: `?ticketId=${ticketId}`,
-                          detailValue: ticketId,
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className="btn btn-primary waves-effect waves-light"
+                      {isEditTicket && (
+                        <Link
+                          to={{
+                            pathname: routes.edit_ticket,
+                            search: `?ticketId=${ticketId}`,
+                            detailValue: ticketId,
+                          }}
                         >
-                          <i className="bx bx-edit font-size-16 align-middle mr-2"></i>
-                          Edit
-                        </button>
-                      </Link>
+                          <button
+                            type="button"
+                            className="btn btn-primary waves-effect waves-light"
+                          >
+                            <i className="bx bx-edit font-size-16 align-middle mr-2"></i>
+                            Edit
+                          </button>
+                        </Link>
+                      )}
                     </Col>
                   </Row>
                   <Row className="justify-content-end">
