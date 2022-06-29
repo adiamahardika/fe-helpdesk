@@ -481,7 +481,7 @@ const Ticket = (props) => {
                             <div
                               style={{
                                 display: "grid",
-                                gridTemplateColumns: "repeat(4, 1fr)",
+                                gridTemplateColumns: "repeat(3, 1fr)",
                               }}
                             >
                               {list_category &&

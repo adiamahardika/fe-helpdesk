@@ -102,7 +102,7 @@ const AddTicket = (props) => {
     let extensionCheck = false;
     let sizeCheck = false;
 
-    if (files[0].size <= 2000000) {
+    if (files[0].size <= 1000000) {
       sizeCheck = true;
     }
     switch (fileName[fileName.length - 1]) {
@@ -307,9 +307,9 @@ const AddTicket = (props) => {
       setTicketCode(ticket_code);
       const judul =
         selectedGrapari.label +
-        " " +
+        " - " +
         selectedCategory.name +
-        " " +
+        " - " +
         data.subCategory;
       const isi = `${data && data.isi}`;
 
@@ -1296,7 +1296,7 @@ const AddTicket = (props) => {
               style={{ lineHeight: "24px", fontSize: "14px" }}
             >
               1. Maximum number of attachments: <strong>2</strong> <br />
-              2. Maximum size per attachment: <strong>2 MB</strong>
+              2. Maximum size per attachment: <strong>1 MB</strong>
               <br />
               3. You may upload files ending with: <br />
               <strong>
