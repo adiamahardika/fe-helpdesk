@@ -196,7 +196,7 @@ const AddCategory = (props) => {
                       </Col>
                     </Row>
                     <Row>
-                      <Col md={4}>
+                      <Col md={6}>
                         <Label className="col-form-label">Sub Category</Label>
                       </Col>
                       <Col md={3}>
@@ -206,7 +206,7 @@ const AddCategory = (props) => {
                     {subCategory &&
                       subCategory.map((value, index) => (
                         <Row className="d-flex align-items-start" key={index}>
-                          <Col md={4}>
+                          <Col md={6}>
                             <AvField
                               name="-"
                               placeholder=""

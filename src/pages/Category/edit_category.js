@@ -157,7 +157,9 @@ const EditCategory = (props) => {
               setIsEdit(false);
               setData(null);
               props.readDetailCategory(id);
-              history.push(`routes.edit_category?id=${id}`);
+              alertMessage === "deleted"
+                ? history.push(routes.category)
+                : history.push(routes.edit_category + `?id=${id}`);
             }}
           >
             Category has successfully {alertMessage}!
@@ -268,7 +270,7 @@ const EditCategory = (props) => {
                     {detail_category &&
                       detail_category.subCategory.map((value, index) => (
                         <Row className="d-flex align-items-start" key={index}>
-                          <Col md={4}>
+                          <Col md={6}>
                             <AvField
                               name="-"
                               placeholder=""

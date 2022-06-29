@@ -42,6 +42,7 @@ const Category = (props) => {
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [modalDetail, setModalDetail] = useState(false);
   const [isAddCategory, setIsAddCategory] = useState(false);
 
   const removeBodyCss = () => {
@@ -86,6 +87,34 @@ const Category = (props) => {
   const handlePageClick = (value) => {
     props.readCategory({ ...data, page_no: value.selected });
     setData({ ...data, page_no: value.selected });
+  };
+  const PriorityLabel = (value) => {
+    if (value) {
+      let index = general_constant.priority.findIndex(
+        (item) => item.name === value.value
+      );
+      let color =
+        index >= 0 ? general_constant.priority[index].color : "#343a40";
+
+      return (
+        <h6 style={{ color: color }}>
+          <span
+            className="badge"
+            style={{
+              fontSize: "12px",
+              display: "inlineBlock",
+              padding: "0.25rem 0.5rem",
+              fontWeight: "bold",
+              borderRadius: "0.5rem",
+              backgroundColor: color,
+              color: "#ffffff",
+            }}
+          >
+            {value.value}
+          </span>
+        </h6>
+      );
+    }
   };
 
   useEffect(() => {
@@ -147,20 +176,41 @@ const Category = (props) => {
                                 </th>
                                 <td>{value.name}</td>
                                 <td>
-                                  <Link
-                                    to={{
-                                      pathname: routes.edit_category,
-                                      search: `?id=${value.id}`,
+                                  <div
+                                    style={{
+                                      display: "grid",
+                                      gridAutoFlow: "column",
+                                      columnGap: "4px",
+                                      gridTemplateColumns:
+                                        "repeat(2, max-content)",
                                     }}
                                   >
                                     <button
                                       type="button"
-                                      className="btn btn-primary waves-effect waves-light"
+                                      className="btn btn-info waves-effect waves-light"
                                       style={{ minWidth: "max-content" }}
+                                      onClick={() => {
+                                        setSelectedData(value);
+                                        setModalDetail(!modalDetail);
+                                      }}
                                     >
-                                      <i className="bx bxs-edit font-size-16 align-middle"></i>
+                                      <i className="bx bx-show-alt font-size-16 align-middle"></i>
                                     </button>
-                                  </Link>
+                                    <Link
+                                      to={{
+                                        pathname: routes.edit_category,
+                                        search: `?id=${value.id}`,
+                                      }}
+                                    >
+                                      <button
+                                        type="button"
+                                        className="btn btn-primary waves-effect waves-light"
+                                        style={{ minWidth: "max-content" }}
+                                      >
+                                        <i className="bx bxs-edit font-size-16 align-middle"></i>
+                                      </button>
+                                    </Link>
+                                  </div>
                                 </td>
                               </tr>
                             );
@@ -264,6 +314,75 @@ const Category = (props) => {
               >
                 Delete
               </button>
+            </div>
+          </Modal>
+
+          <Modal
+            isOpen={modalDetail}
+            toggle={() => {
+              setModalDetail(!modalDetail);
+              removeBodyCss();
+              setSelectedData(null);
+            }}
+            size="lg"
+          >
+            <div
+              className="modal-header"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr repeat(2, max-content)",
+                columnGap: "1rem",
+                alignItems: "center",
+              }}
+            >
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Detail Category
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalDetail(false);
+                  setSelectedData(null);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <Row className="justify-content-center">
+                <Col>
+                  <div className="table-responsive">
+                    <Table className="table table-centered">
+                      <tbody>
+                        <tr>
+                          <th>Name</th>
+                          <td>{selectedData && selectedData.name}</td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Sub Category</th>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        {selectedData &&
+                          selectedData.subCategory.map((value, index) => (
+                            <tr>
+                              <td>{index + 1}</td>
+                              <td>{value.name}</td>
+                              <td>
+                                <PriorityLabel value={value.priority} />
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                </Col>
+              </Row>
             </div>
           </Modal>
           <ShowSweetAlert />

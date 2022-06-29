@@ -45,6 +45,7 @@ const EditTicket = (props) => {
 
   const [data, setData] = useState(null);
   const [optionColor, setOptionColor] = useState(null);
+  const [statusColor, setStatusColor] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -72,6 +73,19 @@ const EditTicket = (props) => {
       email: email,
     });
     setValidEmail(emailValidation(email));
+    setDirty();
+  };
+  const onChangeStatus = async (value) => {
+    if (value) {
+      let findIndexStatus = general_constant.status.findIndex(
+        (item) => item.name === value
+      );
+      setStatusColor(general_constant.status[findIndexStatus].color);
+      setData({
+        ...data,
+        status: value,
+      });
+    }
     setDirty();
   };
 
@@ -193,6 +207,9 @@ const EditTicket = (props) => {
       let findPriority = general_constant.priority.findIndex(
         (value) => value.name === detail_ticket.prioritas
       );
+      let findStatus = general_constant.status.findIndex(
+        (value) => value.name === detail_ticket.status
+      );
 
       setData({
         prioritas: detail_ticket.prioritas,
@@ -204,6 +221,8 @@ const EditTicket = (props) => {
         assignedTo: detail_ticket.assignedTo,
         usernamePembalas: detail_ticket.usernamePembalas,
       });
+      findStatus > 0 &&
+        setStatusColor(general_constant.status[findStatus].color);
       findPriority > 0 &&
         setOptionColor(general_constant.priority[findPriority].color);
       findCategory > 0 && setSelectedCategory(list_category[findCategory]);
@@ -224,9 +243,7 @@ const EditTicket = (props) => {
                     <Row>
                       <Col md={8}>
                         <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Email <span style={{ color: "red" }}>*</span>
-                          </label>
+                          <label className="control-label">Email</label>
                           <AvField
                             name="email"
                             label=""
@@ -245,12 +262,47 @@ const EditTicket = (props) => {
                         </FormGroup>
                       </Col>
                     </Row>
+                    <Row>
+                      <Col md={4}>
+                        <FormGroup className="select2-container">
+                          <label className="control-label">Status</label>
+                          <div>
+                            <select
+                              name="category"
+                              className="form-control"
+                              onChange={(event) =>
+                                onChangeStatus(event.target.value)
+                              }
+                              style={{
+                                color: statusColor,
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {general_constant.status.map((value, index) => (
+                                <option
+                                  key={index}
+                                  value={value && value.name}
+                                  onChange={(event) =>
+                                    onChangeStatus(event.target.value)
+                                  }
+                                  style={{
+                                    color: value.color,
+                                    fontWeight: "bold",
+                                  }}
+                                  selected={data && data.status === value.name}
+                                >
+                                  {value.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
                     <Row className="mt-3">
                       <Col>
                         <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Category <span style={{ color: "red" }}>*</span>
-                          </label>
+                          <label className="control-label">Category</label>
                           <Row className="mb-2">
                             <Col md={5}>
                               <div>
@@ -300,9 +352,7 @@ const EditTicket = (props) => {
                     <Row>
                       <Col md={8}>
                         <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Sub Category <span style={{ color: "red" }}>*</span>
-                          </label>
+                          <label className="control-label">Sub Category</label>
                           <Row className="mb-2">
                             <Col>
                               <div>
@@ -400,12 +450,10 @@ const EditTicket = (props) => {
                         </Col>
                       )}
                     </Row>
-                    <Row className="mt-3">
+                    <Row>
                       <Col md={6}>
                         <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Assign To <span style={{ color: "red" }}>*</span>
-                          </label>
+                          <label className="control-label">Assign To</label>
                           <Row className="align-items-center">
                             <Col>
                               <div>
