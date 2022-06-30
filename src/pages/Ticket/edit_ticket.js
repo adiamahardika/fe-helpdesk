@@ -418,7 +418,7 @@ const EditTicket = (props) => {
                           </Row>
                         </FormGroup>
                       </Col>
-                      {data && data.subCategory && (
+                      {/* {data && data.subCategory && (
                         <Col md={2} className="">
                           <FormGroup className="select2-container">
                             <label className="control-label">Priority</label>
@@ -438,7 +438,7 @@ const EditTicket = (props) => {
                             </FormGroup>
                           </FormGroup>
                         </Col>
-                      )}
+                      )} */}
                     </Row>
                     <Row>
                       <Col md={6}>

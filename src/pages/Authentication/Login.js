@@ -79,6 +79,7 @@ const Login = (props) => {
             sessionStorage.setItem("accessToken", value.response.accessToken);
             sessionStorage.setItem("username", value.response.username);
             sessionStorage.setItem("name", value.response.name);
+            sessionStorage.setItem("email", value.response.email);
             sessionStorage.setItem("areaCode", JSON.stringify(area_code));
             sessionStorage.setItem("regional", JSON.stringify(regional));
             sessionStorage.setItem("grapariId", JSON.stringify(grapari_id));

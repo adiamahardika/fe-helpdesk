@@ -8,8 +8,6 @@ import {
   Col,
   CardTitle,
   Modal,
-  Button,
-  Alert,
   Label,
 } from "reactstrap";
 import { readCategory } from "../../store/pages/category/actions";
@@ -19,13 +17,11 @@ import { readArea } from "../../store/pages/area/actions";
 import { readRegional } from "../../store/pages/regional/actions";
 import { readGrapari } from "../../store/pages/grapari/actions";
 import { readTerminal } from "../../store/pages/terminal/actions";
-import { readCaptcha } from "../../store/auth/captcha/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
 import { uid } from "uid";
-import { emailValidation } from "../../helpers";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -47,8 +43,6 @@ const AddTicket = (props) => {
   const option_grapari = props.option_grapari;
   const option_terminal = props.option_terminal;
   const list_terminal = props.list_terminal;
-  const captcha_id = props.captcha_id;
-  const image_captcha = props.image_captcha;
   const loading = props.loading;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
@@ -60,24 +54,21 @@ const AddTicket = (props) => {
   const regional = JSON.parse(sessionStorage.getItem("regional"));
   const grapari_id = JSON.parse(sessionStorage.getItem("grapariId"));
   const username = sessionStorage.getItem("username");
+  const email = sessionStorage.getItem("email");
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
-  const [captchaRequest, setCaptchaRequest] = useState(null);
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
   const [optionColor, setOptionColor] = useState(null);
-  const [validEmail, setValidEmail] = useState(false);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
-  const [customchk, setcustomchk] = useState(true);
-  const [customchk2, setcustomchk2] = useState(true);
+  const [sendEmailCheck, setSendEmailCheck] = useState(true);
+  const [showTicketCheck, setShowTicketCheck] = useState(true);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
   const [ticketCode, setTicketCode] = useState(null);
   const [isAssigningTicket, setIsAssigningTicket] = useState(false);
-  const [captchaValidation, setCaptchaValidation] = useState(null);
-  const [captchaMessage, setCaptchaMessage] = useState(null);
   const [selectedArea, setSelectedArea] = useState(null);
   const [selectedRegional, setSelectedRegional] = useState(null);
   const [requestRegional, setRequestRegional] = useState(null);
@@ -99,85 +90,26 @@ const AddTicket = (props) => {
     let reader = new FileReader();
     let split = files[0].type.split("/");
     let fileName = files[0].name.split(".");
+    const extension = fileName[fileName.length - 1].toLowerCase();
     let extensionCheck = false;
     let sizeCheck = false;
 
     if (files[0].size <= 1000000) {
       sizeCheck = true;
     }
-    switch (fileName[fileName.length - 1]) {
-      case "gif":
-        extensionCheck = true;
-        break;
-      case "jpg":
-        extensionCheck = true;
-        break;
-      case "jpeg":
-        extensionCheck = true;
-        break;
-      case "png":
-        extensionCheck = true;
-        break;
-      case "zip":
-        extensionCheck = true;
-        color = "#f46a6a";
-        icon = "bx bxs-file-archive";
-        break;
-      case "rar":
-        extensionCheck = true;
-        color = "#f46a6a";
-        icon = "bx bxs-file-archive";
-        break;
-      case "csv":
-        extensionCheck = true;
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        break;
-      case "doc":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-file-doc";
-        break;
-      case "docx":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-file-doc";
-        break;
-      case "xls":
-        extensionCheck = true;
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        break;
-      case "xlsx":
-        extensionCheck = true;
-        color = "#34c38f";
-        icon = "bx bxs-file";
-        break;
-      case "txt":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-file-txt";
-        break;
-      case "pdf":
-        extensionCheck = true;
-        color = "#f1b44c";
-        icon = "bx bxs-file-pdf";
-        break;
-      case "mp4":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-videos";
-        break;
-      case "mkv":
-        extensionCheck = true;
-        color = "#556ee6";
-        icon = "bx bxs-videos";
-        break;
 
-      default:
-        extensionCheck = false;
-        color = "#556ee6";
-        icon = "bx bxs-file";
+    let findIndex = general_constant.file_extension.findIndex(
+      (item) => item.name === extension
+    );
+    if (findIndex >= 0) {
+      color = general_constant.file_extension[findIndex].color;
+      icon = general_constant.file_extension[findIndex].icon;
+      extensionCheck =
+        general_constant.file_extension[findIndex].extension_check;
+    } else {
+      extensionCheck = false;
+      color = "#556ee6";
+      icon = "bx bxs-file";
     }
 
     if (extensionCheck && sizeCheck) {
@@ -248,14 +180,6 @@ const AddTicket = (props) => {
     }
     setDirty();
   };
-  const onValidateEmail = (email) => {
-    setData({
-      ...data,
-      email: email,
-    });
-    setValidEmail(emailValidation(email));
-    setDirty();
-  };
   const onChangeTerminal = (event) => {
     let index =
       list_terminal &&
@@ -274,77 +198,42 @@ const AddTicket = (props) => {
   };
 
   const onSubmitCreate = async () => {
-    let valid_captcha = false;
-    if (
-      !isAssigningTicket &&
-      captchaValidation &&
-      captchaValidation.verifyValue.length > 0
-    ) {
-      await fetch(`${process.env.REACT_APP_API}/v1/captcha/verify`, {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(captchaValidation),
-      })
-        .then((response) => response.json())
-        .then(async (value) => {
-          if (value.is_valid === true) {
-            valid_captcha = true;
-          } else {
-            setCaptchaMessage(value.status.description[0]);
-            setCaptchaValidation({
-              ...captchaValidation,
-              captchaId: captcha_id,
-              verifyValue: null,
-            });
-            props.readCaptcha(captchaRequest);
-          }
-        });
-    }
+    const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
+    setTicketCode(ticket_code);
+    const judul =
+      selectedGrapari.label +
+      " - " +
+      selectedCategory.value.name +
+      " - " +
+      data.subCategory;
+    const isi = `${data && data.isi}`;
 
-    if (isAssigningTicket || valid_captcha) {
-      const ticket_code = (uid(3) + "-" + uid(3) + "-" + uid(4)).toUpperCase();
-      setTicketCode(ticket_code);
-      const judul =
-        selectedGrapari.label +
-        " - " +
-        selectedCategory.value.name +
-        " - " +
-        data.subCategory;
-      const isi = `${data && data.isi}`;
+    let request = new FormData();
+    request.append("status", data.status);
+    request.append("prioritas", data.prioritas);
+    request.append("assignedTo", data.assignedTo);
+    request.append("userPembuat", data.userPembuat);
+    selectedFiles1 && request.append("attachment1", data.attachment1);
+    selectedFiles2 && request.append("attachment2", data.attachment2);
+    request.append("ticketCode", ticket_code);
+    request.append("email", data.email);
+    request.append("judul", judul);
+    request.append("category", data.category);
+    request.append("subCategory", data.subCategory);
+    request.append("areaCode", data.areaCode);
+    request.append("regional", data.regional);
+    request.append("grapariId", data.grapariId);
+    request.append("terminalId", data.terminalId);
+    request.append("lokasi", data.lokasi);
+    request.append("isi", isi);
+    request.append("emailNotification", data.emailNotification);
 
-      let request = new FormData();
-      request.append("status", data.status);
-      request.append("prioritas", data.prioritas);
-      request.append("assignedTo", data.assignedTo);
-      request.append("userPembuat", data.userPembuat);
-      selectedFiles1 && request.append("attachment1", data.attachment1);
-      selectedFiles2 && request.append("attachment2", data.attachment2);
-      request.append("ticketCode", ticket_code);
-      request.append("email", data.email);
-      request.append("judul", judul);
-      request.append("category", data.category);
-      request.append("subCategory", data.subCategory);
-      request.append("areaCode", data.areaCode);
-      request.append("regional", data.regional);
-      request.append("grapariId", data.grapariId);
-      request.append("terminalId", data.terminalId);
-      request.append("lokasi", data.lokasi);
-      request.append("isi", isi);
-      request.append("emailNotification", data.emailNotification);
-
-      props.createTicket(request);
-      setIsShowSweetAlert(setTimeout(true, 1500));
-      setPristine();
-    }
+    props.createTicket(request);
+    setIsShowSweetAlert(setTimeout(true, 1500));
+    setPristine();
   };
   const ButtonSubmitCreate = () => {
-    if (
-      data &&
-      Object.keys(data).length >= 17 &&
-      validEmail &&
-      captchaValidation
-    ) {
+    if (data && Object.keys(data).length >= 17) {
       return (
         <button
           type="button"
@@ -387,7 +276,7 @@ const AddTicket = (props) => {
             onConfirm={() => {
               setIsShowSweetAlert(false);
               setData(null);
-              if (customchk2) {
+              if (showTicketCheck) {
                 history.push(routes.detail_ticket + `?ticketId=${ticketCode}`);
               } else {
                 history.push(routes.ticket);
@@ -464,42 +353,19 @@ const AddTicket = (props) => {
         order_by: "asc",
       });
       props.readUser({ size: 0, page_no: 0, search: "*" });
-      const captcha_request = {
-        captchaId: "",
-        verifyValue: "",
-        driverString: {
-          Height: 50,
-          Width: 210,
-          ShowLineOptions: 0,
-          NoiseCount: 40,
-          Source: "1234567890qwertyuioplkjhgfdsazxcvbnm",
-          Length: 6,
-          Fonts: ["wqy-microhei.ttc"],
-          BgColor: {
-            R: 0,
-            G: 0,
-            B: 0,
-            A: 0,
-          },
-        },
-      };
-      props.readCaptcha(captcha_request);
-      setCaptchaRequest(captcha_request);
       setData({
         status: "New",
         prioritas: "Low",
         assignedTo: "Unassigned",
         userPembuat: username,
         userPengirim: username,
+        email: email,
         attachment1: null,
         attachment2: null,
         emailNotification: "true",
       });
       setOptionColor("#34c38f");
-      setCaptchaValidation({
-        captchaId: null,
-        verifyValue: null,
-      });
+
       assigningTicket && setIsAssigningTicket(true);
     } else {
       history.push(routes.ticket);
@@ -636,29 +502,6 @@ const AddTicket = (props) => {
                       </Col>
                     </Row>
                     <Row className="mt-3">
-                      <Col md={8}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">
-                            Email <span style={{ color: "red" }}>*</span>
-                          </label>
-                          <AvField
-                            name="email"
-                            label=""
-                            placeholder="ex: shop@mail.com"
-                            type="email"
-                            errorMessage="Enter valid Email"
-                            validate={{
-                              required: { value: true },
-                              maxLength: { value: 70 },
-                            }}
-                            onChange={(event) =>
-                              onValidateEmail(event.target.value)
-                            }
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row className="mt-3">
                       <Col>
                         <FormGroup className="select2-container">
                           <Label>
@@ -673,7 +516,10 @@ const AddTicket = (props) => {
                                   setData({
                                     ...data,
                                     category: event.value.id.toString(),
+                                    subCategory: "",
+                                    prioritas: "",
                                   }),
+                                  setShowLainLain(true),
                                   setDirty()
                                 )}
                                 options={option_category}
@@ -704,6 +550,14 @@ const AddTicket = (props) => {
                                   <option value="0" disabled>
                                     Select Sub Category
                                   </option>
+                                  <option
+                                    value={JSON.stringify({
+                                      name: "Lain-lain",
+                                      priority: "Low",
+                                    })}
+                                  >
+                                    Lain-lain
+                                  </option>
                                   {selectedCategory &&
                                     selectedCategory.value.subCategory[0].id !==
                                       0 &&
@@ -717,14 +571,6 @@ const AddTicket = (props) => {
                                         </option>
                                       )
                                     )}
-                                  <option
-                                    value={JSON.stringify({
-                                      name: "Lain-lain",
-                                      priority: "Low",
-                                    })}
-                                  >
-                                    Lain-lain
-                                  </option>
                                 </select>
                               </div>
                             </Col>
@@ -757,7 +603,7 @@ const AddTicket = (props) => {
                           </Row>
                         </FormGroup>
                       </Col>
-                      {data && data.subCategory && (
+                      {/* {data && data.subCategory && (
                         <Col md={2} className="">
                           <FormGroup className="select2-container">
                             <label className="control-label">Priority</label>
@@ -777,7 +623,7 @@ const AddTicket = (props) => {
                             </FormGroup>
                           </FormGroup>
                         </Col>
-                      )}
+                      )} */}
                     </Row>
                     <Row className="mt-3">
                       <Col>
@@ -1028,7 +874,7 @@ const AddTicket = (props) => {
                         </FormGroup>
                       </Col>
                     </Row>
-                    {isAssigningTicket ? (
+                    {isAssigningTicket && (
                       <>
                         <Row className="mt-3">
                           <Col>
@@ -1040,16 +886,16 @@ const AddTicket = (props) => {
                                   className="custom-control-input"
                                   id="CustomCheck1"
                                   onChange={() => false}
-                                  checked={customchk}
+                                  checked={sendEmailCheck}
                                 />
                                 <label
                                   className="custom-control-label"
                                   onClick={() => {
-                                    setcustomchk(!customchk);
+                                    setSendEmailCheck(!sendEmailCheck);
                                     setData({
                                       ...data,
                                       emailNotification:
-                                        (!customchk).toString(),
+                                        (!sendEmailCheck).toString(),
                                     });
                                   }}
                                 >
@@ -1062,12 +908,12 @@ const AddTicket = (props) => {
                                   className="custom-control-input"
                                   id="CustomCheck1"
                                   onChange={() => false}
-                                  checked={customchk2}
+                                  checked={showTicketCheck}
                                 />
                                 <label
                                   className="custom-control-label"
                                   onClick={() => {
-                                    setcustomchk2(!customchk2);
+                                    setShowTicketCheck(!showTicketCheck);
                                   }}
                                 >
                                   Show the ticket after submission
@@ -1128,62 +974,6 @@ const AddTicket = (props) => {
                           </Col>
                         </Row>
                       </>
-                    ) : (
-                      <Col>
-                        <Row>
-                          <label className="control-label">
-                            SPAM Prevention:{" "}
-                            <span style={{ color: "red" }}>*</span> Type the
-                            number you see in the picture below.
-                          </label>
-                        </Row>
-                        <Row
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "min-content",
-                          }}
-                        >
-                          {captchaMessage && (
-                            <Alert color="danger">{captchaMessage}</Alert>
-                          )}
-                          <div
-                            className="mb-2"
-                            style={{
-                              display: "grid",
-                              gridAutoFlow: "column",
-                              gridTemplateColumns: "max-content min-content",
-                              columnGap: "1rem",
-                            }}
-                          >
-                            {" "}
-                            <img src={image_captcha} />{" "}
-                            <Button
-                              color="secondary"
-                              style={{ color: "white" }}
-                              onClick={() => props.readCaptcha(captchaRequest)}
-                            >
-                              <i className="bx bx-refresh font-size-16 align-middle"></i>
-                            </Button>
-                          </div>
-                          <div>
-                            <AvField
-                              name="captcha"
-                              label=""
-                              className="form-control"
-                              type="text"
-                              errorMessage="This field cannot be empty"
-                              required
-                              onChange={(event) => {
-                                setCaptchaValidation({
-                                  ...captchaValidation,
-                                  captchaId: captcha_id,
-                                  verifyValue: event.target.value,
-                                });
-                              }}
-                            />
-                          </div>
-                        </Row>
-                      </Col>
                     )}
                   </Col>
                 </Row>
@@ -1303,7 +1093,7 @@ const mapStatetoProps = (state) => {
   const { option_grapari } = state.Grapari;
   const { option_terminal, list_terminal } = state.Terminal;
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
-  const { captcha_id, image_captcha } = state.Captcha;
+
   return {
     option_category,
     list_user,
@@ -1315,8 +1105,6 @@ const mapStatetoProps = (state) => {
     response_code_ticket,
     message_ticket,
     loading,
-    captcha_id,
-    image_captcha,
   };
 };
 
@@ -1326,7 +1114,6 @@ const mapDispatchToProps = (dispatch) =>
       readCategory,
       createTicket,
       readUser,
-      readCaptcha,
       readArea,
       readRegional,
       readGrapari,
