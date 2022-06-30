@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, FormGroup, Row, Col } from "reactstrap";
+import {
+  Container,
+  Card,
+  CardBody,
+  FormGroup,
+  Row,
+  Col,
+  Label,
+} from "reactstrap";
 import { readCategory } from "../../store/pages/category/actions";
 import { readSubCategory } from "../../store/pages/subCategory/actions";
 import { readUser } from "../../store/pages/users/actions";
@@ -21,6 +29,7 @@ import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import queryString from "query-string";
 import CryptoJS from "crypto-js";
+import Select from "react-select";
 require("dotenv").config();
 
 const EditTicket = (props) => {
@@ -28,6 +37,7 @@ const EditTicket = (props) => {
   let response_code = props.response_code_ticket;
   const detail_ticket = props.detail_ticket;
   const list_category = props.list_category;
+  const option_category = props.option_category;
   const list_user = props.list_user;
   const list_sub_category = props.list_sub_category;
 
@@ -200,9 +210,9 @@ const EditTicket = (props) => {
             value.idCategory === parseInt(detail_ticket.category)
         );
       let findCategory =
-        list_category &&
-        list_category.findIndex(
-          (value) => value.id === parseInt(detail_ticket.category)
+        option_category &&
+        option_category.findIndex(
+          (item) => item.value.id === parseInt(detail_ticket.category)
         );
       let findPriority = general_constant.priority.findIndex(
         (value) => value.name === detail_ticket.prioritas
@@ -225,7 +235,7 @@ const EditTicket = (props) => {
         setStatusColor(general_constant.status[findStatus].color);
       findPriority > 0 &&
         setOptionColor(general_constant.priority[findPriority].color);
-      findCategory > 0 && setSelectedCategory(list_category[findCategory]);
+      findCategory > 0 && setSelectedCategory(option_category[findCategory]);
       findSubCategory < 0 && setShowLainLain(true);
     }
   }, [detail_ticket, list_sub_category, list_category]);
@@ -302,48 +312,27 @@ const EditTicket = (props) => {
                     <Row className="mt-3">
                       <Col>
                         <FormGroup className="select2-container">
-                          <label className="control-label">Category</label>
+                          <Label>
+                            Category <span style={{ color: "red" }}>*</span>
+                          </Label>
                           <Row className="mb-2">
                             <Col md={5}>
-                              <div>
-                                <select
-                                  name="category"
-                                  className="form-control"
-                                  defaultValue={data && data.category}
-                                  onChange={(event) => (
-                                    setData({
-                                      ...data,
-                                      category: JSON.parse(
-                                        event.target.value
-                                      ).id.toString(),
-                                      subCategory: "",
-                                      prioritas: "",
-                                    }),
-                                    setShowLainLain(true),
-                                    setSelectedCategory(
-                                      JSON.parse(event.target.value)
-                                    ),
-                                    setDirty()
-                                  )}
-                                >
-                                  <option value="0" disabled>
-                                    Select Category
-                                  </option>
-                                  {list_category &&
-                                    list_category.map((value, index) => (
-                                      <option
-                                        key={index}
-                                        value={value && JSON.stringify(value)}
-                                        selected={
-                                          data &&
-                                          data.category === value.id.toString()
-                                        }
-                                      >
-                                        {value.name}
-                                      </option>
-                                    ))}
-                                </select>
-                              </div>
+                              <Select
+                                value={selectedCategory}
+                                onChange={(event) => (
+                                  setData({
+                                    ...data,
+                                    category: event.value.id.toString(),
+                                    subCategory: "",
+                                    prioritas: "",
+                                  }),
+                                  setShowLainLain(true),
+                                  setDirty(),
+                                  setSelectedCategory(event)
+                                )}
+                                options={option_category}
+                                classNamePrefix="select2-selection"
+                              />
                             </Col>
                           </Row>
                         </FormGroup>
@@ -379,8 +368,9 @@ const EditTicket = (props) => {
                                     Lain-lain
                                   </option>
                                   {selectedCategory &&
-                                    selectedCategory.subCategory[0].id !== 0 &&
-                                    selectedCategory.subCategory.map(
+                                    selectedCategory.value.subCategory[0].id !==
+                                      0 &&
+                                    selectedCategory.value.subCategory.map(
                                       (value, index) => (
                                         <option
                                           key={index}
@@ -521,7 +511,7 @@ const EditTicket = (props) => {
 };
 
 const mapStatetoProps = (state) => {
-  const { list_category } = state.Category;
+  const { list_category, option_category } = state.Category;
   const { list_user } = state.User;
   const { loading, response_code_ticket, message_ticket, detail_ticket } =
     state.Ticket;
@@ -530,6 +520,7 @@ const mapStatetoProps = (state) => {
   return {
     list_category,
     list_user,
+    option_category,
     list_sub_category,
     detail_ticket,
     response_code_ticket,

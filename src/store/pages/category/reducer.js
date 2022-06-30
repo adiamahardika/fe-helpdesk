@@ -22,6 +22,7 @@ import {
 const INIT_STATE = {
   list_category: null,
   list_checked_category: [],
+  option_category: [],
   detail_category: null,
   parent_1: null,
   parent_2: null,
@@ -39,6 +40,7 @@ const Category = (state = INIT_STATE, action) => {
         ...state,
         loading: true,
         list_checked_category: [],
+        option_category: [],
       };
     case READ_CATEGORY_REJECT:
       return {
@@ -54,6 +56,14 @@ const Category = (state = INIT_STATE, action) => {
           } else {
             return state.list_checked_category.push(false);
           }
+        });
+      }
+      if (state.option_category.length <= 0) {
+        action.payload.content.map((value) => {
+          return state.option_category.push({
+            label: value.name,
+            value: value,
+          });
         });
       }
       return {

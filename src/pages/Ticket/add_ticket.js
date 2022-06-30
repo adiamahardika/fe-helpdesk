@@ -40,7 +40,7 @@ require("dotenv").config();
 const AddTicket = (props) => {
   let message = props.message_ticket;
   let response_code = props.response_code_ticket;
-  const list_category = props.list_category;
+  const option_category = props.option_category;
   const list_user = props.list_user;
   const option_area = props.option_area;
   const option_regional = props.option_regional;
@@ -308,7 +308,7 @@ const AddTicket = (props) => {
       const judul =
         selectedGrapari.label +
         " - " +
-        selectedCategory.name +
+        selectedCategory.value.name +
         " - " +
         data.subCategory;
       const isi = `${data && data.isi}`;
@@ -661,43 +661,24 @@ const AddTicket = (props) => {
                     <Row className="mt-3">
                       <Col>
                         <FormGroup className="select2-container">
-                          <label className="control-label">
+                          <Label>
                             Category <span style={{ color: "red" }}>*</span>
-                          </label>
+                          </Label>
                           <Row className="mb-2">
                             <Col md={5}>
-                              <div>
-                                <select
-                                  name="category"
-                                  className="form-control"
-                                  defaultValue="0"
-                                  onChange={(event) => (
-                                    setData({
-                                      ...data,
-                                      category: JSON.parse(
-                                        event.target.value
-                                      ).id.toString(),
-                                    }),
-                                    setSelectedCategory(
-                                      JSON.parse(event.target.value)
-                                    ),
-                                    setDirty()
-                                  )}
-                                >
-                                  <option value="0" disabled>
-                                    Select Category
-                                  </option>
-                                  {list_category &&
-                                    list_category.map((value, index) => (
-                                      <option
-                                        key={index}
-                                        value={value && JSON.stringify(value)}
-                                      >
-                                        {value.name}
-                                      </option>
-                                    ))}
-                                </select>
-                              </div>
+                              <Select
+                                value={selectedCategory}
+                                onChange={(event) => (
+                                  setSelectedCategory(event),
+                                  setData({
+                                    ...data,
+                                    category: event.value.id.toString(),
+                                  }),
+                                  setDirty()
+                                )}
+                                options={option_category}
+                                classNamePrefix="select2-selection"
+                              />
                             </Col>
                           </Row>
                         </FormGroup>
@@ -724,8 +705,9 @@ const AddTicket = (props) => {
                                     Select Sub Category
                                   </option>
                                   {selectedCategory &&
-                                    selectedCategory.subCategory[0].id !== 0 &&
-                                    selectedCategory.subCategory.map(
+                                    selectedCategory.value.subCategory[0].id !==
+                                      0 &&
+                                    selectedCategory.value.subCategory.map(
                                       (value, index) => (
                                         <option
                                           key={index}
@@ -1314,7 +1296,7 @@ const AddTicket = (props) => {
 };
 
 const mapStatetoProps = (state) => {
-  const { list_category } = state.Category;
+  const { option_category } = state.Category;
   const { list_user } = state.User;
   const { option_area } = state.Area;
   const { option_regional } = state.Regional;
@@ -1323,7 +1305,7 @@ const mapStatetoProps = (state) => {
   const { loading, response_code_ticket, message_ticket } = state.Ticket;
   const { captcha_id, image_captcha } = state.Captcha;
   return {
-    list_category,
+    option_category,
     list_user,
     list_terminal,
     option_area,
