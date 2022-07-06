@@ -245,6 +245,7 @@ const Role = (props) => {
                                   <Link
                                     to={{
                                       pathname: routes.edit_role,
+                                      search: `?id=${value.id}`,
                                       editRoleValue: value,
                                     }}
                                   >

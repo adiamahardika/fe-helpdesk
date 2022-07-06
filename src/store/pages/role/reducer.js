@@ -5,6 +5,9 @@ import {
   READ_ROLE,
   READ_ROLE_REJECT,
   READ_ROLE_FULFILLED,
+  READ_DETAIL_ROLE,
+  READ_DETAIL_ROLE_REJECT,
+  READ_DETAIL_ROLE_FULFILLED,
   UPDATE_ROLE,
   UPDATE_ROLE_REJECT,
   UPDATE_ROLE_FULFILLED,
@@ -16,6 +19,7 @@ import {
 const INIT_STATE = {
   response_code_role: null,
   list_role: null,
+  detail_role: null,
   option_role: [],
   message_role: null,
   loading: false,
@@ -47,6 +51,26 @@ const Role = (state = INIT_STATE, action) => {
       return {
         ...state,
         list_role: action.payload.listRole,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
+        loading: true,
+      };
+    case READ_DETAIL_ROLE:
+      return {
+        ...state,
+        lading: true,
+      };
+    case READ_DETAIL_ROLE_REJECT:
+      return {
+        ...state,
+        response_code_role: action.payload.status.responseCode,
+        message_role: action.payload.status.description[0],
+        loading: true,
+      };
+    case READ_DETAIL_ROLE_FULFILLED:
+      return {
+        ...state,
+        detail_role: action.payload.listRole[0],
         response_code_role: action.payload.status.responseCode,
         message_role: action.payload.status.description[0],
         loading: true,

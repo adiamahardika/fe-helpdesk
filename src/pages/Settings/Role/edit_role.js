@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Container, Card, CardBody, CardHeader, Row, Col } from "reactstrap";
-import { updateRole } from "../../../store/pages/role/actions";
+import { updateRole, readDetailRole } from "../../../store/pages/role/actions";
 import { readPermission } from "../../../store/pages/permission/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
-import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
+import { useLocation } from "react-router-dom";
 import code_all_permissions from "../../../helpers/code_all_permissions.json";
 import list_all_permission from "../../../helpers/list_all_permission.json";
 import general_constant from "../../../helpers/general_constant.json";
 import SweetAlert from "react-bootstrap-sweetalert";
 import UnsavedChangesWarning from "../../../helpers/unsaved_changes_warning";
 import routes from "../../../helpers/routes.json";
+import queryString from "query-string";
 import CryptoJS from "crypto-js";
 require("dotenv").config();
 
@@ -20,7 +21,7 @@ const EditRole = (props) => {
   const message = props.message_role;
   const response_code = props.response_code_role;
   const option_permission = props.option_permission;
-  const editRoleValue = props.location.editRoleValue;
+  const detail_role = props.detail_role;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
@@ -28,6 +29,8 @@ const EditRole = (props) => {
     ).toString(CryptoJS.enc.Utf8)
   );
   const history = useHistory();
+  const { search } = useLocation();
+  const { id } = queryString.parse(search);
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
@@ -38,7 +41,7 @@ const EditRole = (props) => {
 
   const onSubmitEdit = async () => {
     props.updateRole({
-      id: editRoleValue.id,
+      id: parseInt(id),
       listPermission: [...permissionData],
     });
     setIsShowSweetAlert(true);
@@ -358,23 +361,33 @@ const EditRole = (props) => {
   };
 
   useEffect(() => {
-    let newArray = [];
     let isEditRole = permissions.find(
       (value) => value.code === code_all_permissions.edit_role
     );
 
-    if (editRoleValue && isEditRole) {
+    if (isEditRole) {
       props.readPermission();
 
+      props.readDetailRole(id);
+      setDirty();
+    } else {
+      history.push(routes.role);
+    }
+  }, []);
+  useEffect(() => {
+    let newArray = [];
+    if (detail_role === null) {
+      props.readDetailRole(id);
+    } else {
       list_all_permission.map(
         (value, index) => (
-          editRoleValue.listPermission.find((v) => v.code === value.code)
+          detail_role.listPermission.find((v) => v.code === value.code)
             ? newArray.push({ checked: true, sub_level_1: [] })
             : newArray.push({ checked: false, sub_level_1: [] }),
           value.sub_level_1 &&
             value.sub_level_1.map(
               (sl1_value, sl1_index) => (
-                editRoleValue.listPermission.find(
+                detail_role.listPermission.find(
                   (v) => v.code === sl1_value.code
                 )
                   ? newArray[index].sub_level_1.push({
@@ -387,7 +400,7 @@ const EditRole = (props) => {
                     }),
                 sl1_value.sub_level_2 &&
                   sl1_value.sub_level_2.map((sl2_value) => {
-                    editRoleValue.listPermission.find(
+                    detail_role.listPermission.find(
                       (v) => v.code === sl2_value.code
                     )
                       ? newArray[index].sub_level_1[sl1_index].sub_level_2.push(
@@ -405,14 +418,11 @@ const EditRole = (props) => {
             )
         )
       );
+      setData(detail_role);
+      setPermissionData(detail_role.listPermission);
       setIsChecked(newArray);
-      setData(editRoleValue);
-      setPermissionData(editRoleValue.listPermission);
-      setDirty();
-    } else {
-      history.push(routes.role);
     }
-  }, []);
+  }, [detail_role]);
 
   return (
     <React.Fragment>
@@ -446,10 +456,14 @@ const EditRole = (props) => {
                 />
               </AvForm> */}
               <Row>
-                <Col><h6>Name</h6></Col>
+                <Col>
+                  <h6>Name</h6>
+                </Col>
               </Row>
               <Row className="mb-2">
-                <Col><h5>{editRoleValue && editRoleValue.name}</h5></Col>
+                <Col>
+                  <h5>{detail_role && detail_role.name}</h5>
+                </Col>
               </Row>
               <div>
                 <label>Permissions</label>
@@ -592,10 +606,11 @@ const EditRole = (props) => {
 };
 const mapStatetoProps = (state) => {
   const { option_permission, list_permission } = state.Permission;
-  const { response_code_role, message_role } = state.Role;
+  const { response_code_role, message_role, detail_role } = state.Role;
   return {
     option_permission,
     list_permission,
+    detail_role,
     response_code_role,
     message_role,
   };
@@ -606,6 +621,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateRole,
       readPermission,
+      readDetailRole,
     },
     dispatch
   );

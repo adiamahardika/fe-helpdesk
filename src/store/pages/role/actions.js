@@ -5,6 +5,9 @@ import {
   READ_ROLE,
   READ_ROLE_REJECT,
   READ_ROLE_FULFILLED,
+  READ_DETAIL_ROLE,
+  READ_DETAIL_ROLE_REJECT,
+  READ_DETAIL_ROLE_FULFILLED,
   UPDATE_ROLE,
   UPDATE_ROLE_REJECT,
   UPDATE_ROLE_FULFILLED,
@@ -58,6 +61,30 @@ export const readRoleReject = (payload) => {
 export const readRoleFulfilled = (data) => {
   return {
     type: READ_ROLE_FULFILLED,
+    payload: data,
+  };
+};
+
+export const readDetailRole = (id) => {
+  let data = {
+    url: `/v1/role/get-detail/${id}`,
+  };
+  return {
+    type: READ_DETAIL_ROLE,
+    payload: data,
+  };
+};
+
+export const readDetailRoleReject = (payload) => {
+  return {
+    type: READ_DETAIL_ROLE_REJECT,
+    payload: payload,
+  };
+};
+
+export const readDetailRoleFulfilled = (data) => {
+  return {
+    type: READ_DETAIL_ROLE_FULFILLED,
     payload: data,
   };
 };

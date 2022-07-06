@@ -12,12 +12,15 @@ import {
   READ_ROLE,
   UPDATE_ROLE,
   DELETE_ROLE,
+  READ_DETAIL_ROLE,
 } from "./actionTypes";
 import {
   createRoleReject,
   createRoleFulfilled,
   readRoleReject,
   readRoleFulfilled,
+  readDetailRoleReject,
+  readDetailRoleFulfilled,
   updateRoleReject,
   updateRoleFulfilled,
   deleteRoleReject,
@@ -32,6 +35,14 @@ function* readRole({ payload: data }) {
     yield put(readRoleFulfilled(response));
   } else {
     yield put(readRoleReject(response));
+  }
+}
+function* readDetailRole({ payload: data }) {
+  const response = yield call(getMethod, data);
+  if (response.status.responseCode === general_constant.success_response_code) {
+    yield put(readDetailRoleFulfilled(response));
+  } else {
+    yield put(readDetailRoleReject(response));
   }
 }
 function* createRole({ payload: data }) {
@@ -62,6 +73,9 @@ function* deleteRole({ payload: data }) {
 export function* watchReadRole() {
   yield takeLatest(READ_ROLE, readRole);
 }
+export function* watchReadDetailRole() {
+  yield takeLatest(READ_DETAIL_ROLE, readDetailRole);
+}
 export function* watchCreateRole() {
   yield takeEvery(CREATE_ROLE, createRole);
 }
@@ -75,6 +89,7 @@ export function* watchDeleteRole() {
 function* RoleSaga() {
   yield all([
     fork(watchReadRole),
+    fork(watchReadDetailRole),
     fork(watchCreateRole),
     fork(watchUpdateRole),
     fork(watchDeleteRole),
