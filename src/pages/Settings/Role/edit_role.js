@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, CardHeader } from "reactstrap";
+import { Container, Card, CardBody, CardHeader, Row, Col } from "reactstrap";
 import { updateRole } from "../../../store/pages/role/actions";
 import { readPermission } from "../../../store/pages/permission/actions";
 import { connect } from "react-redux";
@@ -36,17 +36,9 @@ const EditRole = (props) => {
   const [isChecked, setIsChecked] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
 
-  const onChangeData = (event) => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.value,
-    });
-    setDirty();
-  };
   const onSubmitEdit = async () => {
     props.updateRole({
       id: editRoleValue.id,
-      name: data.name,
       listPermission: [...permissionData],
     });
     setIsShowSweetAlert(true);
@@ -441,7 +433,7 @@ const EditRole = (props) => {
                 {" "}
                 <ButtonSubmitEdit />
               </div>
-              <AvForm>
+              {/* <AvForm>
                 <AvField
                   name="name"
                   label="Name"
@@ -452,7 +444,13 @@ const EditRole = (props) => {
                   onChange={onChangeData}
                   value={editRoleValue && editRoleValue.name}
                 />
-              </AvForm>
+              </AvForm> */}
+              <Row>
+                <Col><h6>Name</h6></Col>
+              </Row>
+              <Row className="mb-2">
+                <Col><h5>{editRoleValue && editRoleValue.name}</h5></Col>
+              </Row>
               <div>
                 <label>Permissions</label>
                 {list_all_permission.map((value, index) => (
@@ -495,6 +493,7 @@ const EditRole = (props) => {
                             className="sub-menu"
                             aria-expanded="true"
                             style={{ listStyle: "none" }}
+                            key={sl1_index}
                           >
                             <li>
                               <div className="has-arrow">
@@ -539,6 +538,7 @@ const EditRole = (props) => {
                                         className="sub-menu"
                                         aria-expanded="true"
                                         style={{ listStyle: "none" }}
+                                        key={sl2_index}
                                       >
                                         <li>
                                           <div className="custom-control custom-checkbox mb-3">

@@ -180,7 +180,7 @@ const Role = (props) => {
           <Card>
             <CardBody>
               <CardTitle>Role</CardTitle>
-              {addRole && (
+              {/* {addRole && (
                 <div
                   className="col-md-12 mb-3"
                   style={{
@@ -201,7 +201,7 @@ const Role = (props) => {
                     </button>
                   </Link>
                 </div>
-              )}
+              )} */}
               <div className="table-responsive">
                 <Table className="table table-centered">
                   <thead>
@@ -465,7 +465,7 @@ const Role = (props) => {
               </table>
             </div>
             <div className="modal-footer">
-              {deleteRole && (
+              {/* {deleteRole && (
                 <button
                   type="button"
                   className="btn btn-danger waves-effect waves-light"
@@ -476,7 +476,7 @@ const Role = (props) => {
                 >
                   <i className="bx bx-trash font-size-16 align-middle"></i>
                 </button>
-              )}
+              )} */}
               <button
                 type="button"
                 onClick={() => {
