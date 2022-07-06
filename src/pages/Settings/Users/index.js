@@ -196,7 +196,6 @@ const Users = (props) => {
                   </div>
                 </Col>
                 <Col
-                  md="8"
                   className="d-flex align-items-end justify-content-end"
                 >
                   <div className="form-group mb-0">
@@ -233,7 +232,7 @@ const Users = (props) => {
                     </button>
                   </div>
                 </Col>
-                <Col md="2" className="align-items-end justify-content-end">
+                {/* <Col md="2" className="align-items-end justify-content-end">
                   {addUser && (
                     <Link to={routes.add_user}>
                       <Button
@@ -247,7 +246,7 @@ const Users = (props) => {
                       </Button>
                     </Link>
                   )}
-                </Col>
+                </Col> */}
               </Row>
 
               <div className="table-responsive">

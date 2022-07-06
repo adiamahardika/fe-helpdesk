@@ -50,7 +50,6 @@ const DetailUser = (props) => {
   );
 
   const [updateUserData, setUpdateUserData] = useState(null);
-  console.log(updateUserData);
   const [updateStatusData, setUpdateStatusData] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
   const [modalResetPassword, setModalResetPassword] = useState(false);
@@ -244,7 +243,7 @@ const DetailUser = (props) => {
           <Breadcrumbs title={"Users"} breadcrumbItem={"Detail User"} />
           <Card>
             <CardBody>
-              <div
+              {/* <div
                 className="col-md-12 mb-3"
                 style={{
                   display: "grid",
@@ -278,7 +277,7 @@ const DetailUser = (props) => {
                     Edit
                   </button>
                 )}
-              </div>
+              </div> */}
               {isShowUpdateUser ? (
                 <AvForm>
                   <Row className="d-flex justify-content-center">
@@ -414,7 +413,7 @@ const DetailUser = (props) => {
                       <tr>
                         <th>Status</th>
                         <td>{user_detail && user_detail.status}</td>
-                        <td
+                        {/* <td
                           style={{
                             display: "flex",
                             justifyContent: "flex-end",
@@ -429,7 +428,7 @@ const DetailUser = (props) => {
                               Change Status
                             </Button>
                           )}
-                        </td>
+                        </td> */}
                       </tr>
                     </tbody>
                   </Table>
