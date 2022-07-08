@@ -29,9 +29,9 @@ const EmailNotif = (props) => {
   );
   const history = useHistory();
 
-  const [addEmailNotif, setAddEmailNotif] = useState(true);
-  const [editEmailNotif, setEditEmailNotif] = useState(true);
-  const [deleteEmailNotif, setDeleteEmailNotif] = useState(true);
+  const [addEmailNotif, setAddEmailNotif] = useState(false);
+  const [editEmailNotif, setEditEmailNotif] = useState(false);
+  const [deleteEmailNotif, setDeleteEmailNotif] = useState(false);
 
   const [modalDetail, setModalDetail] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
@@ -86,29 +86,28 @@ const EmailNotif = (props) => {
   };
 
   useEffect(() => {
-    // let viewEmailNotif = permissions.find(
-    //   (value) => value.code === code_all_permissions.view_email_notif
-    // );
-    // let isAddEmailNotif = permissions.find(
-    //   (value) => value.code === code_all_permissions.add_email_notif
-    // );
-    // let isEditEmailNotif = permissions.find(
-    //   (value) => value.code === code_all_permissions.edit_email_notif
-    // );
-    // let isDeleteEmailNotif = permissions.find(
-    //   (value) => value.code === code_all_permissions.delete_email_notif
-    // );
+    let viewEmailNotif = permissions.find(
+      (value) => value.code === code_all_permissions.view_email_notif
+    );
+    let isAddEmailNotif = permissions.find(
+      (value) => value.code === code_all_permissions.add_email_notif
+    );
+    let isEditEmailNotif = permissions.find(
+      (value) => value.code === code_all_permissions.edit_email_notif
+    );
+    let isDeleteEmailNotif = permissions.find(
+      (value) => value.code === code_all_permissions.delete_email_notif
+    );
 
-    // if (viewEmailNotifs) {
-    props.readEmailNotif();
+    if (viewEmailNotif) {
+      props.readEmailNotif();
 
-    // isAddEmailNotif && setAddEmailNotif(true);
-    // isEditEmailNotif && setEditEmailNotif(true);
-    // isDeleteEmailNotif && setDeleteEmailNotif(true);
-
-    // } else {
-    //   history.push(routes.ticket);
-    // }
+      isAddEmailNotif && setAddEmailNotif(true);
+      isEditEmailNotif && setEditEmailNotif(true);
+      isDeleteEmailNotif && setDeleteEmailNotif(true);
+    } else {
+      history.push(routes.ticket);
+    }
   }, []);
 
   return (

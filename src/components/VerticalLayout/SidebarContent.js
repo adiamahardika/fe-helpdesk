@@ -24,6 +24,7 @@ const SidebarContent = (props) => {
   const [isViewRoles, setIsViewRoles] = useState(true);
   const [isViewCategory, setIsViewCategory] = useState(true);
   const [isGenerateReport, setIsGenerateReport] = useState(true);
+  const [isEmailNotif, setIsEmailNotif] = useState(true);
 
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -42,12 +43,16 @@ const SidebarContent = (props) => {
     let generateReport = permissions.find(
       (value) => value.code === code_all_permissions.generate_report
     );
+    let emailNotif = permissions.find(
+      (value) => value.code === code_all_permissions.email_notif
+    );
 
     viewUsers ? setIsViewUsers(true) : setIsViewUsers(false);
     viewRoles ? setIsViewRoles(true) : setIsViewRoles(false);
     viewCategory ? setIsViewCategory(true) : setIsViewCategory(false);
     viewTicket ? setIsViewTicket(true) : setIsViewTicket(false);
     generateReport ? setIsGenerateReport(true) : setIsGenerateReport(false);
+    emailNotif ? setIsEmailNotif(true) : setIsEmailNotif(false);
 
     var pathName = props.location.pathname;
     const initMenu = () => {
@@ -114,9 +119,11 @@ const SidebarContent = (props) => {
                 <Link to={routes.role}>{props.t("Role")}</Link>
               </li>
             )}
-            <li>
-              <Link to={routes.email_notif}>{props.t("Email Notif")}</Link>
-            </li>
+            {isEmailNotif && (
+              <li>
+                <Link to={routes.email_notif}>{props.t("Email Notif")}</Link>
+              </li>
+            )}
           </ul>
         </li>
       );

@@ -119,13 +119,12 @@ const AddEmailNotif = (props) => {
   };
 
   useEffect(() => {
-    // let isAddEmailNotif = permissions.find(
-    //   (value) => value.code === code_all_permissions.add_email_notif
-    // );
-    // if (isAddEmailNotif) {
-    // } else {
-    //   history.push(routes.email_notif);
-    // }
+    let isAddEmailNotif = permissions.find(
+      (value) => value.code === code_all_permissions.add_email_notif
+    );
+    if (!isAddEmailNotif) {
+      history.push(routes.email_notif);
+    }
   }, []);
 
   return (

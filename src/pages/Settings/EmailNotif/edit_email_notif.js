@@ -128,14 +128,14 @@ const AddEmailNotif = (props) => {
   };
 
   useEffect(() => {
-    // let isAddEmailNotif = permissions.find(
-    //   (value) => value.code === code_all_permissions.add_email_notif
-    // );
-    // if (isAddEmailNotif) {
-    props.readDetailEmailNotif(id);
-    // } else {
-    //   history.push(routes.email_notif);
-    // }
+    let isEditEmailNotif = permissions.find(
+      (value) => value.code === code_all_permissions.edit_email_notif
+    );
+    if (isEditEmailNotif) {
+      props.readDetailEmailNotif(id);
+    } else {
+      history.push(routes.email_notif);
+    }
   }, []);
 
   return (
