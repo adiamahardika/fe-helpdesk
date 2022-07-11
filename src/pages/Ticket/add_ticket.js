@@ -174,7 +174,7 @@ const AddTicket = (props) => {
       setData({
         ...data,
         subCategory: parse.name !== "Lain-lain" ? parse.name : "",
-        priority: parse.priority,
+        prioritas: parse.priority,
       });
       setShowLainLain(parse.name === "Lain-lain" ? true : false);
     }

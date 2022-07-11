@@ -250,7 +250,7 @@ const EditTicket = (props) => {
               <AvForm>
                 <Row className="justify-content-center">
                   <Col md={8}>
-                    <Row>
+                    {/* <Row>
                       <Col md={8}>
                         <FormGroup className="select2-container">
                           <label className="control-label">Email</label>
@@ -271,7 +271,7 @@ const EditTicket = (props) => {
                           />
                         </FormGroup>
                       </Col>
-                    </Row>
+                    </Row> */}
                     <Row>
                       <Col md={4}>
                         <FormGroup className="select2-container">
