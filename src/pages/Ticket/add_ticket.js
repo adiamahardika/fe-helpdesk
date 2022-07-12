@@ -305,13 +305,13 @@ const AddTicket = (props) => {
   };
 
   useEffect(() => {
-    let addTicket = permissions.find(
-      (value) => value.code === code_all_permissions.add_ticket
+    let submitNewTicket = permissions.find(
+      (value) => value.code === code_all_permissions.submit_new_ticket
     );
     let assigningTicket = permissions.find(
       (value) => value.code === code_all_permissions.assigning_ticket
     );
-    if (addTicket) {
+    if (submitNewTicket) {
       let reqArea = {
         areaCode: area_code && area_code[0] !== "0" ? area_code : [],
         areaName: "",
