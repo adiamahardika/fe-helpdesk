@@ -7,7 +7,7 @@ import {
   Table,
   Col,
   Row,
-  Button,
+  FormGroup,
 } from "reactstrap";
 import { readUser, deleteUser } from "../../../store/pages/users/actions";
 import { readRole } from "../../../store/pages/role/actions";
@@ -28,6 +28,7 @@ require("dotenv").config();
 
 const Users = (props) => {
   const list_user = props.list_user;
+  const list_role = props.list_role;
   const message = props.message_user;
   const response_code = props.response_code_user;
   const total_pages_user = props.total_pages_user;
@@ -172,30 +173,45 @@ const Users = (props) => {
           <Card>
             <CardBody>
               <Row className="mb-3 d-flex align-items-end">
-                <Col md="2">
+                <Col md={2}>
                   <div className="form-group mb-0">
-                    <label>Show Data</label>
+                    <label className="control-label">Role</label>
                     <div>
                       <select
+                        name="role"
                         className="form-control"
-                        defaultValue={10}
-                        onChange={(event) => (
-                          setData({
-                            ...data,
-                            size: parseInt(event.target.value),
-                            pageNo: 0,
-                          }),
+                        defaultValue={0}
+                        onChange={(event) => {
                           props.readUser({
                             ...data,
-                            size: parseInt(event.target.value),
-                            pageNo: 0,
-                          })
-                        )}
+                            role: parseInt(event.target.value),
+                          });
+                          setData({
+                            ...data,
+                            role: parseInt(event.target.value),
+                          });
+                        }}
                       >
-                        <option value={10}>10</option>
-                        <option value={25}>25</option>
-                        <option value={50}>50</option>
-                        <option value={100}>100</option>
+                        <option value={0}>All</option>
+                        {list_role &&
+                          list_role.map((value, index) => (
+                            <option
+                              key={index}
+                              value={value && value.id}
+                              onChange={(event) => {
+                                props.readUser({
+                                  ...data,
+                                  role: parseInt(event.target.value),
+                                });
+                                setData({
+                                  ...data,
+                                  role: parseInt(event.target.value),
+                                });
+                              }}
+                            >
+                              {value.name}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -325,20 +341,55 @@ const Users = (props) => {
                 )}
               </div>
               <Row className="d-flex align-items-end">
-                <ReactPaginate
-                  previousLabel={"previous"}
-                  nextLabel={"next"}
-                  breakLabel={"..."}
-                  breakClassName={"break-me"}
-                  pageCount={total_pages_user}
-                  marginPagesDisplayed={1}
-                  pageRangeDisplayed={5}
-                  forcePage={active_page_user}
-                  onPageChange={handlePageClick}
-                  containerClassName={"pagination"}
-                  subContainerClassName={"pages pagination"}
-                  activeClassName={"active"}
-                />
+                <Col md="2">
+                  <div className="form-group mb-0">
+                    <label>Show Data</label>
+                    <div>
+                      <select
+                        className="form-control"
+                        defaultValue={10}
+                        onChange={(event) => (
+                          setData({
+                            ...data,
+                            size: parseInt(event.target.value),
+                            pageNo: 0,
+                          }),
+                          props.readUser({
+                            ...data,
+                            size: parseInt(event.target.value),
+                            pageNo: 0,
+                          })
+                        )}
+                      >
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                  </div>
+                </Col>
+                <Col
+                  className="justify-content-end"
+                  style={{ display: "grid" }}
+                >
+                  <ReactPaginate
+                    previousLabel={"previous"}
+                    nextLabel={"next"}
+                    breakLabel={"..."}
+                    breakClassName={"break-me"}
+                    pageCount={total_pages_user}
+                    marginPagesDisplayed={1}
+                    pageRangeDisplayed={5}
+                    forcePage={active_page_user}
+                    onPageChange={handlePageClick}
+                    containerClassName={"pagination"}
+                    subContainerClassName={"pages pagination"}
+                    activeClassName={"active"}
+                  />
+                </Col>
               </Row>
             </CardBody>
           </Card>
@@ -416,10 +467,10 @@ const mapStatetoProps = (state) => {
     total_pages_user,
     active_page_user,
   } = state.User;
-  const { option_role } = state.Role;
+  const { list_role } = state.Role;
   return {
     list_user,
-    option_role,
+    list_role,
     response_code_user,
     message_user,
     page_user,
