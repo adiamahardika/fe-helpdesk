@@ -38,7 +38,7 @@ import { postMethod, getMethod, putMethod, deleteMethod } from "../../method";
 import general_constant from "../../../helpers/general_constant.json";
 
 function* readUser({ payload: data }) {
-  const response = yield call(getMethod, data);
+  const response = yield call(postMethod, data);
   if (response.status.responseCode === general_constant.success_response_code) {
     yield put(readUserFulfilled(response));
   } else {

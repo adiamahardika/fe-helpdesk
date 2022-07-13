@@ -181,7 +181,7 @@ const EditTicket = (props) => {
         sort_by: "name",
         order_by: "asc",
       });
-      props.readUser({ size: 0, page_no: 0, search: "*" });
+      props.readUser({ size: 0, pageNo: 0, search: "", role: 2 });
       props.readDetailTicket(ticketId);
       props.readSubCategory();
 

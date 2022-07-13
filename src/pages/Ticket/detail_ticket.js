@@ -14,9 +14,6 @@ import {
   updateTicket,
   replyTicket,
 } from "../../store/pages/ticket/actions";
-import { readCategory } from "../../store/pages/category/actions";
-import { readTicketStatus } from "../../store/pages/ticketStatus/actions";
-import { readUser } from "../../store/pages/users/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { parseFullDate } from "../../helpers/index";
@@ -39,9 +36,6 @@ require("dotenv").config();
 const DetailTicket = (props) => {
   const detail_ticket = props.detail_ticket;
   const list_reply_ticket = props.list_reply_ticket;
-  const list_category = props.list_category;
-  const list_user = props.list_user;
-  const list_ticket_status = props.list_ticket_status;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const username = sessionStorage.getItem("username");
@@ -368,14 +362,6 @@ const DetailTicket = (props) => {
     );
     if (viewDetailTicket) {
       props.readDetailTicket(ticketId);
-      props.readCategory({
-        size: 0,
-        page_no: 0,
-        sort_by: "name",
-        order_by: "asc",
-      });
-      props.readUser({ size: 0, page_no: 0, search: "*" });
-      props.readTicketStatus();
       setReplyData({
         ticketCode: ticketId,
         usernamePengirim: username,
@@ -1151,10 +1137,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       readDetailTicket,
       updateTicket,
-      readCategory,
-      readUser,
       replyTicket,
-      readTicketStatus,
     },
     dispatch
   );

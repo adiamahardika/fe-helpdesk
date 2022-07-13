@@ -58,7 +58,8 @@ export const createUserFulfilled = (payload) => {
 
 export const readUser = (value) => {
   let data = {
-    url: `/v1/user/get/${value.search}/${value.size}/${value.page_no}`,
+    url: `/v1/user/get`,
+    body: value,
   };
   return {
     type: READ_USER,

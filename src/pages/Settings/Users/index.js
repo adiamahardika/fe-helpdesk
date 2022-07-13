@@ -47,7 +47,12 @@ const Users = (props) => {
 
   const [modalDelete, setModalDelete] = useState(false);
 
-  const [data, setData] = useState({ size: 10, page_no: 0, search: "*" });
+  const [data, setData] = useState({
+    size: 10,
+    pageNo: 0,
+    search: "",
+    role: 0,
+  });
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
 
@@ -91,8 +96,8 @@ const Users = (props) => {
     return value;
   };
   const handlePageClick = (value) => {
-    props.readUser({ ...data, page_no: value.selected });
-    setData({ ...data, page_no: value.selected });
+    props.readUser({ ...data, pageNo: value.selected });
+    setData({ ...data, pageNo: value.selected });
   };
   const EditButton = (value) => {
     let button = null;
@@ -178,12 +183,12 @@ const Users = (props) => {
                           setData({
                             ...data,
                             size: parseInt(event.target.value),
-                            page_no: 0,
+                            pageNo: 0,
                           }),
                           props.readUser({
                             ...data,
                             size: parseInt(event.target.value),
-                            page_no: 0,
+                            pageNo: 0,
                           })
                         )}
                       >
@@ -195,9 +200,7 @@ const Users = (props) => {
                     </div>
                   </div>
                 </Col>
-                <Col
-                  className="d-flex align-items-end justify-content-end"
-                >
+                <Col className="d-flex align-items-end justify-content-end">
                   <div className="form-group mb-0">
                     <div>
                       <input
@@ -206,7 +209,7 @@ const Users = (props) => {
                         placeholder="Search..."
                         onChange={(event) =>
                           event.target.value === ""
-                            ? (props.readUser({ ...data, search: "*" }),
+                            ? (props.readUser({ ...data, search: "" }),
                               setData({
                                 ...data,
                                 search: event.target.value,

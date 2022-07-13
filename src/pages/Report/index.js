@@ -230,7 +230,7 @@ const Report = (props) => {
         order_by: "asc",
         is_check_all: true,
       });
-      props.readUser({ size: 0, page_no: 0, search: "*" });
+      props.readUser({ size: 0, pageNo: 0, search: "", role: 2 });
       props.readUserMultipleSelect();
       setData(item);
       setToday(today);
@@ -523,7 +523,12 @@ const Report = (props) => {
                           </select>
                         </div> */}
                         <FormGroup className="mb-0 templating-select select2-container">
-                          <label className="control-label">Created by</label>
+                          <label
+                            className="control-label"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            Created by
+                          </label>
                           <Select
                             style={{ height: "max-content" }}
                             placeholder="All"
