@@ -54,6 +54,7 @@ const EditTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
+  console.log(data);
   const [optionColor, setOptionColor] = useState(null);
   const [statusColor, setStatusColor] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
@@ -75,14 +76,6 @@ const EditTicket = (props) => {
       });
       setShowLainLain(parse.name === "Lain-lain" ? true : false);
     }
-    setDirty();
-  };
-  const onValidateEmail = (email) => {
-    setData({
-      ...data,
-      email: email,
-    });
-    setValidEmail(emailValidation(email));
     setDirty();
   };
   const onChangeStatus = async (value) => {
@@ -107,9 +100,8 @@ const EditTicket = (props) => {
   const ButtonSubmitUpdate = () => {
     if (
       data &&
-      Object.keys(data).length >= 8 &&
-      Object.values(data).every((value) => value !== "") &&
-      validEmail
+      Object.keys(data).length >= 7 &&
+      Object.values(data).every((value) => value !== "")
     ) {
       return (
         <button
@@ -227,15 +219,14 @@ const EditTicket = (props) => {
         ticketCode: ticketId,
         category: detail_ticket.category,
         subCategory: detail_ticket.subCategory,
-        email: detail_ticket.email,
         assignedTo: detail_ticket.assignedTo,
         usernamePembalas: detail_ticket.usernamePembalas,
       });
-      findStatus > 0 &&
+      findStatus >= 0 &&
         setStatusColor(general_constant.status[findStatus].color);
-      findPriority > 0 &&
+      findPriority >= 0 &&
         setOptionColor(general_constant.priority[findPriority].color);
-      findCategory > 0 && setSelectedCategory(option_category[findCategory]);
+      findCategory >= 0 && setSelectedCategory(option_category[findCategory]);
       findSubCategory < 0 && setShowLainLain(true);
     }
   }, [detail_ticket, list_sub_category, list_category]);
