@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Card,
-  CardBody,
-  Modal,
-  Table,
-  Col,
-  Row,
-  FormGroup,
-} from "reactstrap";
+import { Container, Card, CardBody, Table, Col, Row } from "reactstrap";
 import { readUser, deleteUser } from "../../../store/pages/users/actions";
 import { readRole } from "../../../store/pages/role/actions";
 import { connect } from "react-redux";
@@ -45,8 +36,6 @@ const Users = (props) => {
   const [deleteUser, setDeleteUser] = useState(false);
   const [addUser, setAddUser] = useState(false);
   const [editUser, setEditUser] = useState(false);
-
-  const [modalDelete, setModalDelete] = useState(false);
 
   const [data, setData] = useState({
     size: 10,
@@ -361,8 +350,6 @@ const Users = (props) => {
                           })
                         )}
                       >
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
                         <option value={10}>10</option>
                         <option value={25}>25</option>
                         <option value={50}>50</option>
@@ -393,63 +380,6 @@ const Users = (props) => {
               </Row>
             </CardBody>
           </Card>
-
-          {/* Modal Delete */}
-          <Modal
-            isOpen={modalDelete}
-            toggle={() => {
-              setModalDelete(!modalDelete);
-              removeBodyCss();
-              setSelectedData(null);
-            }}
-          >
-            <div className="modal-header">
-              <h5 className="modal-title mt-0" id="myModalLabel">
-                Delete User
-              </h5>
-              <button
-                type="button"
-                onClick={() => {
-                  setModalDelete(false);
-                  setSelectedData(null);
-                }}
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              Are you sure want to delete this user?
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                onClick={() => {
-                  setModalDelete(!modalDelete);
-                  removeBodyCss();
-                  setSelectedData(null);
-                }}
-                className="btn btn-secondary waves-effect"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger waves-effect waves-light"
-                onClick={() => {
-                  setIsShowSweetAlert(true);
-                  props.deleteUser({ ...data, id: selectedData.id });
-                  setModalDelete(!modalDelete);
-                  removeBodyCss();
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </Modal>
           <ShowSweetAlert />
         </Container>
       </div>
