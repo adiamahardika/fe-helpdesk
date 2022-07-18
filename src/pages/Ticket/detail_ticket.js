@@ -401,9 +401,7 @@ const DetailTicket = (props) => {
                           style={{ fontSize: "2rem" }}
                         >
                           {detail_ticket &&
-                            detail_ticket.usernamePembuat
-                              .charAt(0)
-                              .toUpperCase()}
+                            detail_ticket.userPembuat.charAt(0).toUpperCase()}
                         </span>
                       </div>
                     </Col>
@@ -414,7 +412,7 @@ const DetailTicket = (props) => {
                       style={{ flexFlow: "column", overflowWrap: "anywhere" }}
                     >
                       <strong>
-                        {detail_ticket && detail_ticket.usernamePembuat}
+                        {detail_ticket && detail_ticket.userPembuat}
                       </strong>
                       <strong>{detail_ticket && detail_ticket.email}</strong>
                     </Col>
@@ -540,7 +538,11 @@ const DetailTicket = (props) => {
                       <Row>
                         <Col>
                           Assign To:
-                          <h6>{detail_ticket && detail_ticket.assignedTo}</h6>
+                          <h6>
+                            {detail_ticket && detail_ticket.assignee.length > 0
+                              ? detail_ticket.assignee
+                              : "Unassigned"}
+                          </h6>
                         </Col>
                       </Row>
                     </Col>

@@ -904,14 +904,16 @@ const Ticket = (props) => {
                         </tr>
                         <tr>
                           <th>Owner</th>
-                          <td>
-                            {selectedData && selectedData.usernamePembuat}
-                          </td>
+                          <td>{selectedData && selectedData.userPembuat}</td>
                           <td></td>
                         </tr>
                         <tr>
                           <th>Assigned To</th>
-                          <td>{selectedData && selectedData.assignedTo}</td>
+                          <td>
+                            {selectedData && selectedData.assignee.length > 0
+                              ? selectedData.assignee
+                              : "Unassigned"}
+                          </td>
                           <td></td>
                         </tr>
                         <tr>
