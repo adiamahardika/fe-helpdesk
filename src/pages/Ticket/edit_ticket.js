@@ -49,12 +49,12 @@ const EditTicket = (props) => {
     ).toString(CryptoJS.enc.Utf8)
   );
   const history = useHistory();
+  const username = sessionStorage.getItem("username");
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
-  console.log(data);
   const [optionColor, setOptionColor] = useState(null);
   const [statusColor, setStatusColor] = useState(null);
   const [validEmail, setValidEmail] = useState(true);
@@ -220,7 +220,7 @@ const EditTicket = (props) => {
         category: detail_ticket.category,
         subCategory: detail_ticket.subCategory,
         assignedTo: detail_ticket.assignedTo,
-        usernamePembalas: detail_ticket.usernamePembalas,
+        updatedBy: username,
       });
       findStatus >= 0 &&
         setStatusColor(general_constant.status[findStatus].color);
