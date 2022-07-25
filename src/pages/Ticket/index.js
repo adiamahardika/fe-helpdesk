@@ -39,6 +39,7 @@ require("dotenv").config();
 
 const Ticket = (props) => {
   const list_ticket = props.list_ticket;
+  console.log(list_ticket);
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
   const message = props.message_ticket;
@@ -668,6 +669,7 @@ const Ticket = (props) => {
                         <th>Status</th>
                         <th>Priority</th>
                         <th>Category</th>
+                        <th>Assigned To</th>
                         <th>Submitted</th>
                         <th>Actions</th>
                       </tr>
@@ -709,6 +711,7 @@ const Ticket = (props) => {
                                   {value.categoryName}
                                 </span>
                               </td>
+                              <td>{value.assignee}</td>
                               <td>
                                 <span
                                   style={{
