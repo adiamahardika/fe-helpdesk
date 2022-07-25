@@ -617,7 +617,7 @@ const Report = (props) => {
                           <ExcelColumn label="Email" value="email" />
                           <ExcelColumn label="Owner" value="usernamePembuat" />
                           <ExcelColumn label="Submitted" value="tglDibuat" />
-                          <ExcelColumn label="Time Worked" value="totalWaktu" />
+                          <ExcelColumn label="Assigned To" value="assignee" />
                           <ExcelColumn label="Updated" value="tglDiperbarui" />
                           <ExcelColumn
                             label="Last Replier"
