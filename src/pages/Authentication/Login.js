@@ -5,7 +5,7 @@ import { withRouter, useHistory } from "react-router-dom";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { readCaptcha } from "../../store/auth/captcha/actions";
 import { bindActionCreators } from "redux";
-import login2 from "../../assets/images/login-image.svg";
+import login2 from "../../assets/images/login-image-2.svg";
 import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import CryptoJS from "crypto-js";

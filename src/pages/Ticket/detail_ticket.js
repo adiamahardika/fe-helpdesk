@@ -55,10 +55,12 @@ const DetailTicket = (props) => {
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
 
-  const [checkedSubmitAs, setCheckedSubmitAs] = useState(null);
+  const [statusColor, setStatusColor] = useState(null);
   const [isEditTicket, setIsEditTicket] = useState(false);
+  const [isStartTicket, setIsStartTicket] = useState(false);
   const [isCloseTicket, setIsCloseTicket] = useState(false);
   const [isReplyTicket, setIsReplyTicket] = useState(false);
+  const [isChangeStatus, setIsChangeStatus] = useState(false);
 
   const [selectedFiles1, setSelectedFiles1] = useState(null);
   const [selectedFiles2, setSelectedFiles2] = useState(null);
@@ -140,22 +142,43 @@ const DetailTicket = (props) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   };
-  const onChangeSubmitAs = (value, index) => {
-    let array = [];
-    checkedSubmitAs.map((newValue, newIndex) => {
-      if (newIndex === index) {
-        return array.push(true);
-      } else {
-        return array.push(false);
-      }
+  const onChangeStatus = async (value) => {
+    if (value) {
+      let findIndexStatus = general_constant.status.findIndex(
+        (item) => item.name === value
+      );
+      let selected = general_constant.status[findIndexStatus];
+      setStatusColor(selected.color);
+      setReplyData({
+        ...replyData,
+        status: value,
+        replyType: selected.replyType,
+      });
+    }
+    setDirty();
+  };
+  const showChangeStatus = async (value) => {
+    setIsChangeStatus(value);
+
+    let status;
+    let reply_type;
+    if (value === false) {
+      status = detail_ticket.status;
+      reply_type = "";
+    } else {
+      status = "Finish";
+      reply_type = "close";
+      setStatusColor("#34c38f");
+    }
+    setReplyData({
+      ...replyData,
+      status: status,
+      replyType: reply_type,
     });
-    setCheckedSubmitAs(array);
-    setReplyData({ ...replyData, status: value });
   };
 
   const onSubmitReply = async (event) => {
     event.preventDefault();
-    let ticket_status = isCloseTicket ? replyData.status : detail_ticket.status;
     let reply_request = new FormData();
     reply_request.append("ticketCode", ticketId);
     reply_request.append("isi", replyData.isi);
@@ -164,15 +187,20 @@ const DetailTicket = (props) => {
       reply_request.append("attachment1", replyData.attachment1);
     selectedFiles2 &&
       reply_request.append("attachment2", replyData.attachment2);
-    reply_request.append("status", ticket_status);
+    reply_request.append("status", replyData.status);
     reply_request.append("emailNotification", detail_ticket.emailNotification);
+    reply_request.append("replyType", replyData.replyType);
+    reply_request.append("updatedBy", replyData.updatedBy);
     props.replyTicket(reply_request, ticketId);
-    setReplyData({
-      ticketCode: ticketId,
-      usernamePengirim: username,
-      status: "Process",
-      isi: "",
-    });
+    // setReplyData({
+    //   ticketCode: ticketId,
+    //   usernamePengirim: username,
+    //   status: "Process",
+    //   isi: "",
+    //   updatedBy: username,
+    //   replyType: "start",
+    // });
+    // setStatusColor("#34c38f");
     setSelectedFiles1(null);
     setSelectedFiles2(null);
     setPristine();
@@ -357,25 +385,51 @@ const DetailTicket = (props) => {
     let closeTicket = permissions.find(
       (value) => value.code === code_all_permissions.close_ticket
     );
+    let startTicket = permissions.find(
+      (value) => value.code === code_all_permissions.start_ticket
+    );
     let replyTicket = permissions.find(
       (value) => value.code === code_all_permissions.reply_ticket
     );
     if (viewDetailTicket) {
       props.readDetailTicket(ticketId);
-      setReplyData({
-        ticketCode: ticketId,
-        usernamePengirim: username,
-        status: "Process",
-        isi: "",
-      });
-      setCheckedSubmitAs([false, true, false, false]);
+
       editTicket && setIsEditTicket(true);
+      startTicket && setIsStartTicket(true);
       closeTicket && setIsCloseTicket(true);
       replyTicket && setIsReplyTicket(true);
     } else {
       history.push(routes.ticket);
     }
   }, []);
+  useEffect(() => {
+    if (detail_ticket === null) {
+      props.readDetailTicket(ticketId);
+    } else {
+      let findStatus = general_constant.status.findIndex(
+        (value) => value.name === detail_ticket.status
+      );
+      let selected = general_constant.status[findStatus];
+
+      findStatus >= 0 &&
+        setStatusColor(selected.order > 2 ? selected.color : "#34c38f");
+
+      let reply_type = "";
+      let ticket_status = detail_ticket.status;
+      if (isStartTicket && detail_ticket.status === "New") {
+        reply_type = "start";
+        ticket_status = "Process";
+      }
+      setReplyData({
+        ticketCode: ticketId,
+        usernamePengirim: username,
+        status: ticket_status,
+        isi: "",
+        updatedBy: username,
+        replyType: reply_type,
+      });
+    }
+  }, [detail_ticket]);
   return (
     <React.Fragment>
       <div className="page-content">
@@ -937,67 +991,78 @@ const DetailTicket = (props) => {
                               </FormGroup>
                             </Col>
                           </Row>
-                          {isCloseTicket && (
-                            <Row className="mt-2 justify-content-center">
-                              <Col>
-                                <FormGroup className="select2-container">
-                                  <label className="control-label">
-                                    Submit as
-                                  </label>
-                                  <div
-                                    style={{
-                                      display: "grid",
-                                      gridTemplateColumns: "repeat(3, 1fr)",
-                                      columnGap: "1rem",
-                                    }}
-                                  >
-                                    {general_constant.status.map(
-                                      (value, index) =>
-                                        value.name !== "New" && (
-                                          <ul
-                                            className="sub-menu"
-                                            aria-expanded="true"
-                                            style={{ listStyle: "none" }}
-                                            key={index}
+                          {isCloseTicket &&
+                            detail_ticket &&
+                            detail_ticket.status !== "New" &&
+                            detail_ticket.status !== "Finish" && (
+                              <>
+                                <Row className="mt-2 justify-content-center">
+                                  <Col>
+                                    <FormGroup>
+                                      <div className="custom-control custom-checkbox">
+                                        <input
+                                          type="checkbox"
+                                          className="custom-control-input"
+                                          id="CustomCheck1"
+                                          onChange={() => false}
+                                          checked={isChangeStatus}
+                                        />
+                                        <label
+                                          className="custom-control-label"
+                                          onClick={() => {
+                                            showChangeStatus(!isChangeStatus);
+                                          }}
+                                        >
+                                          Change Status
+                                        </label>
+                                      </div>
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
+                                {isChangeStatus && (
+                                  <Row>
+                                    <Col md={4}>
+                                      <FormGroup className="select2-container">
+                                        <div>
+                                          <select
+                                            name="category"
+                                            className="form-control"
+                                            onChange={(event) =>
+                                              onChangeStatus(event.target.value)
+                                            }
+                                            style={{
+                                              color: statusColor,
+                                              fontWeight: "bold",
+                                            }}
                                           >
-                                            <li>
-                                              <div className="has-arrow">
-                                                <div className="custom-control custom-checkbox mb-3">
-                                                  <input
-                                                    type="checkbox"
-                                                    className="custom-control-input"
-                                                    id="CustomCheck1"
-                                                    onChange={() => false}
-                                                    checked={
-                                                      checkedSubmitAs &&
-                                                      checkedSubmitAs[index]
-                                                    }
-                                                  />
-                                                  <label
-                                                    className="custom-control-label"
-                                                    style={{
-                                                      color: value.color,
-                                                    }}
-                                                    onClick={() =>
-                                                      onChangeSubmitAs(
-                                                        value.name,
-                                                        index
+                                            {general_constant.status.map(
+                                              (value, index) =>
+                                                value.order > 2 && (
+                                                  <option
+                                                    key={index}
+                                                    value={value && value.name}
+                                                    onChange={(event) =>
+                                                      onChangeStatus(
+                                                        event.target.value
                                                       )
                                                     }
+                                                    style={{
+                                                      color: value.color,
+                                                      fontWeight: "bold",
+                                                    }}
                                                   >
-                                                    <span>{value.name}</span>
-                                                  </label>
-                                                </div>
-                                              </div>
-                                            </li>
-                                          </ul>
-                                        )
-                                    )}
-                                  </div>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                          )}
+                                                    {value.name}
+                                                  </option>
+                                                )
+                                            )}
+                                          </select>
+                                        </div>
+                                      </FormGroup>
+                                    </Col>
+                                  </Row>
+                                )}
+                              </>
+                            )}
                         </Col>
                       </Row>
                     </AvForm>

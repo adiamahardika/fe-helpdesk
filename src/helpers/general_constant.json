@@ -25,10 +25,10 @@
     }
   ],
   "status": [
-    { "name": "New", "color": "#f46a6a" },
-    { "name": "Process", "color": "#556ee6" },
-    { "name": "Finish", "color": "#34c38f" },
-    { "name": "On Hold", "color": "#343a40" }
+    { "order": 1, "name": "New", "color": "#f46a6a", "replyType": "" },
+    { "order": 2, "name": "Process", "color": "#556ee6", "replyType": "start" },
+    { "order": 3, "name": "Finish", "color": "#34c38f", "replyType": "close" },
+    { "order": 4, "name": "On Hold", "color": "#343a40", "replyType": "" }
   ],
   "file_extension": [
     {

@@ -39,7 +39,6 @@ require("dotenv").config();
 
 const Ticket = (props) => {
   const list_ticket = props.list_ticket;
-  console.log(list_ticket);
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
   const message = props.message_ticket;
@@ -711,7 +710,11 @@ const Ticket = (props) => {
                                   {value.categoryName}
                                 </span>
                               </td>
-                              <td>{value.assignee}</td>
+                              <td>
+                                {value && value.assignee.length > 0
+                                  ? value.assignee
+                                  : "Unassigned"}
+                              </td>
                               <td>
                                 <span
                                   style={{
