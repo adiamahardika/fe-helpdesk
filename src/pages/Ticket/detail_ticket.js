@@ -1230,7 +1230,7 @@ const DetailTicket = (props) => {
                 className="btn btn-secondary waves-effect"
                 data-dismiss="modal"
               >
-                Close
+                Cancel
               </button>
               <button
                 type="button"
@@ -1289,7 +1289,7 @@ const DetailTicket = (props) => {
                 className="btn btn-secondary waves-effect"
                 data-dismiss="modal"
               >
-                Close
+                Cancel
               </button>
               <button
                 type="button"
