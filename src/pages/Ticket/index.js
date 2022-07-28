@@ -14,6 +14,8 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Label,
+  FormGroup,
 } from "reactstrap";
 import { readTicket } from "../../store/pages/ticket/actions";
 import {
@@ -26,6 +28,10 @@ import { bindActionCreators } from "redux";
 import { getShortDate, parseFullDate } from "../../helpers/index";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import { AvForm } from "availity-reactstrap-validation";
+import { readArea } from "../../store/pages/area/actions";
+import { readRegional } from "../../store/pages/regional/actions";
+import { readGrapari } from "../../store/pages/grapari/actions";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -34,6 +40,7 @@ import general_constant from "../../helpers/general_constant.json";
 import routes from "../../helpers/routes.json";
 import classnames from "classnames";
 import CryptoJS from "crypto-js";
+import Select from "react-select";
 import "../../assets/css/pagination.css";
 require("dotenv").config();
 
@@ -45,13 +52,18 @@ const Ticket = (props) => {
   const response_code = props.response_code_ticket;
   const total_pages_ticket = props.total_pages_ticket;
   const active_page_ticket = props.active_page_ticket;
+  const option_area = props.option_area;
+  const option_regional = props.option_regional;
+  const option_grapari = props.option_grapari;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
-
+  const area_code = JSON.parse(sessionStorage.getItem("areaCode"));
+  const regional = JSON.parse(sessionStorage.getItem("regional"));
+  const grapari_id = JSON.parse(sessionStorage.getItem("grapariId"));
   const username = sessionStorage.getItem("username");
   const history = useHistory();
 
@@ -65,10 +77,14 @@ const Ticket = (props) => {
   const [isViewAssignedToMeTicket, setIsViewAssignedToMeTicket] =
     useState(false);
   const [activeTicketSideNav, setActiveTicketSideNav] = useState("");
-
   const [data, setData] = useState(null);
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
+  const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedRegional, setSelectedRegional] = useState(null);
+  const [requestRegional, setRequestRegional] = useState(null);
+  const [selectedGrapari, setSelectedGrapari] = useState(null);
+  const [requestGrapari, setRequestGrapari] = useState(null);
 
   const removeBodyCss = () => {
     document.body.classList.add("no_padding");
@@ -102,6 +118,63 @@ const Ticket = (props) => {
 
     props.readTicket({ ...data, category: array });
     setData({ ...data, category: array });
+  };
+  const handleArea = async (event) => {
+    let area_code = [];
+    await event.map((item) => area_code.push(item.value));
+
+    setSelectedArea(event);
+    setSelectedRegional(null);
+    setSelectedGrapari(null);
+    setData({ ...data, areaCode: area_code });
+
+    props.readRegional({
+      ...requestRegional,
+      areaCode: area_code,
+    });
+    props.readGrapari({
+      ...requestGrapari,
+      areaCode: area_code,
+    });
+    props.readTicket({
+      ...data,
+      areaCode: area_code,
+    });
+    delete data.areaCode;
+    delete data.regional;
+    delete data.grapariId;
+  };
+  const handleRegional = async (event) => {
+    let regional = [];
+    await event.map((item) => regional.push(item.value));
+
+    setSelectedRegional(event);
+    setSelectedGrapari(null);
+    setData({ ...data, regional: regional });
+
+    props.readGrapari({
+      ...requestGrapari,
+      regional: regional,
+    });
+    props.readTicket({
+      ...data,
+      regional: regional,
+    });
+    delete data.regional;
+    delete data.grapariId;
+  };
+  const handleGrapari = async (event) => {
+    let grapari_id = [];
+    await event.map((item) => grapari_id.push(item.value));
+
+    setSelectedGrapari(event);
+    setData({ ...data, grapariId: grapari_id });
+
+    props.readTicket({
+      ...data,
+      grapariId: grapari_id,
+    });
+    delete data.grapariId;
   };
 
   const ShowSweetAlert = () => {
@@ -228,12 +301,39 @@ const Ticket = (props) => {
       (value) => value.code === code_all_permissions.view_assigned_to_me_ticket
     );
     if (viewTicket) {
+      let reqArea = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        areaName: "",
+        status: "A",
+      };
+      props.readArea(reqArea);
+
+      let reqRegional = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        status: "A",
+      };
+      props.readRegional(reqRegional);
+      setRequestRegional(reqRegional);
+
+      let reqGrapari = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        grapariId: grapari_id && grapari_id[0] !== "0" ? grapari_id : [],
+        status: "Active",
+      };
+      props.readGrapari(reqGrapari);
+      setRequestGrapari(reqGrapari);
+
       let start = new Date().setDate(new Date().getDate() - 30);
 
       let item = {
         assignedTo: "",
         usernamePembuat: "",
         category: [],
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        grapariId: grapari_id && grapari_id[0] !== "0" ? grapari_id : [],
         pageNo: 0,
         pageSize: 10,
         priority: "",
@@ -421,9 +521,9 @@ const Ticket = (props) => {
             </Col>
             <Col md={9}>
               <Card className="p-3">
-                <Row className="mb-3 d-flex align-items-end">
+                <Row className="d-flex align-items-end">
                   <Col>
-                    <Row className="d-flex align-items-end">
+                    <Row className="mb-2 d-flex align-items-end">
                       <Col
                         md={6}
                         style={{
@@ -610,6 +710,61 @@ const Ticket = (props) => {
                         </div>
                       </Col>
                     </Row>
+                    <AvForm>
+                      <Row>
+                        {area_code && (
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <Label>Area</Label>
+                              <Select
+                                value={selectedArea}
+                                placeholder="All"
+                                onChange={(event) => {
+                                  handleArea(event);
+                                }}
+                                options={option_area}
+                                classNamePrefix="select2-selection"
+                                isMulti={true}
+                              />
+                            </FormGroup>
+                          </Col>
+                        )}
+                        {regional && (
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <Label>Regional</Label>
+                              <Select
+                                value={selectedRegional}
+                                placeholder="All"
+                                onChange={(event) => {
+                                  handleRegional(event);
+                                }}
+                                options={option_regional}
+                                classNamePrefix="select2-selection"
+                                isMulti={true}
+                              />
+                            </FormGroup>
+                          </Col>
+                        )}
+                        {grapari_id && (
+                          <Col>
+                            <FormGroup className="select2-container">
+                              <Label>Grapari</Label>
+                              <Select
+                                value={selectedGrapari}
+                                placeholder="All"
+                                onChange={(event) => {
+                                  handleGrapari(event);
+                                }}
+                                options={option_grapari}
+                                classNamePrefix="select2-selection"
+                                isMulti={true}
+                              />
+                            </FormGroup>
+                          </Col>
+                        )}
+                      </Row>
+                    </AvForm>
                   </Col>
                 </Row>
                 <Nav tabs className="nav-tabs-custom nav-justified">
@@ -989,10 +1144,16 @@ const mapStatetoProps = (state) => {
     active_page_ticket,
   } = state.Ticket;
   const { list_category, list_checked_category } = state.Category;
+  const { option_area } = state.Area;
+  const { option_regional } = state.Regional;
+  const { option_grapari } = state.Grapari;
   return {
     list_ticket,
     list_category,
     list_checked_category,
+    option_area,
+    option_regional,
+    option_grapari,
     response_code_ticket,
     message_ticket,
     page_ticket,
@@ -1009,6 +1170,9 @@ const mapDispatchToProps = (dispatch) =>
       readCategory,
       checkCategory,
       uncheckCategory,
+      readArea,
+      readRegional,
+      readGrapari,
     },
     dispatch
   );
