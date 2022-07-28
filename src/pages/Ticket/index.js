@@ -126,7 +126,7 @@ const Ticket = (props) => {
     setSelectedArea(event);
     setSelectedRegional(null);
     setSelectedGrapari(null);
-    setData({ ...data, areaCode: area_code });
+    setData({ ...data, areaCode: area_code, regional: [], grapariId: [] });
 
     props.readRegional({
       ...requestRegional,
@@ -139,6 +139,8 @@ const Ticket = (props) => {
     props.readTicket({
       ...data,
       areaCode: area_code,
+      regional: [],
+      grapariId: [],
     });
     delete data.areaCode;
     delete data.regional;
@@ -150,7 +152,7 @@ const Ticket = (props) => {
 
     setSelectedRegional(event);
     setSelectedGrapari(null);
-    setData({ ...data, regional: regional });
+    setData({ ...data, regional: regional, grapariId: [] });
 
     props.readGrapari({
       ...requestGrapari,
@@ -159,6 +161,7 @@ const Ticket = (props) => {
     props.readTicket({
       ...data,
       regional: regional,
+      grapariId: [],
     });
     delete data.regional;
     delete data.grapariId;
