@@ -7,6 +7,7 @@ import {
   UPDATE_TICKET,
   REPLY_TICKET,
   START_TICKET,
+  CLOSE_TICKET,
 } from "./actionTypes";
 import {
   readTicketReject,
@@ -21,6 +22,8 @@ import {
   replyTicketFulfilled,
   startTicketReject,
   startTicketFulfilled,
+  closeTicketReject,
+  closeTicketFulfilled,
 } from "./actions";
 import {
   getMethod,
@@ -81,6 +84,15 @@ function* startTicket({ payload: data }) {
     yield put(startTicketReject(response));
   }
 }
+function* closeTicket({ payload: data }) {
+  const response = yield call(putMethod, data);
+  if (response.status.responseCode === general_constant.success_response_code) {
+    const detailResponse = yield call(getMethod, { url: data.detail_url });
+    yield put(closeTicketFulfilled(detailResponse));
+  } else {
+    yield put(closeTicketReject(response));
+  }
+}
 
 export function* watchReadTicket() {
   yield takeLatest(READ_TICKET, readTicket);
@@ -100,6 +112,9 @@ export function* watchReplyTicket() {
 export function* watchStartTicket() {
   yield takeLatest(START_TICKET, startTicket);
 }
+export function* watchCloseTicket() {
+  yield takeLatest(CLOSE_TICKET, closeTicket);
+}
 
 function* TicketSaga() {
   yield all([
@@ -109,6 +124,7 @@ function* TicketSaga() {
     fork(watchUpdateTicket),
     fork(watchReplyTicket),
     fork(watchStartTicket),
+    fork(watchCloseTicket),
   ]);
 }
 

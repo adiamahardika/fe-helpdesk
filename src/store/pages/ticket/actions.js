@@ -17,6 +17,9 @@ import {
   START_TICKET,
   START_TICKET_REJECT,
   START_TICKET_FULFILLED,
+  CLOSE_TICKET,
+  CLOSE_TICKET_REJECT,
+  CLOSE_TICKET_FULFILLED,
 } from "./actionTypes";
 
 export const readTicket = (value) => {
@@ -167,6 +170,32 @@ export const startTicketReject = (payload) => {
 export const startTicketFulfilled = (data) => {
   return {
     type: START_TICKET_FULFILLED,
+    payload: data,
+  };
+};
+
+export const closeTicket = (value, ticket_code) => {
+  const data = {
+    body: value,
+    url: `/v1/ticket/close`,
+    detail_url: `/v1/ticket/get-detail/${ticket_code}`,
+  };
+  return {
+    type: CLOSE_TICKET,
+    payload: data,
+  };
+};
+
+export const closeTicketReject = (payload) => {
+  return {
+    type: CLOSE_TICKET_REJECT,
+    payload: payload,
+  };
+};
+
+export const closeTicketFulfilled = (data) => {
+  return {
+    type: CLOSE_TICKET_FULFILLED,
     payload: data,
   };
 };

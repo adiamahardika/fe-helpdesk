@@ -14,6 +14,7 @@ import {
   updateTicket,
   replyTicket,
   startTicket,
+  closeTicket,
 } from "../../store/pages/ticket/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -57,6 +58,7 @@ const DetailTicket = (props) => {
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
   const [modalStart, setModalStart] = useState(false);
+  const [modalClose, setModalClose] = useState(false);
 
   const [statusColor, setStatusColor] = useState(null);
   const [isEditTicket, setIsEditTicket] = useState(false);
@@ -247,6 +249,7 @@ const DetailTicket = (props) => {
             onConfirm={() => {
               setIsShowSweetAlert(false);
               setModalStart(false);
+              setModalClose(false);
               history.push(routes.detail_ticket + "?ticketId=" + ticketId);
             }}
           >
@@ -532,6 +535,19 @@ const DetailTicket = (props) => {
                           >
                             <i className="bx bx-play font-size-16 align-middle mr-1"></i>
                             Start
+                          </button>
+                        )}
+                      {isCloseTicket &&
+                        detail_ticket &&
+                        detail_ticket.status !== "New" &&
+                        detail_ticket.status !== "Finish" && (
+                          <button
+                            type="button"
+                            className="btn btn-success waves-effect waves-light mr-2 d-flex align-items-center"
+                            onClick={() => setModalClose(true)}
+                          >
+                            <i className="bx bx-stop font-size-16 align-middle mr-1"></i>
+                            Close
                           </button>
                         )}
                       {isEditTicket && (
@@ -1177,6 +1193,7 @@ const DetailTicket = (props) => {
             </div>
           </Modal>
 
+          {/* Modal Start */}
           <Modal
             isOpen={modalStart}
             toggle={() => {
@@ -1201,7 +1218,7 @@ const DetailTicket = (props) => {
               </button>
             </div>
             <div className="modal-body">
-              Are you sure want to start this start?
+              Are you sure want to start this ticket?
             </div>
             <div className="modal-footer">
               <button
@@ -1231,6 +1248,65 @@ const DetailTicket = (props) => {
                 }}
               >
                 Start
+              </button>
+            </div>
+          </Modal>
+
+          {/* Modal Close */}
+          <Modal
+            isOpen={modalClose}
+            toggle={() => {
+              setModalClose(!modalClose);
+              removeBodyCss();
+            }}
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Close Ticket
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalClose(false);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Are you sure want to close this ticket?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalClose(!modalClose);
+                  removeBodyCss();
+                }}
+                className="btn btn-secondary waves-effect"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-success waves-effect waves-light"
+                onClick={() => {
+                  setAlertMessage("closed");
+                  setIsShowSweetAlert(true);
+                  props.closeTicket(
+                    {
+                      ticketCode: ticketId,
+                      startBy: username,
+                    },
+                    ticketId
+                  );
+                }}
+              >
+                Close
               </button>
             </div>
           </Modal>
@@ -1272,6 +1348,7 @@ const mapDispatchToProps = (dispatch) =>
       updateTicket,
       replyTicket,
       startTicket,
+      closeTicket,
     },
     dispatch
   );
