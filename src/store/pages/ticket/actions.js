@@ -14,6 +14,9 @@ import {
   REPLY_TICKET,
   REPLY_TICKET_REJECT,
   REPLY_TICKET_FULFILLED,
+  START_TICKET,
+  START_TICKET_REJECT,
+  START_TICKET_FULFILLED,
 } from "./actionTypes";
 
 export const readTicket = (value) => {
@@ -138,6 +141,32 @@ export const replyTicketReject = (payload) => {
 export const replyTicketFulfilled = (data) => {
   return {
     type: REPLY_TICKET_FULFILLED,
+    payload: data,
+  };
+};
+
+export const startTicket = (value, ticket_code) => {
+  const data = {
+    body: value,
+    url: `/v1/ticket/start`,
+    detail_url: `/v1/ticket/get-detail/${ticket_code}`,
+  };
+  return {
+    type: START_TICKET,
+    payload: data,
+  };
+};
+
+export const startTicketReject = (payload) => {
+  return {
+    type: START_TICKET_REJECT,
+    payload: payload,
+  };
+};
+
+export const startTicketFulfilled = (data) => {
+  return {
+    type: START_TICKET_FULFILLED,
     payload: data,
   };
 };

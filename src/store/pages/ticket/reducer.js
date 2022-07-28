@@ -14,6 +14,9 @@ import {
   REPLY_TICKET,
   REPLY_TICKET_REJECT,
   REPLY_TICKET_FULFILLED,
+  START_TICKET,
+  START_TICKET_REJECT,
+  START_TICKET_FULFILLED,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -129,6 +132,27 @@ const Ticket = (state = INIT_STATE, action) => {
         loading: false,
       };
     case REPLY_TICKET_FULFILLED:
+      return {
+        ...state,
+        detail_ticket: action.payload.listDetailTicket,
+        list_reply_ticket: action.payload.listReplyTicket,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
+        loading: false,
+      };
+    case START_TICKET:
+      return {
+        ...state,
+        loading: true,
+      };
+    case START_TICKET_REJECT:
+      return {
+        ...state,
+        response_code_ticket: action.payload.status.responseCode,
+        message_ticket: action.payload.status.description[0],
+        loading: false,
+      };
+    case START_TICKET_FULFILLED:
       return {
         ...state,
         detail_ticket: action.payload.listDetailTicket,

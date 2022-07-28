@@ -13,6 +13,7 @@ import {
   readDetailTicket,
   updateTicket,
   replyTicket,
+  startTicket,
 } from "../../store/pages/ticket/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -52,8 +53,10 @@ const DetailTicket = (props) => {
 
   const [replyData, setReplyData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(false);
   const [modalFilter, setModalFilter] = useState(false);
   const [modalRequirements, setModalRequirements] = useState(false);
+  const [modalStart, setModalStart] = useState(false);
 
   const [statusColor, setStatusColor] = useState(null);
   const [isEditTicket, setIsEditTicket] = useState(false);
@@ -192,15 +195,6 @@ const DetailTicket = (props) => {
     reply_request.append("replyType", replyData.replyType);
     reply_request.append("updatedBy", replyData.updatedBy);
     props.replyTicket(reply_request, ticketId);
-    // setReplyData({
-    //   ticketCode: ticketId,
-    //   usernamePengirim: username,
-    //   status: "Process",
-    //   isi: "",
-    //   updatedBy: username,
-    //   replyType: "start",
-    // });
-    // setStatusColor("#34c38f");
     setSelectedFiles1(null);
     setSelectedFiles2(null);
     setPristine();
@@ -252,10 +246,11 @@ const DetailTicket = (props) => {
             confirmBtnBsStyle="success"
             onConfirm={() => {
               setIsShowSweetAlert(false);
+              setModalStart(false);
               history.push(routes.detail_ticket + "?ticketId=" + ticketId);
             }}
           >
-            The ticket has successfully edited!
+            The ticket has successfully {alertMessage}!
           </SweetAlert>
         );
       } else {
@@ -518,7 +513,7 @@ const DetailTicket = (props) => {
                       <h4>{detail_ticket && detail_ticket.judul}</h4>
                     </Col>
                     <Col
-                      md={3}
+                      md={4}
                       className="justify-content-end d-flex d-print-none align-items-center"
                     >
                       <span
@@ -527,6 +522,18 @@ const DetailTicket = (props) => {
                       >
                         <i className="bx bxs-printer font-size-24 align-middle mr-2"></i>
                       </span>
+                      {isStartTicket &&
+                        detail_ticket &&
+                        detail_ticket.status === "New" && (
+                          <button
+                            type="button"
+                            className="btn btn-success waves-effect waves-light mr-2 d-flex align-items-center"
+                            onClick={() => setModalStart(true)}
+                          >
+                            <i className="bx bx-play font-size-16 align-middle mr-1"></i>
+                            Start
+                          </button>
+                        )}
                       {isEditTicket && (
                         <Link
                           to={{
@@ -534,12 +541,13 @@ const DetailTicket = (props) => {
                             search: `?ticketId=${ticketId}`,
                             detailValue: ticketId,
                           }}
+                          className="d-flex align-items-center"
                         >
                           <button
                             type="button"
                             className="btn btn-primary waves-effect waves-light"
                           >
-                            <i className="bx bx-edit font-size-16 align-middle mr-2"></i>
+                            <i className="bx bx-edit font-size-16 align-middle mr-1"></i>
                             Edit
                           </button>
                         </Link>
@@ -1168,6 +1176,64 @@ const DetailTicket = (props) => {
               </strong>
             </div>
           </Modal>
+
+          <Modal
+            isOpen={modalStart}
+            toggle={() => {
+              setModalStart(!modalStart);
+              removeBodyCss();
+            }}
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Start Ticket
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalStart(false);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Are you sure want to start this start?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalStart(!modalStart);
+                  removeBodyCss();
+                }}
+                className="btn btn-secondary waves-effect"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-success waves-effect waves-light"
+                onClick={() => {
+                  setAlertMessage("started");
+                  setIsShowSweetAlert(true);
+                  props.startTicket(
+                    {
+                      ticketCode: ticketId,
+                      startBy: username,
+                    },
+                    ticketId
+                  );
+                }}
+              >
+                Start
+              </button>
+            </div>
+          </Modal>
           {Prompt}
           <ShowSweetAlert />
         </Container>
@@ -1205,6 +1271,7 @@ const mapDispatchToProps = (dispatch) =>
       readDetailTicket,
       updateTicket,
       replyTicket,
+      startTicket,
     },
     dispatch
   );
