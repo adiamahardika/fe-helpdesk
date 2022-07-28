@@ -716,7 +716,7 @@ const Ticket = (props) => {
                     <AvForm>
                       <Row>
                         {area_code && (
-                          <Col>
+                          <Col md={4}>
                             <FormGroup className="select2-container">
                               <Label>Area</Label>
                               <Select
@@ -733,7 +733,7 @@ const Ticket = (props) => {
                           </Col>
                         )}
                         {regional && (
-                          <Col>
+                          <Col md={4}>
                             <FormGroup className="select2-container">
                               <Label>Regional</Label>
                               <Select
@@ -750,7 +750,7 @@ const Ticket = (props) => {
                           </Col>
                         )}
                         {grapari_id && (
-                          <Col>
+                          <Col md={4}>
                             <FormGroup className="select2-container">
                               <Label>Grapari</Label>
                               <Select

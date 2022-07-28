@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, CardBody, Col, Row, FormGroup } from "reactstrap";
+import {
+  Container,
+  Card,
+  CardBody,
+  Col,
+  Row,
+  FormGroup,
+  Label,
+} from "reactstrap";
 import { readReport } from "../../store/pages/report/actions";
 import {
   readCategory,
@@ -13,6 +21,10 @@ import {
 } from "../../store/pages/users/actions";
 import { useHistory } from "react-router";
 import { getShortDate } from "../../helpers";
+import { readArea } from "../../store/pages/area/actions";
+import { readRegional } from "../../store/pages/regional/actions";
+import { readGrapari } from "../../store/pages/grapari/actions";
+import { AvForm } from "availity-reactstrap-validation";
 import Select from "react-select";
 import ReactExport from "react-export-excel";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -34,6 +46,9 @@ const Report = (props) => {
   const list_user_multiple_select = props.list_user_multiple_select;
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
+  const option_area = props.option_area;
+  const option_regional = props.option_regional;
+  const option_grapari = props.option_grapari;
   const loading = props.loading;
   const response_code = props.response_code_report;
   const permissions = JSON.parse(
@@ -42,7 +57,9 @@ const Report = (props) => {
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
-
+  const area_code = JSON.parse(sessionStorage.getItem("areaCode"));
+  const regional = JSON.parse(sessionStorage.getItem("regional"));
+  const grapari_id = JSON.parse(sessionStorage.getItem("grapariId"));
   const username = sessionStorage.getItem("username");
   const history = useHistory();
   const animatedComponents = makeAnimated();
@@ -62,6 +79,11 @@ const Report = (props) => {
   ]);
   const [data, setData] = useState(null);
   const [selectedCreatedBy, setSelectedCreatedBy] = useState(null);
+  const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedRegional, setSelectedRegional] = useState(null);
+  const [requestRegional, setRequestRegional] = useState(null);
+  const [selectedGrapari, setSelectedGrapari] = useState(null);
+  const [requestGrapari, setRequestGrapari] = useState(null);
 
   const handleCheckedAllCategory = async () => {
     let array = [];
@@ -188,6 +210,66 @@ const Report = (props) => {
     setData({ ...data, usernamePembuat: created_by });
     props.readReport({ ...data, usernamePembuat: created_by });
   };
+  const handleArea = async (event) => {
+    let area_code = [];
+    await event.map((item) => area_code.push(item.value));
+
+    setSelectedArea(event);
+    setSelectedRegional(null);
+    setSelectedGrapari(null);
+    setData({ ...data, areaCode: area_code, regional: [], grapariId: [] });
+
+    props.readRegional({
+      ...requestRegional,
+      areaCode: area_code,
+    });
+    props.readGrapari({
+      ...requestGrapari,
+      areaCode: area_code,
+    });
+    props.readReport({
+      ...data,
+      areaCode: area_code,
+      regional: [],
+      grapariId: [],
+    });
+    delete data.areaCode;
+    delete data.regional;
+    delete data.grapariId;
+  };
+  const handleRegional = async (event) => {
+    let regional = [];
+    await event.map((item) => regional.push(item.value));
+
+    setSelectedRegional(event);
+    setSelectedGrapari(null);
+    setData({ ...data, regional: regional, grapariId: [] });
+
+    props.readGrapari({
+      ...requestGrapari,
+      regional: regional,
+    });
+    props.readReport({
+      ...data,
+      regional: regional,
+      grapariId: [],
+    });
+    delete data.regional;
+    delete data.grapariId;
+  };
+  const handleGrapari = async (event) => {
+    let grapari_id = [];
+    await event.map((item) => grapari_id.push(item.value));
+
+    setSelectedGrapari(event);
+    setData({ ...data, grapariId: grapari_id });
+
+    props.readReport({
+      ...data,
+      grapariId: grapari_id,
+    });
+    delete data.grapariId;
+  };
 
   useEffect(() => {
     let generateReport = permissions.find(
@@ -201,6 +283,30 @@ const Report = (props) => {
     );
 
     if (generateReport) {
+      let reqArea = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        areaName: "",
+        status: "A",
+      };
+      props.readArea(reqArea);
+
+      let reqRegional = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        status: "A",
+      };
+      props.readRegional(reqRegional);
+      setRequestRegional(reqRegional);
+
+      let reqGrapari = {
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        grapariId: grapari_id && grapari_id[0] !== "0" ? grapari_id : [],
+        status: "Active",
+      };
+      props.readGrapari(reqGrapari);
+      setRequestGrapari(reqGrapari);
+
       let start = new Date().setDate(new Date().getDate() - 30);
 
       let priorityArray = [];
@@ -209,6 +315,9 @@ const Report = (props) => {
         assignedTo: "",
         usernamePembuat: filterCreatedBy ? [] : [username],
         category: [],
+        areaCode: area_code && area_code[0] !== "0" ? area_code : [],
+        regional: regional && regional[0] !== "0" ? regional : [],
+        grapariId: grapari_id && grapari_id[0] !== "0" ? grapari_id : [],
         priority: priorityArray,
         status: statusArray,
         startDate: getShortDate(start),
@@ -301,6 +410,61 @@ const Report = (props) => {
                       </div>
                     </Col>
                   </Row>
+                  <AvForm>
+                    <Row>
+                      {area_code && (
+                        <Col md={4}>
+                          <FormGroup className="select2-container">
+                            <Label>Area</Label>
+                            <Select
+                              value={selectedArea}
+                              placeholder="All"
+                              onChange={(event) => {
+                                handleArea(event);
+                              }}
+                              options={option_area}
+                              classNamePrefix="select2-selection"
+                              isMulti={true}
+                            />
+                          </FormGroup>
+                        </Col>
+                      )}
+                      {regional && (
+                        <Col md={4}>
+                          <FormGroup className="select2-container">
+                            <Label>Regional</Label>
+                            <Select
+                              value={selectedRegional}
+                              placeholder="All"
+                              onChange={(event) => {
+                                handleRegional(event);
+                              }}
+                              options={option_regional}
+                              classNamePrefix="select2-selection"
+                              isMulti={true}
+                            />
+                          </FormGroup>
+                        </Col>
+                      )}
+                      {grapari_id && (
+                        <Col md={4}>
+                          <FormGroup className="select2-container">
+                            <Label>Grapari</Label>
+                            <Select
+                              value={selectedGrapari}
+                              placeholder="All"
+                              onChange={(event) => {
+                                handleGrapari(event);
+                              }}
+                              options={option_grapari}
+                              classNamePrefix="select2-selection"
+                              isMulti={true}
+                            />
+                          </FormGroup>
+                        </Col>
+                      )}
+                    </Row>
+                  </AvForm>
                   <Row>
                     <Col md={6}>
                       <div className="form-group">
@@ -617,6 +781,12 @@ const Report = (props) => {
                           <ExcelColumn label="Email" value="email" />
                           <ExcelColumn label="Owner" value="usernamePembuat" />
                           <ExcelColumn label="Submitted" value="tglDibuat" />
+                          <ExcelColumn label="Start Time" value="startTime" />
+                          <ExcelColumn
+                            label="Assigning Time"
+                            value="assigningTime"
+                          />
+                          <ExcelColumn label="Close Time" value="closeTime" />
                           <ExcelColumn label="Assigned To" value="assignee" />
                           <ExcelColumn label="Updated" value="tglDiperbarui" />
                           <ExcelColumn
@@ -644,12 +814,18 @@ const mapStatetoProps = (state) => {
     state.Report;
   const { list_category, list_checked_category } = state.Category;
   const { list_user, list_user_multiple_select } = state.User;
+  const { option_area } = state.Area;
+  const { option_regional } = state.Regional;
+  const { option_grapari } = state.Grapari;
   return {
     list_report,
     list_category,
     list_checked_category,
     list_user,
     list_user_multiple_select,
+    option_area,
+    option_regional,
+    option_grapari,
     response_code_report,
     message_report,
     loading,
@@ -661,6 +837,9 @@ const mapDispatchToProps = (dispatch) =>
     {
       readReport,
       readCategory,
+      readArea,
+      readRegional,
+      readGrapari,
       checkCategory,
       readUser,
       readUserMultipleSelect,
