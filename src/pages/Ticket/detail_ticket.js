@@ -32,6 +32,7 @@ import queryString from "query-string";
 import Dropzone from "react-dropzone";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import CryptoJS from "crypto-js";
+import Loader from "../../helpers/loader";
 import "../../assets/css/pagination.css";
 require("dotenv").config();
 
@@ -40,6 +41,7 @@ const DetailTicket = (props) => {
   const list_reply_ticket = props.list_reply_ticket;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
+  const loading = props.loading;
   const username = sessionStorage.getItem("username");
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
@@ -215,6 +217,8 @@ const DetailTicket = (props) => {
             className="btn btn-primary waves-effect waves-light"
             onClick={(event) => {
               onSubmitReply(event);
+              setAlertMessage("replied");
+              setIsShowSweetAlert(true);
             }}
           >
             <i className="bx bxs-send font-size-16 align-middle mr-2"></i>
@@ -430,6 +434,8 @@ const DetailTicket = (props) => {
   }, [detail_ticket]);
   return (
     <React.Fragment>
+      {" "}
+      {loading && <Loader />}
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title={"Detail Ticket"} breadcrumbItem={"Ticket"} />
