@@ -31,6 +31,7 @@ import routes from "../../helpers/routes.json";
 import Dropzone from "react-dropzone";
 import CryptoJS from "crypto-js";
 import Select from "react-select";
+import Loader from "../../helpers/loader";
 require("dotenv").config();
 
 const AddTicket = (props) => {
@@ -374,6 +375,7 @@ const AddTicket = (props) => {
 
   return (
     <React.Fragment>
+      {loading && <Loader />}
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title={"Ticket"} breadcrumbItem={"Add Ticket"} />

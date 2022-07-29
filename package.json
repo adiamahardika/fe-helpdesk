@@ -68,6 +68,7 @@
     "react-input-mask": "^2.0.4",
     "react-jvectormap": "^0.0.16",
     "react-leaflet": "^3.2.2",
+    "react-loader-spinner": "^5.1.7-beta.1",
     "react-modal-video": "^1.2.8",
     "react-paginate": "^8.0.0",
     "react-perfect-scrollbar": "^1.5.8",
