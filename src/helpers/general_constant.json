@@ -6,6 +6,10 @@
   "expired_token_response_code": "exp-01",
   "unauthorized_status": 401,
   "low_priority": "low",
+  "role_id": {
+    "teknisi": 2,
+    "team_lead": 16
+  },
   "priority": [
     {
       "name": "Low",

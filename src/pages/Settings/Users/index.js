@@ -41,7 +41,7 @@ const Users = (props) => {
     size: 10,
     pageNo: 0,
     search: "",
-    role: 0,
+    role: [],
   });
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
@@ -169,19 +169,25 @@ const Users = (props) => {
                       <select
                         name="role"
                         className="form-control"
-                        defaultValue={0}
+                        defaultValue={""}
                         onChange={(event) => {
                           props.readUser({
                             ...data,
-                            role: parseInt(event.target.value),
+                            role:
+                              event.target.value != ""
+                                ? [parseInt(event.target.value)]
+                                : [],
                           });
                           setData({
                             ...data,
-                            role: parseInt(event.target.value),
+                            role:
+                              event.target.value != ""
+                                ? [parseInt(event.target.value)]
+                                : [],
                           });
                         }}
                       >
-                        <option value={0}>All</option>
+                        <option value={""}>All</option>
                         {list_role &&
                           list_role.map((value, index) => (
                             <option
@@ -190,11 +196,11 @@ const Users = (props) => {
                               onChange={(event) => {
                                 props.readUser({
                                   ...data,
-                                  role: parseInt(event.target.value),
+                                  role: [parseInt(event.target.value)],
                                 });
                                 setData({
                                   ...data,
-                                  role: parseInt(event.target.value),
+                                  role: [parseInt(event.target.value)],
                                 });
                               }}
                             >

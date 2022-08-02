@@ -189,7 +189,13 @@ const EditTicket = (props) => {
         sort_by: "name",
         order_by: "asc",
       });
-      props.readUser({ size: 0, pageNo: 0, search: "", role: 2 });
+      let role_id = general_constant.role_id;
+      props.readUser({
+        size: 0,
+        pageNo: 0,
+        search: "",
+        role: [role_id.teknisi, role_id.team_lead],
+      });
       props.readDetailTicket(ticketId);
       props.readSubCategory();
 
