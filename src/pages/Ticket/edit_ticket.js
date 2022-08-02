@@ -20,7 +20,6 @@ import { bindActionCreators } from "redux";
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
-import { emailValidation } from "../../helpers";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -55,10 +54,11 @@ const EditTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [data, setData] = useState(null);
-  const [optionColor, setOptionColor] = useState(null);
   const [statusColor, setStatusColor] = useState(null);
-  const [validEmail, setValidEmail] = useState(true);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
+  const [isEditStatusTicket, setIsEditStatusTicket] = useState(false);
+  const [isEditAssigningTicket, setIsEditAssigningTicket] = useState(false);
+  const [isEditCategoryTicket, setIsEditCategoryTicket] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showLainLain, setShowLainLain] = useState(false);
 
@@ -68,7 +68,6 @@ const EditTicket = (props) => {
       let findIndex = general_constant.priority.findIndex(
         (value) => value.name === parse.priority
       );
-      setOptionColor(general_constant.priority[findIndex].color);
       setData({
         ...data,
         subCategory: parse.name !== "Lain-lain" ? parse.name : "",
@@ -173,6 +172,15 @@ const EditTicket = (props) => {
     let editTicket = permissions.find(
       (value) => value.code === code_all_permissions.edit_ticket
     );
+    let editStatusTicket = permissions.find(
+      (value) => value.code === code_all_permissions.edit_status_ticket
+    );
+    let editAssigningTicket = permissions.find(
+      (value) => value.code === code_all_permissions.edit_assigning_ticket
+    );
+    let editCategoryTicket = permissions.find(
+      (value) => value.code === code_all_permissions.edit_category_ticket
+    );
 
     if (editTicket) {
       props.readCategory({
@@ -185,7 +193,9 @@ const EditTicket = (props) => {
       props.readDetailTicket(ticketId);
       props.readSubCategory();
 
-      setOptionColor("#34c38f");
+      editStatusTicket && setIsEditStatusTicket(true);
+      editAssigningTicket && setIsEditAssigningTicket(true);
+      editCategoryTicket && setIsEditCategoryTicket(true);
     } else {
       history.push(routes.ticket);
     }
@@ -206,9 +216,6 @@ const EditTicket = (props) => {
         option_category.findIndex(
           (item) => item.value.id === parseInt(detail_ticket.category)
         );
-      let findPriority = general_constant.priority.findIndex(
-        (value) => value.name === detail_ticket.prioritas
-      );
       let findStatus = general_constant.status.findIndex(
         (value) => value.name === detail_ticket.status
       );
@@ -224,8 +231,6 @@ const EditTicket = (props) => {
       });
       findStatus >= 0 &&
         setStatusColor(general_constant.status[findStatus].color);
-      findPriority >= 0 &&
-        setOptionColor(general_constant.priority[findPriority].color);
       findCategory >= 0 && setSelectedCategory(option_category[findCategory]);
       findSubCategory < 0 && setShowLainLain(true);
     }
@@ -241,94 +246,81 @@ const EditTicket = (props) => {
               <AvForm>
                 <Row className="justify-content-center">
                   <Col md={8}>
-                    {/* <Row>
-                      <Col md={8}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">Email</label>
-                          <AvField
-                            name="email"
-                            label=""
-                            placeholder="ex: shop@mail.com"
-                            type="email"
-                            errorMessage="Enter valid Email"
-                            validate={{
-                              required: { value: true },
-                              maxLength: { value: 70 },
-                            }}
-                            value={data && data.email}
-                            onChange={(event) =>
-                              onValidateEmail(event.target.value)
-                            }
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row> */}
-                    <Row>
-                      <Col md={4}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">Status</label>
-                          <div>
-                            <select
-                              name="category"
-                              className="form-control"
-                              onChange={(event) =>
-                                onChangeStatus(event.target.value)
-                              }
-                              style={{
-                                color: statusColor,
-                                fontWeight: "bold",
-                              }}
-                            >
-                              {general_constant.status.map((value, index) => (
-                                <option
-                                  key={index}
-                                  value={value && value.name}
-                                  onChange={(event) =>
-                                    onChangeStatus(event.target.value)
-                                  }
-                                  style={{
-                                    color: value.color,
-                                    fontWeight: "bold",
-                                  }}
-                                  selected={data && data.status === value.name}
-                                >
-                                  {value.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row className="mt-3">
-                      <Col>
-                        <FormGroup className="select2-container">
-                          <Label>
-                            Category <span style={{ color: "red" }}>*</span>
-                          </Label>
-                          <Row className="mb-2">
-                            <Col md={5}>
-                              <Select
-                                value={selectedCategory}
-                                onChange={(event) => (
-                                  setData({
-                                    ...data,
-                                    category: event.value.id.toString(),
-                                    subCategory: "",
-                                    prioritas: "",
-                                  }),
-                                  setShowLainLain(true),
-                                  setDirty(),
-                                  setSelectedCategory(event)
+                    {isEditStatusTicket && (
+                      <Row>
+                        <Col md={4}>
+                          <FormGroup className="select2-container">
+                            <label className="control-label">Status</label>
+                            <div>
+                              <select
+                                name="category"
+                                className="form-control"
+                                onChange={(event) =>
+                                  onChangeStatus(event.target.value)
+                                }
+                                style={{
+                                  color: statusColor,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {general_constant.status.map(
+                                  (value, index) =>
+                                    value.name !== "New" && (
+                                      <option
+                                        key={index}
+                                        value={value && value.name}
+                                        onChange={(event) =>
+                                          onChangeStatus(event.target.value)
+                                        }
+                                        style={{
+                                          color: value.color,
+                                          fontWeight: "bold",
+                                        }}
+                                        selected={
+                                          data && data.status === value.name
+                                        }
+                                      >
+                                        {value.name}
+                                      </option>
+                                    )
                                 )}
-                                options={option_category}
-                                classNamePrefix="select2-selection"
-                              />
-                            </Col>
-                          </Row>
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                              </select>
+                            </div>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    )}
+                    {isEditCategoryTicket && (
+                      <Row className="mt-2">
+                        <Col>
+                          <FormGroup className="select2-container">
+                            <Label>
+                              Category <span style={{ color: "red" }}>*</span>
+                            </Label>
+                            <Row className="mb-2">
+                              <Col md={5}>
+                                <Select
+                                  value={selectedCategory}
+                                  onChange={(event) => (
+                                    setData({
+                                      ...data,
+                                      category: event.value.id.toString(),
+                                      subCategory: "",
+                                      prioritas: "",
+                                    }),
+                                    setShowLainLain(true),
+                                    setDirty(),
+                                    setSelectedCategory(event)
+                                  )}
+                                  options={option_category}
+                                  classNamePrefix="select2-selection"
+                                />
+                              </Col>
+                            </Row>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    )}
                     <Row>
                       <Col md={8}>
                         <FormGroup className="select2-container">
@@ -400,7 +392,6 @@ const EditTicket = (props) => {
                                         subCategory: event.target.value,
                                         prioritas: "Low",
                                       });
-                                      setOptionColor("#34c38f");
                                     }}
                                   />
                                 </FormGroup>
@@ -431,51 +422,55 @@ const EditTicket = (props) => {
                         </Col>
                       )} */}
                     </Row>
-                    <Row>
-                      <Col md={6}>
-                        <FormGroup className="select2-container">
-                          <label className="control-label">Assign To</label>
-                          <Row className="align-items-center">
-                            <Col>
-                              <div>
-                                <select
-                                  name="assignedTo"
-                                  className="form-control"
-                                  defaultValue={data && data.assignedTo}
-                                  onChange={(event) =>
-                                    setData({
-                                      ...data,
-                                      assignedTo: event.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="Unassigned">Unassigned</option>
-                                  {list_user &&
-                                    list_user.map((value, index) => (
-                                      <option
-                                        key={index}
-                                        value={value.username}
-                                        onChange={(event) =>
-                                          setData({
-                                            ...data,
-                                            assignedTo: event.target.value,
-                                          })
-                                        }
-                                        selected={
-                                          data &&
-                                          data.assignedTo === value.username
-                                        }
-                                      >
-                                        {value.name}
-                                      </option>
-                                    ))}
-                                </select>
-                              </div>
-                            </Col>
-                          </Row>
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                    {isEditAssigningTicket && (
+                      <Row>
+                        <Col md={6}>
+                          <FormGroup className="select2-container">
+                            <label className="control-label">Assign To</label>
+                            <Row className="align-items-center">
+                              <Col>
+                                <div>
+                                  <select
+                                    name="assignedTo"
+                                    className="form-control"
+                                    defaultValue={data && data.assignedTo}
+                                    onChange={(event) =>
+                                      setData({
+                                        ...data,
+                                        assignedTo: event.target.value,
+                                      })
+                                    }
+                                  >
+                                    <option value="Unassigned">
+                                      Unassigned
+                                    </option>
+                                    {list_user &&
+                                      list_user.map((value, index) => (
+                                        <option
+                                          key={index}
+                                          value={value.username}
+                                          onChange={(event) =>
+                                            setData({
+                                              ...data,
+                                              assignedTo: event.target.value,
+                                            })
+                                          }
+                                          selected={
+                                            data &&
+                                            data.assignedTo === value.username
+                                          }
+                                        >
+                                          {value.name}
+                                        </option>
+                                      ))}
+                                  </select>
+                                </div>
+                              </Col>
+                            </Row>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    )}
                   </Col>
                 </Row>
               </AvForm>

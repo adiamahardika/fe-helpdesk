@@ -30,20 +30,16 @@
             "code": "1.2.1"
           },
           {
-            "name": "Edit Ticket",
+            "name": "Reply Ticket",
             "code": "1.2.2"
           },
           {
-            "name": "Reply Ticket",
+            "name": "Start Ticket",
             "code": "1.2.3"
           },
           {
-            "name": "Start Ticket",
-            "code": "1.2.4"
-          },
-          {
             "name": "Close Ticket",
-            "code": "1.2.5"
+            "code": "1.2.4"
           }
         ]
       },
@@ -58,6 +54,24 @@
           {
             "name": "Assigning Ticket",
             "code": "1.3.2"
+          }
+        ]
+      },
+      {
+        "name": "Edit Ticket",
+        "code": "1.4",
+        "sub_level_2": [
+          {
+            "name": "Edit Status Ticket",
+            "code": "1.4.1"
+          },
+          {
+            "name": "Edit Assigning Ticket",
+            "code": "1.4.2"
+          },
+          {
+            "name": "Edit Category Ticket",
+            "code": "1.4.3"
           }
         ]
       }
