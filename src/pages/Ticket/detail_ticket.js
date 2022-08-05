@@ -740,377 +740,387 @@ const DetailTicket = (props) => {
                     )}
                 </CardBody>
               </Card>
-              {isReplyTicket && (
-                <Card className="d-print-none">
-                  <CardBody>
-                    <CardTitle>
-                      <i className="font-size-24 bx bxs-share align-middle"></i>{" "}
-                      Reply
-                    </CardTitle>
-                    <AvForm>
-                      <Row className="justify-content-center">
-                        <Col md={10}>
-                          <Row>
-                            <Col>
-                              <FormGroup className="select2-container">
-                                <label className="control-label">
-                                  Write a message{" "}
-                                  <span style={{ color: "red" }}>*</span>
-                                </label>
-                                <AvField
-                                  name="isi"
-                                  label=""
-                                  type="textarea"
-                                  errorMessage="Message must be filled!"
-                                  validate={{
-                                    required: { value: true },
-                                  }}
-                                  value={replyData && replyData.isi}
-                                  onChange={(event) => (
-                                    setReplyData({
-                                      ...replyData,
-                                      [event.target.name]: event.target.value,
-                                    }),
-                                    setDirty()
-                                  )}
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row className="mt-3">
-                            <Col>
-                              <FormGroup className="select2-container">
-                                <label
-                                  className="control-label"
-                                  style={{
-                                    display: "grid",
-                                    alignItems: "center",
-                                    gridAutoFlow: "column",
-                                  }}
-                                >
-                                  Attachment
-                                  <span
-                                    className="btn-link waves-effect text-right"
-                                    onClick={() => {
-                                      setModalFilter(false);
-                                      setModalRequirements(true);
+              {isReplyTicket &&
+                detail_ticket &&
+                detail_ticket.status !== "Finish" && (
+                  <Card className="d-print-none">
+                    <CardBody>
+                      <CardTitle>
+                        <i className="font-size-24 bx bxs-share align-middle"></i>{" "}
+                        Reply
+                      </CardTitle>
+                      <AvForm>
+                        <Row className="justify-content-center">
+                          <Col md={10}>
+                            <Row>
+                              <Col>
+                                <FormGroup className="select2-container">
+                                  <label className="control-label">
+                                    Write a message{" "}
+                                    <span style={{ color: "red" }}>*</span>
+                                  </label>
+                                  <AvField
+                                    name="isi"
+                                    label=""
+                                    type="textarea"
+                                    errorMessage="Message must be filled!"
+                                    validate={{
+                                      required: { value: true },
+                                    }}
+                                    value={replyData && replyData.isi}
+                                    onChange={(event) => (
+                                      setReplyData({
+                                        ...replyData,
+                                        [event.target.name]: event.target.value,
+                                      }),
+                                      setDirty()
+                                    )}
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row className="mt-3">
+                              <Col>
+                                <FormGroup className="select2-container">
+                                  <label
+                                    className="control-label"
+                                    style={{
+                                      display: "grid",
+                                      alignItems: "center",
+                                      gridAutoFlow: "column",
                                     }}
                                   >
-                                    See requirements{" "}
-                                    <span style={{ color: "#f1b44c" }}>
-                                      <i className="bx bxs-error align-middle"></i>
+                                    Attachment
+                                    <span
+                                      className="btn-link waves-effect text-right"
+                                      onClick={() => {
+                                        setModalFilter(false);
+                                        setModalRequirements(true);
+                                      }}
+                                    >
+                                      See requirements{" "}
+                                      <span style={{ color: "#f1b44c" }}>
+                                        <i className="bx bxs-error align-middle"></i>
+                                      </span>
                                     </span>
-                                  </span>
-                                </label>
-                                <Dropzone
-                                  onDrop={(acceptedFiles) => {
-                                    handleAcceptedFiles(acceptedFiles, "1");
-                                  }}
-                                >
-                                  {({ getRootProps, getInputProps }) => (
-                                    <div
-                                      className="dropzone align-content-center"
-                                      style={{
-                                        display: "grid",
-                                      }}
-                                    >
+                                  </label>
+                                  <Dropzone
+                                    onDrop={(acceptedFiles) => {
+                                      handleAcceptedFiles(acceptedFiles, "1");
+                                    }}
+                                  >
+                                    {({ getRootProps, getInputProps }) => (
                                       <div
-                                        className="dz-message needsclick"
-                                        {...getRootProps()}
+                                        className="dropzone align-content-center"
+                                        style={{
+                                          display: "grid",
+                                        }}
                                       >
-                                        {selectedFiles1 ? (
-                                          <Row>
-                                            <Col md={2}>
-                                              {selectedFiles1 &&
-                                              selectedFiles1.file ===
-                                                "image" ? (
-                                                <img
-                                                  data-dz-thumbnail=""
-                                                  className="rounded bg-light"
-                                                  style={{
-                                                    width: "100%",
-                                                  }}
-                                                  alt={selectedFiles1.name}
-                                                  src={selectedFiles1.preview}
-                                                />
-                                              ) : (
-                                                <span
-                                                  style={{
-                                                    color: `${
-                                                      selectedFiles1 &&
-                                                      selectedFiles1.color
-                                                    }`,
-                                                  }}
-                                                >
-                                                  <i
-                                                    className={` bx ${
-                                                      selectedFiles1 &&
-                                                      selectedFiles1.icon
-                                                    } align-middle`}
-                                                    style={{
-                                                      fontSize: "3.5rem",
-                                                    }}
-                                                  ></i>
-                                                </span>
-                                              )}
-                                            </Col>
-                                            <Col
-                                              md={8}
-                                              style={{ display: "grid" }}
-                                            >
-                                              <Row className="text-left align-self-end">
-                                                <h4>
-                                                  {selectedFiles1 &&
-                                                    selectedFiles1.name}
-                                                </h4>
-                                              </Row>
-                                              <Row className="text-left align-self-start">
-                                                <div
-                                                  style={{ fontSize: "16px" }}
-                                                >
-                                                  {selectedFiles1 &&
-                                                    selectedFiles1.formattedSize}
-                                                </div>
-                                              </Row>
-                                            </Col>{" "}
-                                            <Col
-                                              md={2}
-                                              className="align-items-center d-flex"
-                                            >
-                                              <button
-                                                type="button"
-                                                className="btn btn-light waves-effect waves-light align-middle"
-                                                onClick={() => {
-                                                  setSelectedFiles1(null);
-                                                  delete replyData.attachment1;
-                                                }}
-                                              >
-                                                <i
-                                                  className={`bx bx-x`}
-                                                  style={{
-                                                    fontSize: "1.5rem",
-                                                  }}
-                                                ></i>
-                                              </button>
-                                            </Col>
-                                          </Row>
-                                        ) : (
-                                          <>
-                                            <input {...getInputProps()} />
-                                            <div className="mb-3">
-                                              <i className="display-4 text-muted bx bxs-cloud-upload"></i>
-                                            </div>
-                                            <h4>
-                                              Drop files here or click to
-                                              upload.
-                                            </h4>
-                                          </>
-                                        )}
-                                      </div>
-                                    </div>
-                                  )}
-                                </Dropzone>
-                                <Dropzone
-                                  onDrop={(acceptedFiles) => {
-                                    handleAcceptedFiles(acceptedFiles, "2");
-                                  }}
-                                >
-                                  {({ getRootProps, getInputProps }) => (
-                                    <div
-                                      className="dropzone align-content-center mt-2"
-                                      style={{
-                                        display: "grid",
-                                      }}
-                                    >
-                                      <div
-                                        className="dz-message needsclick"
-                                        {...getRootProps()}
-                                      >
-                                        {selectedFiles2 ? (
-                                          <Row>
-                                            <Col md={2}>
-                                              {selectedFiles2 &&
-                                              selectedFiles2.file ===
-                                                "image" ? (
-                                                <img
-                                                  data-dz-thumbnail=""
-                                                  className="rounded bg-light"
-                                                  style={{
-                                                    width: "100%",
-                                                  }}
-                                                  alt={selectedFiles2.name}
-                                                  src={selectedFiles2.preview}
-                                                />
-                                              ) : (
-                                                <span
-                                                  style={{
-                                                    color: `${
-                                                      selectedFiles2 &&
-                                                      selectedFiles2.color
-                                                    }`,
-                                                  }}
-                                                >
-                                                  <i
-                                                    className={` bx ${
-                                                      selectedFiles2 &&
-                                                      selectedFiles2.icon
-                                                    } align-middle`}
-                                                    style={{
-                                                      fontSize: "3.5rem",
-                                                    }}
-                                                  ></i>
-                                                </span>
-                                              )}
-                                            </Col>
-                                            <Col
-                                              md={8}
-                                              style={{ display: "grid" }}
-                                            >
-                                              <Row className="text-left align-self-end">
-                                                <h4>
-                                                  {selectedFiles2 &&
-                                                    selectedFiles2.name}
-                                                </h4>
-                                              </Row>
-                                              <Row className="text-left align-self-start">
-                                                <div
-                                                  style={{ fontSize: "16px" }}
-                                                >
-                                                  {selectedFiles2 &&
-                                                    selectedFiles2.formattedSize}
-                                                </div>
-                                              </Row>
-                                            </Col>{" "}
-                                            <Col
-                                              md={2}
-                                              className="align-items-center d-flex"
-                                            >
-                                              <button
-                                                type="button"
-                                                className="btn btn-light waves-effect waves-light align-middle"
-                                                onClick={() => {
-                                                  setSelectedFiles2(null);
-                                                  delete replyData.attachment2;
-                                                }}
-                                              >
-                                                <i
-                                                  className={`bx bx-x`}
-                                                  style={{
-                                                    fontSize: "1.5rem",
-                                                  }}
-                                                ></i>
-                                              </button>
-                                            </Col>
-                                          </Row>
-                                        ) : (
-                                          <>
-                                            <input {...getInputProps()} />
-                                            <div className="mb-3">
-                                              <i className="display-4 text-muted bx bxs-cloud-upload"></i>
-                                            </div>
-                                            <h4>
-                                              Drop files here or click to
-                                              upload.
-                                            </h4>
-                                          </>
-                                        )}
-                                      </div>
-                                    </div>
-                                  )}
-                                </Dropzone>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          {isCloseTicket &&
-                            detail_ticket &&
-                            detail_ticket.status !== "New" &&
-                            detail_ticket.status !== "Finish" && (
-                              <>
-                                <Row className="mt-2 justify-content-center">
-                                  <Col>
-                                    <FormGroup>
-                                      <div className="custom-control custom-checkbox">
-                                        <input
-                                          type="checkbox"
-                                          className="custom-control-input"
-                                          id="CustomCheck1"
-                                          onChange={() => false}
-                                          checked={isChangeStatus}
-                                        />
-                                        <label
-                                          className="custom-control-label"
-                                          onClick={() => {
-                                            showChangeStatus(!isChangeStatus);
-                                          }}
+                                        <div
+                                          className="dz-message needsclick"
+                                          {...getRootProps()}
                                         >
-                                          Change Status
-                                        </label>
-                                      </div>
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                {isChangeStatus && (
-                                  <Row>
-                                    <Col md={4}>
-                                      <FormGroup className="select2-container">
-                                        <div>
-                                          <select
-                                            name="category"
-                                            className="form-control"
-                                            onChange={(event) =>
-                                              onChangeStatus(event.target.value)
-                                            }
-                                            style={{
-                                              color: statusColor,
-                                              fontWeight: "bold",
-                                            }}
-                                          >
-                                            {general_constant.status.map(
-                                              (value, index) =>
-                                                value.order > 2 && (
-                                                  <option
-                                                    key={index}
-                                                    value={value && value.name}
-                                                    onChange={(event) =>
-                                                      onChangeStatus(
-                                                        event.target.value
-                                                      )
-                                                    }
+                                          {selectedFiles1 ? (
+                                            <Row>
+                                              <Col md={2}>
+                                                {selectedFiles1 &&
+                                                selectedFiles1.file ===
+                                                  "image" ? (
+                                                  <img
+                                                    data-dz-thumbnail=""
+                                                    className="rounded bg-light"
                                                     style={{
-                                                      color: value.color,
-                                                      fontWeight: "bold",
+                                                      width: "100%",
+                                                    }}
+                                                    alt={selectedFiles1.name}
+                                                    src={selectedFiles1.preview}
+                                                  />
+                                                ) : (
+                                                  <span
+                                                    style={{
+                                                      color: `${
+                                                        selectedFiles1 &&
+                                                        selectedFiles1.color
+                                                      }`,
                                                     }}
                                                   >
-                                                    {value.name}
-                                                  </option>
-                                                )
-                                            )}
-                                          </select>
+                                                    <i
+                                                      className={` bx ${
+                                                        selectedFiles1 &&
+                                                        selectedFiles1.icon
+                                                      } align-middle`}
+                                                      style={{
+                                                        fontSize: "3.5rem",
+                                                      }}
+                                                    ></i>
+                                                  </span>
+                                                )}
+                                              </Col>
+                                              <Col
+                                                md={8}
+                                                style={{ display: "grid" }}
+                                              >
+                                                <Row className="text-left align-self-end">
+                                                  <h4>
+                                                    {selectedFiles1 &&
+                                                      selectedFiles1.name}
+                                                  </h4>
+                                                </Row>
+                                                <Row className="text-left align-self-start">
+                                                  <div
+                                                    style={{
+                                                      fontSize: "16px",
+                                                    }}
+                                                  >
+                                                    {selectedFiles1 &&
+                                                      selectedFiles1.formattedSize}
+                                                  </div>
+                                                </Row>
+                                              </Col>{" "}
+                                              <Col
+                                                md={2}
+                                                className="align-items-center d-flex"
+                                              >
+                                                <button
+                                                  type="button"
+                                                  className="btn btn-light waves-effect waves-light align-middle"
+                                                  onClick={() => {
+                                                    setSelectedFiles1(null);
+                                                    delete replyData.attachment1;
+                                                  }}
+                                                >
+                                                  <i
+                                                    className={`bx bx-x`}
+                                                    style={{
+                                                      fontSize: "1.5rem",
+                                                    }}
+                                                  ></i>
+                                                </button>
+                                              </Col>
+                                            </Row>
+                                          ) : (
+                                            <>
+                                              <input {...getInputProps()} />
+                                              <div className="mb-3">
+                                                <i className="display-4 text-muted bx bxs-cloud-upload"></i>
+                                              </div>
+                                              <h4>
+                                                Drop files here or click to
+                                                upload.
+                                              </h4>
+                                            </>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </Dropzone>
+                                  <Dropzone
+                                    onDrop={(acceptedFiles) => {
+                                      handleAcceptedFiles(acceptedFiles, "2");
+                                    }}
+                                  >
+                                    {({ getRootProps, getInputProps }) => (
+                                      <div
+                                        className="dropzone align-content-center mt-2"
+                                        style={{
+                                          display: "grid",
+                                        }}
+                                      >
+                                        <div
+                                          className="dz-message needsclick"
+                                          {...getRootProps()}
+                                        >
+                                          {selectedFiles2 ? (
+                                            <Row>
+                                              <Col md={2}>
+                                                {selectedFiles2 &&
+                                                selectedFiles2.file ===
+                                                  "image" ? (
+                                                  <img
+                                                    data-dz-thumbnail=""
+                                                    className="rounded bg-light"
+                                                    style={{
+                                                      width: "100%",
+                                                    }}
+                                                    alt={selectedFiles2.name}
+                                                    src={selectedFiles2.preview}
+                                                  />
+                                                ) : (
+                                                  <span
+                                                    style={{
+                                                      color: `${
+                                                        selectedFiles2 &&
+                                                        selectedFiles2.color
+                                                      }`,
+                                                    }}
+                                                  >
+                                                    <i
+                                                      className={` bx ${
+                                                        selectedFiles2 &&
+                                                        selectedFiles2.icon
+                                                      } align-middle`}
+                                                      style={{
+                                                        fontSize: "3.5rem",
+                                                      }}
+                                                    ></i>
+                                                  </span>
+                                                )}
+                                              </Col>
+                                              <Col
+                                                md={8}
+                                                style={{ display: "grid" }}
+                                              >
+                                                <Row className="text-left align-self-end">
+                                                  <h4>
+                                                    {selectedFiles2 &&
+                                                      selectedFiles2.name}
+                                                  </h4>
+                                                </Row>
+                                                <Row className="text-left align-self-start">
+                                                  <div
+                                                    style={{
+                                                      fontSize: "16px",
+                                                    }}
+                                                  >
+                                                    {selectedFiles2 &&
+                                                      selectedFiles2.formattedSize}
+                                                  </div>
+                                                </Row>
+                                              </Col>{" "}
+                                              <Col
+                                                md={2}
+                                                className="align-items-center d-flex"
+                                              >
+                                                <button
+                                                  type="button"
+                                                  className="btn btn-light waves-effect waves-light align-middle"
+                                                  onClick={() => {
+                                                    setSelectedFiles2(null);
+                                                    delete replyData.attachment2;
+                                                  }}
+                                                >
+                                                  <i
+                                                    className={`bx bx-x`}
+                                                    style={{
+                                                      fontSize: "1.5rem",
+                                                    }}
+                                                  ></i>
+                                                </button>
+                                              </Col>
+                                            </Row>
+                                          ) : (
+                                            <>
+                                              <input {...getInputProps()} />
+                                              <div className="mb-3">
+                                                <i className="display-4 text-muted bx bxs-cloud-upload"></i>
+                                              </div>
+                                              <h4>
+                                                Drop files here or click to
+                                                upload.
+                                              </h4>
+                                            </>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </Dropzone>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            {isCloseTicket &&
+                              detail_ticket &&
+                              detail_ticket.status !== "New" &&
+                              detail_ticket.status !== "Finish" && (
+                                <>
+                                  <Row className="mt-2 justify-content-center">
+                                    <Col>
+                                      <FormGroup>
+                                        <div className="custom-control custom-checkbox">
+                                          <input
+                                            type="checkbox"
+                                            className="custom-control-input"
+                                            id="CustomCheck1"
+                                            onChange={() => false}
+                                            checked={isChangeStatus}
+                                          />
+                                          <label
+                                            className="custom-control-label"
+                                            onClick={() => {
+                                              showChangeStatus(!isChangeStatus);
+                                            }}
+                                          >
+                                            Change Status
+                                          </label>
                                         </div>
                                       </FormGroup>
                                     </Col>
                                   </Row>
-                                )}
-                              </>
-                            )}
-                        </Col>
-                      </Row>
-                    </AvForm>
-                    <div
-                      className="col-md-12 mb-3"
-                      style={{
-                        display: "grid",
-                        justifyItems: "flex-end",
-                        gridTemplateColumns: "1fr",
-                        columnGap: "8px",
-                      }}
-                    >
-                      {" "}
-                      <ButtonSubmitReply />
-                    </div>
-                  </CardBody>
-                </Card>
-              )}
+                                  {isChangeStatus && (
+                                    <Row>
+                                      <Col md={4}>
+                                        <FormGroup className="select2-container">
+                                          <div>
+                                            <select
+                                              name="category"
+                                              className="form-control"
+                                              onChange={(event) =>
+                                                onChangeStatus(
+                                                  event.target.value
+                                                )
+                                              }
+                                              style={{
+                                                color: statusColor,
+                                                fontWeight: "bold",
+                                              }}
+                                            >
+                                              {general_constant.status.map(
+                                                (value, index) =>
+                                                  value.order > 2 && (
+                                                    <option
+                                                      key={index}
+                                                      value={
+                                                        value && value.name
+                                                      }
+                                                      onChange={(event) =>
+                                                        onChangeStatus(
+                                                          event.target.value
+                                                        )
+                                                      }
+                                                      style={{
+                                                        color: value.color,
+                                                        fontWeight: "bold",
+                                                      }}
+                                                    >
+                                                      {value.name}
+                                                    </option>
+                                                  )
+                                              )}
+                                            </select>
+                                          </div>
+                                        </FormGroup>
+                                      </Col>
+                                    </Row>
+                                  )}
+                                </>
+                              )}
+                          </Col>
+                        </Row>
+                      </AvForm>
+                      <div
+                        className="col-md-12 mb-3"
+                        style={{
+                          display: "grid",
+                          justifyItems: "flex-end",
+                          gridTemplateColumns: "1fr",
+                          columnGap: "8px",
+                        }}
+                      >
+                        {" "}
+                        <ButtonSubmitReply />
+                      </div>
+                    </CardBody>
+                  </Card>
+                )}
             </Col>
           </Row>
           {/* Modal Filter */}
@@ -1306,7 +1316,7 @@ const DetailTicket = (props) => {
                   props.closeTicket(
                     {
                       ticketCode: ticketId,
-                      startBy: username,
+                      closeBy: username,
                     },
                     ticketId
                   );
