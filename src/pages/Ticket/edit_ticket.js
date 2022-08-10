@@ -65,9 +65,6 @@ const EditTicket = (props) => {
   const onChangeSubCategory = async (event) => {
     if (event) {
       let parse = JSON.parse(event.target.value);
-      let findIndex = general_constant.priority.findIndex(
-        (value) => value.name === parse.priority
-      );
       setData({
         ...data,
         subCategory: parse.name !== "Lain-lain" ? parse.name : "",

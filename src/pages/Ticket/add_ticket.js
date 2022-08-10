@@ -234,7 +234,11 @@ const AddTicket = (props) => {
     setPristine();
   };
   const ButtonSubmitCreate = () => {
-    if (data && Object.keys(data).length >= 17) {
+    if (
+      data &&
+      Object.keys(data).length >= 17 &&
+      Object.values(data).every((value) => value !== "")
+    ) {
       return (
         <button
           type="button"
@@ -559,6 +563,7 @@ const AddTicket = (props) => {
                                     Select Sub Category
                                   </option>
                                   <option
+                                    selected={data && data.subCategory === ""}
                                     value={JSON.stringify({
                                       name: "Lain-lain",
                                       priority: "Low",
@@ -597,11 +602,12 @@ const AddTicket = (props) => {
                                       required: { value: true },
                                       maxLength: { value: 100 },
                                     }}
+                                    value={data && data.subCategory}
                                     onChange={(event) => {
                                       setData({
                                         ...data,
                                         subCategory: event.target.value,
-                                        priority: "Low",
+                                        prioritas: "Low",
                                       });
                                     }}
                                   />
@@ -617,9 +623,9 @@ const AddTicket = (props) => {
                             <label className="control-label">Priority</label>
                             <FormGroup className="select2-container">
                               <AvField
-                                name="priority"
+                                name="prioritas"
                                 label=""
-                                value={data && data.priority}
+                                value={data && data.prioritas}
                                 type="text"
                                 style={{
                                   color: optionColor,
