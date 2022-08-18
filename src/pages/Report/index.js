@@ -26,7 +26,7 @@ import { readRegional } from "../../store/pages/regional/actions";
 import { readGrapari } from "../../store/pages/grapari/actions";
 import { AvForm } from "availity-reactstrap-validation";
 import Select from "react-select";
-import ReactExport from "react-export-excel";
+import ReactExport from "react-export-excel-xlsx-fix";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import code_all_permissions from "../../helpers/code_all_permissions.json";
 import general_constant from "../../helpers/general_constant.json";
@@ -795,10 +795,6 @@ const Report = (props) => {
                           <ExcelColumn label="Close Time" value="closeTime" />
                           <ExcelColumn label="Assigned To" value="assignee" />
                           <ExcelColumn label="Updated" value="tglDiperbarui" />
-                          <ExcelColumn
-                            label="Last Replier"
-                            value="usernamePembalas"
-                          />
                           <ExcelColumn label="Subject" value="judul" />
                           <ExcelColumn label="Isi" value="isi" />
                         </ExcelSheet>
