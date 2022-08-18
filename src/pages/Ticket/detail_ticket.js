@@ -38,6 +38,7 @@ require("dotenv").config();
 
 const DetailTicket = (props) => {
   const detail_ticket = props.detail_ticket;
+  console.log(detail_ticket);
   const list_reply_ticket = props.list_reply_ticket;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
@@ -503,11 +504,62 @@ const DetailTicket = (props) => {
                       <strong>{detail_ticket && detail_ticket.lokasi}</strong>
                     </Col>
                   </Row>
-                  <Row className="align-items-center mb-2">
+                  <Row
+                    className="align-items-center mb-2"
+                    style={{
+                      borderBottomColor: "#cfcfcf",
+                      borderBottomStyle: "solid",
+                      borderBottomWidth: "1px",
+                      paddingBottom: "1rem",
+                    }}
+                  >
                     <Col className="d-flex" style={{ flexFlow: "column" }}>
                       Terminal Id
                       <strong>
                         {detail_ticket && detail_ticket.terminalId}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row className="align-items-center mb-2">
+                    <Col className="d-flex" style={{ flexFlow: "column" }}>
+                      Updated On
+                      <strong>
+                        {parseFullDate(
+                          detail_ticket && detail_ticket.tglDiperbarui
+                        )}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row className="align-items-center mb-2">
+                    <Col className="d-flex" style={{ flexFlow: "column" }}>
+                      Assigned On
+                      <strong>
+                        {detail_ticket &&
+                        detail_ticket.assigningTime.includes("0001-01-01T")
+                          ? "-"
+                          : parseFullDate(detail_ticket.assigningTime)}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row className="align-items-center mb-2">
+                    <Col className="d-flex" style={{ flexFlow: "column" }}>
+                      Started On
+                      <strong>
+                        {detail_ticket &&
+                        detail_ticket.startTime.includes("0001-01-01T")
+                          ? "-"
+                          : parseFullDate(detail_ticket.startTime)}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row className="align-items-center mb-2">
+                    <Col className="d-flex" style={{ flexFlow: "column" }}>
+                      Closed On
+                      <strong>
+                        {detail_ticket &&
+                        detail_ticket.closeTime.includes("0001-01-01T")
+                          ? "-"
+                          : parseFullDate(detail_ticket.closeTime)}
                       </strong>
                     </Col>
                   </Row>

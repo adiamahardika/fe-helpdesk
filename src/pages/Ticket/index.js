@@ -1126,7 +1126,11 @@ const Ticket = (props) => {
                           <th>Assigning On</th>
                           <td>
                             {selectedData &&
-                              parseFullDate(selectedData.assigningTime)}
+                            selectedData.assigningTime.includes("0001-01-01T")
+                              ? "-"
+                              : parseFullDate(
+                                  selectedData && selectedData.assigningTime
+                                )}
                           </td>
                           <td></td>
                         </tr>
@@ -1134,7 +1138,11 @@ const Ticket = (props) => {
                           <th>Start On</th>
                           <td>
                             {selectedData &&
-                              parseFullDate(selectedData.startTime)}
+                            selectedData.startTime.includes("0001-01-01T")
+                              ? "-"
+                              : parseFullDate(
+                                  selectedData && selectedData.startTime
+                                )}
                           </td>
                           <td></td>
                         </tr>
@@ -1142,7 +1150,11 @@ const Ticket = (props) => {
                           <th>Close On</th>
                           <td>
                             {selectedData &&
-                              parseFullDate(selectedData.closeTime)}
+                            selectedData.closeTime.includes("0001-01-01T")
+                              ? "-"
+                              : parseFullDate(
+                                  selectedData && selectedData.closeTime
+                                )}
                           </td>
                           <td></td>
                         </tr>
