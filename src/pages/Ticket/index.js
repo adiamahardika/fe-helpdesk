@@ -827,7 +827,7 @@ const Ticket = (props) => {
                         <th>Priority</th>
                         <th>Category</th>
                         <th>Assigned To</th>
-                        <th>Submitted</th>
+                        <th>Updated On</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -880,7 +880,7 @@ const Ticket = (props) => {
                                     display: "block",
                                   }}
                                 >
-                                  {parseFullDate(value.tglDibuat)}
+                                  {parseFullDate(value.tglDiperbarui)}
                                 </span>
                               </td>
                               <td>
@@ -994,7 +994,7 @@ const Ticket = (props) => {
               removeBodyCss();
               setSelectedData(null);
             }}
-            size="lg"
+            size="xl"
           >
             <div
               className="modal-header"
@@ -1044,14 +1044,6 @@ const Ticket = (props) => {
                           <td></td>
                         </tr>
                         <tr>
-                          <th>Submitted</th>
-                          <td>
-                            {selectedData &&
-                              parseFullDate(selectedData.tglDibuat)}
-                          </td>
-                          <td></td>
-                        </tr>
-                        <tr>
                           <th>Category</th>
                           <td>{selectedData && selectedData.categoryName}</td>
                           <td></td>
@@ -1081,7 +1073,15 @@ const Ticket = (props) => {
                           <td></td>
                         </tr>
                         <tr>
-                          <th>Updated</th>
+                          <th>Submitted On</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.tglDibuat)}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Updated On</th>
                           <td>
                             {selectedData &&
                               parseFullDate(selectedData.tglDiperbarui)}
@@ -1120,6 +1120,30 @@ const Ticket = (props) => {
                         <tr>
                           <th>Terminal Id</th>
                           <td>{selectedData && selectedData.terminalId}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Assigning On</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.assigningTime)}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Start On</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.startTime)}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Close On</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.closeTime)}
+                          </td>
                           <td></td>
                         </tr>
                       </tbody>
