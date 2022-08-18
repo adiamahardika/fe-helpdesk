@@ -38,7 +38,6 @@ require("dotenv").config();
 
 const DetailTicket = (props) => {
   const detail_ticket = props.detail_ticket;
-  console.log(detail_ticket);
   const list_reply_ticket = props.list_reply_ticket;
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
