@@ -536,7 +536,9 @@ const DetailTicket = (props) => {
                         {detail_ticket &&
                         detail_ticket.assigningTime.includes("0001-01-01T")
                           ? "-"
-                          : parseFullDate(detail_ticket.assigningTime)}
+                          : parseFullDate(
+                              detail_ticket && detail_ticket.assigningTime
+                            )}
                       </strong>
                     </Col>
                   </Row>
@@ -547,7 +549,9 @@ const DetailTicket = (props) => {
                         {detail_ticket &&
                         detail_ticket.startTime.includes("0001-01-01T")
                           ? "-"
-                          : parseFullDate(detail_ticket.startTime)}
+                          : parseFullDate(
+                              detail_ticket && detail_ticket.startTime
+                            )}
                       </strong>
                     </Col>
                   </Row>
@@ -558,7 +562,9 @@ const DetailTicket = (props) => {
                         {detail_ticket &&
                         detail_ticket.closeTime.includes("0001-01-01T")
                           ? "-"
-                          : parseFullDate(detail_ticket.closeTime)}
+                          : parseFullDate(
+                              detail_ticket && detail_ticket.closeTime
+                            )}
                       </strong>
                     </Col>
                   </Row>
