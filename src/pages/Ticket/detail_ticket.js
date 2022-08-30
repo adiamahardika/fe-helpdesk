@@ -56,7 +56,6 @@ const DetailTicket = (props) => {
 
   const [replyData, setReplyData] = useState(null);
   const [closeData, setCloseData] = useState(null);
-  console.log(closeData);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState(false);
   const [modalFilter, setModalFilter] = useState(false);

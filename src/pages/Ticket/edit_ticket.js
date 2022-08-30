@@ -93,12 +93,9 @@ const EditTicket = (props) => {
     setIsShowSweetAlert(setTimeout(true, 1500));
     setPristine();
   };
+  console.log(data);
   const ButtonSubmitUpdate = () => {
-    if (
-      data &&
-      Object.keys(data).length >= 7 &&
-      Object.values(data).every((value) => value !== "")
-    ) {
+    if (data && Object.keys(data).length >= 8) {
       return (
         <button
           type="button"
@@ -230,6 +227,7 @@ const EditTicket = (props) => {
         category: detail_ticket.category,
         subCategory: detail_ticket.subCategory,
         assignedTo: detail_ticket.assignedTo,
+        visitStatus: detail_ticket.visitStatus,
         updatedBy: username,
       });
       findStatus >= 0 &&
@@ -287,6 +285,59 @@ const EditTicket = (props) => {
                                       </option>
                                     )
                                 )}
+                              </select>
+                            </div>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    )}
+                    {data && data.visitStatus !== "" && (
+                      <Row>
+                        <Col md={4}>
+                          <FormGroup className="select2-container">
+                            <label className="control-label">
+                              Visit Status
+                            </label>
+                            <div>
+                              <select
+                                name="visitDate"
+                                className="form-control"
+                                defaultValue={data && data.visitStatus}
+                                onChange={(event) =>
+                                  setData({
+                                    ...data,
+                                    visitStatus: event.target.value,
+                                  })
+                                }
+                              >
+                                <option
+                                  value="No Visit"
+                                  onChange={(event) =>
+                                    setData({
+                                      ...data,
+                                      visitStatus: event.target.value,
+                                    })
+                                  }
+                                  selected={
+                                    data && data.visitStatus === "No Visit"
+                                  }
+                                >
+                                  No Visit
+                                </option>
+                                <option
+                                  value="Visit"
+                                  onChange={(event) =>
+                                    setData({
+                                      ...data,
+                                      visitStatus: event.target.value,
+                                    })
+                                  }
+                                  selected={
+                                    data && data.visitStatus === "Visit"
+                                  }
+                                >
+                                  Visit
+                                </option>
                               </select>
                             </div>
                           </FormGroup>
