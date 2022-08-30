@@ -55,7 +55,8 @@ const DetailTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [replyData, setReplyData] = useState(null);
-  console.log(replyData);
+  const [closeData, setCloseData] = useState(null);
+  console.log(closeData);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState(false);
   const [modalFilter, setModalFilter] = useState(false);
@@ -617,7 +618,14 @@ const DetailTicket = (props) => {
                           <button
                             type="button"
                             className="btn btn-success waves-effect waves-light mr-2 d-flex align-items-center"
-                            onClick={() => setModalClose(true)}
+                            onClick={() => {
+                              setModalClose(true);
+                              setCloseData({
+                                ticketCode: ticketId,
+                                closeBy: username,
+                                visitStatus: "No Visit",
+                              });
+                            }}
                           >
                             <i className="bx bx-stop font-size-16 align-middle mr-1"></i>
                             Close
@@ -1435,7 +1443,63 @@ const DetailTicket = (props) => {
               </button>
             </div>
             <div className="modal-body">
-              Are you sure want to close this ticket?
+              {detail_ticket && detail_ticket.visitStatus === "" ? (
+                <Row className="align-items-center justify-content-center">
+                  <Col md={6}>
+                    <FormGroup className="select2-container">
+                      <label>Visit status</label>
+                      <div>
+                        <select
+                          name="visit"
+                          className="form-control"
+                          defaultValue={closeData && closeData.visitStatus}
+                          onChange={(event) =>
+                            setCloseData({
+                              ...closeData,
+                              visitStatus: event.target.value,
+                            })
+                          }
+                          style={{
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {" "}
+                          <option
+                            value="No Visit"
+                            onChange={(event) =>
+                              setCloseData({
+                                ...closeData,
+                                visitStatus: event.target.value,
+                              })
+                            }
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            No Visit
+                          </option>
+                          <option
+                            value="Visit"
+                            onChange={(event) =>
+                              setCloseData({
+                                ...closeData,
+                                visitStatus: event.target.value,
+                              })
+                            }
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Visit
+                          </option>
+                        </select>
+                      </div>
+                    </FormGroup>
+                  </Col>
+                </Row>
+              ) : (
+                <>Are you sure want to close this ticket?</>
+              )}
             </div>
             <div className="modal-footer">
               <button
@@ -1455,13 +1519,7 @@ const DetailTicket = (props) => {
                 onClick={() => {
                   setAlertMessage("closed");
                   setIsShowSweetAlert(true);
-                  props.closeTicket(
-                    {
-                      ticketCode: ticketId,
-                      closeBy: username,
-                    },
-                    ticketId
-                  );
+                  props.closeTicket(closeData, ticketId);
                 }}
               >
                 Close
