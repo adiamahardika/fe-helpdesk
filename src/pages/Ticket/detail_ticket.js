@@ -622,7 +622,11 @@ const DetailTicket = (props) => {
                               setCloseData({
                                 ticketCode: ticketId,
                                 closeBy: username,
-                                visitStatus: "No Visit",
+                                visitStatus:
+                                  detail_ticket &&
+                                  detail_ticket.visitStatus !== ""
+                                    ? detail_ticket.visitStatus
+                                    : "No Visit",
                               });
                             }}
                           >

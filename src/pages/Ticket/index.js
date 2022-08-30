@@ -1049,6 +1049,15 @@ const Ticket = (props) => {
                           <td></td>
                         </tr>
                         <tr>
+                          <th>Visit Status</th>
+                          <td>
+                            {selectedData && selectedData.visitStatus.length > 0
+                              ? selectedData.visitStatus
+                              : "-"}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
                           <th>Subject</th>
                           <td>{selectedData && selectedData.judul}</td>
                           <td></td>
@@ -1069,22 +1078,6 @@ const Ticket = (props) => {
                             {selectedData && selectedData.assignee.length > 0
                               ? selectedData.assignee
                               : "Unassigned"}
-                          </td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <th>Submitted On</th>
-                          <td>
-                            {selectedData &&
-                              parseFullDate(selectedData.tglDibuat)}
-                          </td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <th>Updated On</th>
-                          <td>
-                            {selectedData &&
-                              parseFullDate(selectedData.tglDiperbarui)}
                           </td>
                           <td></td>
                         </tr>
@@ -1120,6 +1113,22 @@ const Ticket = (props) => {
                         <tr>
                           <th>Terminal Id</th>
                           <td>{selectedData && selectedData.terminalId}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Submitted On</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.tglDibuat)}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>Updated On</th>
+                          <td>
+                            {selectedData &&
+                              parseFullDate(selectedData.tglDiperbarui)}
+                          </td>
                           <td></td>
                         </tr>
                         <tr>

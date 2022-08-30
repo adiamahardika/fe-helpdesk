@@ -76,12 +76,15 @@ const EditTicket = (props) => {
   };
   const onChangeStatus = async (value) => {
     if (value) {
+      let visitStatus =
+        value.name === "Finish" ? "No Visit" : detail_ticket.visitStatus;
       let findIndexStatus = general_constant.status.findIndex(
         (item) => item.name === value
       );
       setStatusColor(general_constant.status[findIndexStatus].color);
       setData({
         ...data,
+        visitStatus: visitStatus,
         status: value,
       });
     }
@@ -291,7 +294,7 @@ const EditTicket = (props) => {
                         </Col>
                       </Row>
                     )}
-                    {data && data.visitStatus !== "" && (
+                    {data && data.status === "Finish" && (
                       <Row>
                         <Col md={4}>
                           <FormGroup className="select2-container">
