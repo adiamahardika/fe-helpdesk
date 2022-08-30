@@ -55,6 +55,7 @@ const DetailTicket = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 
   const [replyData, setReplyData] = useState(null);
+  console.log(replyData);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState(false);
   const [modalFilter, setModalFilter] = useState(false);
@@ -151,6 +152,8 @@ const DetailTicket = (props) => {
   };
   const onChangeStatus = async (value) => {
     if (value) {
+      let visitStatus =
+        value.name === "Finish" ? "No Visit" : detail_ticket.visitStatus;
       let findIndexStatus = general_constant.status.findIndex(
         (item) => item.name === value
       );
@@ -159,6 +162,7 @@ const DetailTicket = (props) => {
       setReplyData({
         ...replyData,
         status: value,
+        visitStatus: visitStatus,
         replyType: selected.replyType,
       });
     }
@@ -169,18 +173,22 @@ const DetailTicket = (props) => {
 
     let status;
     let reply_type;
+    let visitStatus;
     if (value === false) {
       status = detail_ticket.status;
       reply_type = "";
+      visitStatus = detail_ticket.visitStatus;
     } else {
       status = "Finish";
       reply_type = "close";
+      visitStatus = "No Visit";
       setStatusColor("#34c38f");
     }
     setReplyData({
       ...replyData,
       status: status,
       replyType: reply_type,
+      visitStatus: visitStatus,
     });
   };
 
@@ -196,6 +204,7 @@ const DetailTicket = (props) => {
       reply_request.append("attachment2", replyData.attachment2);
     reply_request.append("status", replyData.status);
     reply_request.append("emailNotification", detail_ticket.emailNotification);
+    reply_request.append("visitStatus", replyData.visitStatus);
     reply_request.append("replyType", replyData.replyType);
     reply_request.append("updatedBy", replyData.updatedBy);
     props.replyTicket(reply_request, ticketId);
@@ -208,7 +217,7 @@ const DetailTicket = (props) => {
     if (
       replyData &&
       replyData.isi !== "" &&
-      Object.keys(replyData).length >= 4
+      Object.keys(replyData).length >= 7
     ) {
       return (
         <a href={`#reply-${list_reply_ticket && list_reply_ticket.length - 1}`}>
@@ -426,6 +435,7 @@ const DetailTicket = (props) => {
         ticketCode: ticketId,
         usernamePengirim: username,
         status: ticket_status,
+        visitStatus: detail_ticket.visitStatus,
         isi: "",
         updatedBy: username,
         replyType: reply_type,
@@ -683,6 +693,17 @@ const DetailTicket = (props) => {
                             {detail_ticket && detail_ticket.assignee.length > 0
                               ? detail_ticket.assignee
                               : "Unassigned"}
+                          </h6>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          Visit Status
+                          <h6>
+                            {detail_ticket &&
+                            detail_ticket.visitStatus.length > 0
+                              ? detail_ticket.visitStatus
+                              : "-"}
                           </h6>
                         </Col>
                       </Row>
@@ -1158,6 +1179,70 @@ const DetailTicket = (props) => {
                                       </Col>
                                     </Row>
                                   )}
+                                  {detail_ticket &&
+                                    detail_ticket.visitStatus === "" &&
+                                    replyData &&
+                                    replyData.status === "Finish" && (
+                                      <Row className="mt-1">
+                                        <Col md={4}>
+                                          <FormGroup className="select2-container">
+                                            <label>Visit status</label>
+                                            <div>
+                                              <select
+                                                name="visit"
+                                                className="form-control"
+                                                defaultValue={
+                                                  replyData &&
+                                                  replyData.visitStatus
+                                                }
+                                                onChange={(event) =>
+                                                  setReplyData({
+                                                    ...replyData,
+                                                    visitStatus:
+                                                      event.target.value,
+                                                  })
+                                                }
+                                                style={{
+                                                  fontWeight: "bold",
+                                                }}
+                                              >
+                                                {" "}
+                                                <option
+                                                  value="No Visit"
+                                                  onChange={(event) =>
+                                                    setReplyData({
+                                                      ...replyData,
+                                                      visitStatus:
+                                                        event.target.value,
+                                                    })
+                                                  }
+                                                  style={{
+                                                    fontWeight: "bold",
+                                                  }}
+                                                >
+                                                  No Visit
+                                                </option>
+                                                <option
+                                                  value="Visit"
+                                                  onChange={(event) =>
+                                                    setReplyData({
+                                                      ...replyData,
+                                                      visitStatus:
+                                                        event.target.value,
+                                                    })
+                                                  }
+                                                  style={{
+                                                    fontWeight: "bold",
+                                                  }}
+                                                >
+                                                  Visit
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                    )}
                                 </>
                               )}
                           </Col>
