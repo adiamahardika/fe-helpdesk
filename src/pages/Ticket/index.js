@@ -837,7 +837,11 @@ const Ticket = (props) => {
                           return (
                             <tr key={value.id}>
                               <th scope="row">
-                                <div>{index + 1}</div>
+                                <div>
+                                  {data.pageSize * active_page_ticket +
+                                    index +
+                                    1}
+                                </div>
                               </th>
                               <td>{value.ticketCode}</td>
                               <td>{value.terminalId}</td>
