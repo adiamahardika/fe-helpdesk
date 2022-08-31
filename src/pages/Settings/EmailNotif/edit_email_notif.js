@@ -27,7 +27,7 @@ const AddEmailNotif = (props) => {
   const detail_email_notif = props.detail_email_notif;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );

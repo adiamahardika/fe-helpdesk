@@ -42,10 +42,10 @@ const DetailTicket = (props) => {
   const message = props.message_ticket;
   const response_code = props.response_code_ticket;
   const loading = props.loading;
-  const username = sessionStorage.getItem("username");
+  const username = localStorage.getItem("username");
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );

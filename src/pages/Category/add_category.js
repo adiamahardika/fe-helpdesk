@@ -33,7 +33,7 @@ const AddCategory = (props) => {
   const loading = props.loading;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );

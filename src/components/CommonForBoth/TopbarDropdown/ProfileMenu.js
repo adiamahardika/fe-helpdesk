@@ -9,8 +9,8 @@ import routes from "../../../helpers/routes.json";
 const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
-  const name = sessionStorage.getItem("name");
-  const username = sessionStorage.getItem("username");
+  const name = localStorage.getItem("name");
+  const username = localStorage.getItem("username");
 
   return (
     <React.Fragment>

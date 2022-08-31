@@ -75,22 +75,22 @@ const Login = (props) => {
               grapari_id = null;
             }
 
-            sessionStorage.setItem("signatureKey", decode.signature_key);
-            sessionStorage.setItem("accessToken", value.response.accessToken);
-            sessionStorage.setItem("username", value.response.username);
-            sessionStorage.setItem("name", value.response.name);
-            sessionStorage.setItem("email", value.response.email);
-            sessionStorage.setItem("areaCode", JSON.stringify(area_code));
-            sessionStorage.setItem("regional", JSON.stringify(regional));
-            sessionStorage.setItem("grapariId", JSON.stringify(grapari_id));
-            sessionStorage.setItem(
+            localStorage.setItem("signatureKey", decode.signature_key);
+            localStorage.setItem("accessToken", value.response.accessToken);
+            localStorage.setItem("username", value.response.username);
+            localStorage.setItem("name", value.response.name);
+            localStorage.setItem("email", value.response.email);
+            localStorage.setItem("areaCode", JSON.stringify(area_code));
+            localStorage.setItem("regional", JSON.stringify(regional));
+            localStorage.setItem("grapariId", JSON.stringify(grapari_id));
+            localStorage.setItem(
               "permission",
               CryptoJS.AES.encrypt(
                 JSON.stringify(value.response.role[0].listPermission),
                 `${process.env.ENCRYPT_KEY}`
               )
             );
-            sessionStorage.setItem("isAuth", true);
+            localStorage.setItem("isAuth", true);
             history.push(routes.ticket);
           } else {
             setMessage(value.status.description);
@@ -120,7 +120,7 @@ const Login = (props) => {
         },
       },
     };
-    sessionStorage.clear();
+    localStorage.clear();
     setCaptchaRequest(request);
     props.readCaptcha(request);
   }, []);

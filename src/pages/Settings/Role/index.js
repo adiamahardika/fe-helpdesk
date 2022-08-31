@@ -31,7 +31,7 @@ const Role = (props) => {
   const list_role = props.list_role;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );

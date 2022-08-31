@@ -20,7 +20,7 @@ const IdleTimerContainer = (props) => {
     setModalIsOpen(!modalIsOpen);
     window.location.assign(routes.login);
     clearTimeout(sessionTimeoutRef.current);
-    sessionStorage.clear();
+    localStorage.clear();
   };
 
   return (

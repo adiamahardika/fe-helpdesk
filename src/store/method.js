@@ -3,20 +3,31 @@ import routes from "../helpers/routes.json";
 require("dotenv").config();
 
 const refreshToken = async () => {
-  await fetch(process.env.REACT_APP_API + "/v1/auth/refresh-token", {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      token: sessionStorage.getItem("accessToken"),
-      "signature-key": sessionStorage.getItem("signatureKey"),
-      "request-by": sessionStorage.getItem("username"),
-    },
-  })
-    .then((response) => response.json())
-    .then((value) => {
-      sessionStorage.setItem("accessToken", value.response.accessToken);
-    });
+  const now = new Date();
+  const token = localStorage.getItem("accessToken");
+  const jwtPayload = JSON.parse(window.atob(token.split(".")[1]));
+  const exp = jwtPayload.exp * 1000;
+  const min = exp - now;
+
+  if (min < -10760000) {
+    localStorage.clear();
+    window.location.assign(routes.login);
+  } else {
+    await fetch(process.env.REACT_APP_API + "/v1/auth/refresh-token", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+        "signature-key": localStorage.getItem("signatureKey"),
+        "request-by": localStorage.getItem("username"),
+      },
+    })
+      .then((response) => response.json())
+      .then((value) => {
+        localStorage.setItem("accessToken", value.response.accessToken);
+      });
+  }
 };
 
 export const getMethod = async (data) => {
@@ -25,9 +36,9 @@ export const getMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      token: sessionStorage.getItem("accessToken"),
-      "signature-key": sessionStorage.getItem("signatureKey"),
-      "request-by": sessionStorage.getItem("username"),
+      token: localStorage.getItem("accessToken"),
+      "signature-key": localStorage.getItem("signatureKey"),
+      "request-by": localStorage.getItem("username"),
     },
   });
 
@@ -42,7 +53,7 @@ export const getMethod = async (data) => {
   } else if (
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.assign(routes.login);
   } else {
     return item;
@@ -55,9 +66,9 @@ export const postMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      token: sessionStorage.getItem("accessToken"),
-      "signature-key": sessionStorage.getItem("signatureKey"),
-      "request-by": sessionStorage.getItem("username"),
+      token: localStorage.getItem("accessToken"),
+      "signature-key": localStorage.getItem("signatureKey"),
+      "request-by": localStorage.getItem("username"),
     },
     body: JSON.stringify(data.body),
   });
@@ -73,7 +84,7 @@ export const postMethod = async (data) => {
   } else if (
     response.status.httpStatusCode === general_constant.unauthorized_status
   ) {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.assign(routes.login);
   } else {
     return item;
@@ -85,9 +96,9 @@ export const postMethodWithFile = async (data) => {
     method: "POST",
     mode: "cors",
     headers: {
-      token: sessionStorage.getItem("accessToken"),
-      "signature-key": sessionStorage.getItem("signatureKey"),
-      "request-by": sessionStorage.getItem("username"),
+      token: localStorage.getItem("accessToken"),
+      "signature-key": localStorage.getItem("signatureKey"),
+      "request-by": localStorage.getItem("username"),
     },
     body: data.body,
   });
@@ -103,7 +114,7 @@ export const postMethodWithFile = async (data) => {
   } else if (
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.assign(routes.login);
   } else {
     return item;
@@ -116,9 +127,9 @@ export const putMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      token: sessionStorage.getItem("accessToken"),
-      "signature-key": sessionStorage.getItem("signatureKey"),
-      "request-by": sessionStorage.getItem("username"),
+      token: localStorage.getItem("accessToken"),
+      "signature-key": localStorage.getItem("signatureKey"),
+      "request-by": localStorage.getItem("username"),
     },
     body: JSON.stringify(data.body),
   });
@@ -134,7 +145,7 @@ export const putMethod = async (data) => {
   } else if (
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.assign(routes.login);
   } else {
     return item;
@@ -147,9 +158,9 @@ export const deleteMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      token: sessionStorage.getItem("accessToken"),
-      "signature-key": sessionStorage.getItem("signatureKey"),
-      "request-by": sessionStorage.getItem("username"),
+      token: localStorage.getItem("accessToken"),
+      "signature-key": localStorage.getItem("signatureKey"),
+      "request-by": localStorage.getItem("username"),
     },
   });
   const responseGet = await fetch(process.env.REACT_APP_API + data.read_url, {
@@ -157,9 +168,9 @@ export const deleteMethod = async (data) => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      token: sessionStorage.getItem("accessToken"),
-      "signature-key": sessionStorage.getItem("signatureKey"),
-      "request-by": sessionStorage.getItem("username"),
+      token: localStorage.getItem("accessToken"),
+      "signature-key": localStorage.getItem("signatureKey"),
+      "request-by": localStorage.getItem("username"),
     },
   });
 
@@ -177,7 +188,7 @@ export const deleteMethod = async (data) => {
   } else if (
     item.status.httpStatusCode === general_constant.unauthorized_status
   ) {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.assign(routes.login);
   } else if (item.status.responseCode === general_constant.success_message) {
     return item;

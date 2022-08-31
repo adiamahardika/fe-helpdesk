@@ -26,11 +26,11 @@ const Users = (props) => {
   const active_page_user = props.active_page_user;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
-  const username = sessionStorage.getItem("username");
+  const username = localStorage.getItem("username");
   const history = useHistory();
 
   const [deleteUser, setDeleteUser] = useState(false);
@@ -91,7 +91,7 @@ const Users = (props) => {
   };
   const EditButton = (value) => {
     let button = null;
-    if (value.value.username === sessionStorage.getItem("username")) {
+    if (value.value.username === localStorage.getItem("username")) {
       button = (
         <Link
           to={{

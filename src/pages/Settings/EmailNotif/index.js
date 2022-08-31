@@ -23,7 +23,7 @@ const EmailNotif = (props) => {
   const list_email_notif = props.list_email_notif;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );

@@ -44,7 +44,7 @@ const DetailUser = (props) => {
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
@@ -225,7 +225,7 @@ const DetailUser = (props) => {
       (value) => value.code === code_all_permissions.edit_user_status
     );
 
-    if (isUpdateUser && username !== sessionStorage.getItem("username")) {
+    if (isUpdateUser && username !== localStorage.getItem("username")) {
       isResetPassword && setIsShowResetPassword(true);
       isUpdateStatus && setIsShowUpdateStatus(true);
       props.readUserDetail(username);

@@ -47,15 +47,15 @@ const AddTicket = (props) => {
   const loading = props.loading;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
-  const area_code = JSON.parse(sessionStorage.getItem("areaCode"));
-  const regional = JSON.parse(sessionStorage.getItem("regional"));
-  const grapari_id = JSON.parse(sessionStorage.getItem("grapariId"));
-  const username = sessionStorage.getItem("username");
-  const email = sessionStorage.getItem("email");
+  const area_code = JSON.parse(localStorage.getItem("areaCode"));
+  const regional = JSON.parse(localStorage.getItem("regional"));
+  const grapari_id = JSON.parse(localStorage.getItem("grapariId"));
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("email");
   const history = useHistory();
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();
 

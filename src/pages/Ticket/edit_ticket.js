@@ -44,12 +44,12 @@ const EditTicket = (props) => {
 
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
-      sessionStorage.getItem("permission"),
+      localStorage.getItem("permission"),
       `${process.env.ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
   const history = useHistory();
-  const username = sessionStorage.getItem("username");
+  const username = localStorage.getItem("username");
   const { search } = useLocation();
   const { ticketId } = queryString.parse(search);
   const [Prompt, setDirty, setPristine] = UnsavedChangesWarning();

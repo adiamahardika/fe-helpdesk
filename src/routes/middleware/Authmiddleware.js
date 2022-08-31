@@ -6,7 +6,7 @@ import IdleTimerContainer from "../../components/Common/IdleTimeout";
 const Authmiddleware = ({ component: Component, layout: Layout }) => (
   <Route
     render={(props) => {
-      if (!sessionStorage.getItem("isAuth")) {
+      if (!localStorage.getItem("isAuth")) {
         return (
           <Redirect
             to={{ pathname: routes.login, state: { from: props.location } }}
