@@ -778,6 +778,10 @@ const Report = (props) => {
                           <ExcelColumn label="Ticket Id" value="ticketCode" />
                           <ExcelColumn label="Category" value="category" />
                           <ExcelColumn label="Status" value="status" />
+                          <ExcelColumn
+                            label="Visit Status"
+                            value="visitStatus"
+                          />
                           <ExcelColumn label="Prioritas" value="prioritas" />
                           <ExcelColumn label="Area" value="areaName" />
                           <ExcelColumn label="Regional" value="regional" />
