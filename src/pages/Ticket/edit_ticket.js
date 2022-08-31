@@ -29,6 +29,7 @@ import routes from "../../helpers/routes.json";
 import queryString from "query-string";
 import CryptoJS from "crypto-js";
 import Select from "react-select";
+import Loader from "../../helpers/loader";
 require("dotenv").config();
 
 const EditTicket = (props) => {
@@ -39,8 +40,8 @@ const EditTicket = (props) => {
   const option_category = props.option_category;
   const list_user = props.list_user;
   const list_sub_category = props.list_sub_category;
-
   const loading = props.loading;
+
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
@@ -96,7 +97,6 @@ const EditTicket = (props) => {
     setIsShowSweetAlert(setTimeout(true, 1500));
     setPristine();
   };
-  console.log(data);
   const ButtonSubmitUpdate = () => {
     if (data && Object.keys(data).length >= 8) {
       return (
@@ -242,6 +242,7 @@ const EditTicket = (props) => {
 
   return (
     <React.Fragment>
+      {loading && <Loader />}
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title={"Ticket"} breadcrumbItem={"Edit Ticket"} />

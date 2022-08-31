@@ -41,11 +41,13 @@ import routes from "../../helpers/routes.json";
 import classnames from "classnames";
 import CryptoJS from "crypto-js";
 import Select from "react-select";
+import Loader from "../../helpers/loader";
 import "../../assets/css/pagination.css";
 require("dotenv").config();
 
 const Ticket = (props) => {
   const list_ticket = props.list_ticket;
+  const loading = props.loading;
   const list_category = props.list_category;
   const list_checked_category = props.list_checked_category;
   const message = props.message_ticket;
@@ -374,6 +376,7 @@ const Ticket = (props) => {
   }, []);
   return (
     <React.Fragment>
+      {loading && <Loader />}
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title={"Ticket"} breadcrumbItem={"Ticket"} />

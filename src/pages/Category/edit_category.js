@@ -27,12 +27,14 @@ import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import queryString from "query-string";
 import CryptoJS from "crypto-js";
+import Loader from "../../helpers/loader";
 require("dotenv").config();
 
 const EditCategory = (props) => {
   const message = props.message_category;
   const response_code = props.response_code_category;
   const detail_category = props.detail_category;
+  const loading = props.loading;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
@@ -211,6 +213,7 @@ const EditCategory = (props) => {
 
   return (
     <React.Fragment>
+      {loading && <Loader />}
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title={"Category"} breadcrumbItem={"Detail Category"} />

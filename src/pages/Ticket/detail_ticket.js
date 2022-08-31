@@ -444,7 +444,6 @@ const DetailTicket = (props) => {
   }, [detail_ticket]);
   return (
     <React.Fragment>
-      {" "}
       {loading && <Loader />}
       <div className="page-content">
         <Container fluid>

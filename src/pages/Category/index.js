@@ -21,6 +21,7 @@ require("dotenv").config();
 
 const Category = (props) => {
   const list_category = props.list_category;
+  console.log("response", list_category);
   const message = props.message_category;
   const response_code = props.response_code_category;
   const total_pages_category = props.total_pages_category;
@@ -39,6 +40,7 @@ const Category = (props) => {
     sort_by: "name",
     order_by: "asc",
   });
+  console.log("request", data);
   const [selectedData, setSelectedData] = useState(null);
   const [isShowSweetAlert, setIsShowSweetAlert] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
@@ -172,7 +174,11 @@ const Category = (props) => {
                             return (
                               <tr key={value.id}>
                                 <th scope="row">
-                                  <div>{index + 1}</div>
+                                  <div>
+                                    {data.size * active_page_category +
+                                      index +
+                                      1}
+                                  </div>
                                 </th>
                                 <td>{value.name}</td>
                                 <td>
@@ -231,12 +237,12 @@ const Category = (props) => {
                                 setData({
                                   ...data,
                                   size: parseInt(event.target.value),
-                                  pageNo: 0,
+                                  page_no: 0,
                                 }),
                                 props.readCategory({
                                   ...data,
                                   size: parseInt(event.target.value),
-                                  pageNo: 0,
+                                  page_no: 0,
                                 })
                               )}
                             >

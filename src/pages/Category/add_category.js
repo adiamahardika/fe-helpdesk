@@ -23,12 +23,14 @@ import general_constant from "../../helpers/general_constant.json";
 import UnsavedChangesWarning from "../../helpers/unsaved_changes_warning";
 import routes from "../../helpers/routes.json";
 import CryptoJS from "crypto-js";
+import Loader from "../../helpers/loader";
 require("dotenv").config();
 
 const AddCategory = (props) => {
   const message = props.message_category;
   const response_code = props.response_code_category;
   const list_category = props.list_category;
+  const loading = props.loading;
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       sessionStorage.getItem("permission"),
@@ -67,7 +69,6 @@ const AddCategory = (props) => {
 
   const onSubmitCreate = async () => {
     props.createCategory({ ...data, subCategory: subCategory });
-    console.log({ ...data, subCategory: subCategory });
     setIsShowSweetAlert(true);
     setPristine();
   };
@@ -160,6 +161,7 @@ const AddCategory = (props) => {
 
   return (
     <React.Fragment>
+      {loading && <Loader />}
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title={"Category"} breadcrumbItem={"Add Category"} />
