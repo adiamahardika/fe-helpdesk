@@ -282,7 +282,10 @@ const Users = (props) => {
                         return (
                           <tr key={value.id}>
                             <th scope="row">
-                              <div>{index + 1}</div>
+                              <div>
+                                {" "}
+                                {data.size * active_page_user + index + 1}
+                              </div>
                             </th>
                             <td>{value.username}</td>
                             <td>{value.name}</td>
