@@ -211,6 +211,12 @@ const EditCategory = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (detail_category) {
+      setSubCategoryLength(detail_category.subCategory.length);
+    }
+  }, [detail_category]);
+
   return (
     <React.Fragment>
       {loading && <Loader />}
