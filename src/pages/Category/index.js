@@ -175,9 +175,10 @@ const Category = (props) => {
                               <tr key={value.id}>
                                 <th scope="row">
                                   <div>
-                                    {data.size * active_page_category +
-                                      index +
-                                      1}
+                                    {data &&
+                                      data.size * active_page_category +
+                                        index +
+                                        1}
                                   </div>
                                 </th>
                                 <td>{value.name}</td>

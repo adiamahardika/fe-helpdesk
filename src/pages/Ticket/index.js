@@ -841,9 +841,10 @@ const Ticket = (props) => {
                             <tr key={value.id}>
                               <th scope="row">
                                 <div>
-                                  {data.pageSize * active_page_ticket +
-                                    index +
-                                    1}
+                                  {data &&
+                                    data.pageSize * active_page_ticket +
+                                      index +
+                                      1}
                                 </div>
                               </th>
                               <td>{value.ticketCode}</td>

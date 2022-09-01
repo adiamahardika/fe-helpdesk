@@ -284,7 +284,8 @@ const Users = (props) => {
                             <th scope="row">
                               <div>
                                 {" "}
-                                {data.size * active_page_user + index + 1}
+                                {data &&
+                                  data.size * active_page_user + index + 1}
                               </div>
                             </th>
                             <td>{value.username}</td>
