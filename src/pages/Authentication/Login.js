@@ -74,8 +74,15 @@ const Login = (props) => {
             } else if (grapari_id[0] === "") {
               grapari_id = null;
             }
-
-            localStorage.setItem("signatureKey", decode.signature_key);
+            const signature_key = `${process.env.REACT_APP_SIGNATURE_SECRET}`;
+            localStorage.setItem(
+              "signatureKey",
+              CryptoJS.MD5(
+                value.response.username +
+                  value.response.id.toString() +
+                  signature_key
+              ).toString()
+            );
             localStorage.setItem("accessToken", value.response.accessToken);
             localStorage.setItem("username", value.response.username);
             localStorage.setItem("name", value.response.name);
@@ -87,7 +94,7 @@ const Login = (props) => {
               "permission",
               CryptoJS.AES.encrypt(
                 JSON.stringify(value.response.role[0].listPermission),
-                `${process.env.ENCRYPT_KEY}`
+                `${process.env.REACT_APP_ENCRYPT_KEY}`
               )
             );
             localStorage.setItem("isAuth", true);

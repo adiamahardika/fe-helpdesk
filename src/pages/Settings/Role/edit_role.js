@@ -25,7 +25,7 @@ const EditRole = (props) => {
   const permissions = JSON.parse(
     CryptoJS.AES.decrypt(
       localStorage.getItem("permission"),
-      `${process.env.ENCRYPT_KEY}`
+      `${process.env.REACT_APP_ENCRYPT_KEY}`
     ).toString(CryptoJS.enc.Utf8)
   );
   const history = useHistory();
