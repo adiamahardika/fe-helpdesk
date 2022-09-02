@@ -98,7 +98,12 @@ const EditTicket = (props) => {
     setPristine();
   };
   const ButtonSubmitUpdate = () => {
-    if (data && Object.keys(data).length >= 8) {
+    if (
+      data &&
+      Object.keys(data).length >= 8 &&
+      data.subCategory !== "" &&
+      data.prioritas !== ""
+    ) {
       return (
         <button
           type="button"
