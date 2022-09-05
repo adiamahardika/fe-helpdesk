@@ -53,9 +53,9 @@ const userRoutes = [
 
   // this route should be at the end of all other routes
   {
-    path: "/ticketing",
+    path: "/",
     exact: true,
-    component: () => <Redirect to={routes.ticket} />,
+    component: () => <Redirect to={routes.dashboard} />,
   },
 ];
 

@@ -136,6 +136,12 @@ const SidebarContent = (props) => {
     <React.Fragment>
       <div id="sidebar-menu">
         <ul className="metismenu list-unstyled" id="side-menu">
+          <li>
+            <Link to={routes.dashboard} className="waves-effect">
+              <i className="bx bx-line-chart"></i>
+              <span>{props.t("Dashboard")}</span>
+            </Link>
+          </li>
           {isViewTicket && (
             <li>
               <Link to={routes.ticket} className="waves-effect">

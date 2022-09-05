@@ -3,6 +3,7 @@ import routes from "../helpers/routes.json";
 require("dotenv").config();
 
 const refreshToken = async () => {
+  console.log("refresh");
   const now = new Date();
   const token = localStorage.getItem("accessToken");
   const jwtPayload = JSON.parse(window.atob(token.split(".")[1]));
