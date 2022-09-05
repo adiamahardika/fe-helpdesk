@@ -384,7 +384,7 @@ const Dashboard = (props) => {
                   <Row>
                     <Col className="d-flex justify-content-end">
                       <h4>
-                        {data.startDate} / {data.endDate}
+                        {data && data.startDate} / {data && data.endDate}
                       </h4>
                     </Col>
                   </Row>
