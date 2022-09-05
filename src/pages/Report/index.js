@@ -352,7 +352,7 @@ const Report = (props) => {
       filterCreatedBy && setIsFilterCreatedBy(true);
       filterAssignedTo && setIsFilterAssignedTo(true);
     } else {
-      history.push(routes.ticket);
+      history.push(routes.dashboard);
     }
   }, []);
 

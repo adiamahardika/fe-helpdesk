@@ -205,7 +205,7 @@ const EditTicket = (props) => {
       editAssigningTicket && setIsEditAssigningTicket(true);
       editCategoryTicket && setIsEditCategoryTicket(true);
     } else {
-      history.push(routes.ticket);
+      history.push(routes.dashboard);
     }
   }, []);
   useEffect(() => {

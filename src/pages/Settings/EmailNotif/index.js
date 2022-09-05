@@ -106,7 +106,7 @@ const EmailNotif = (props) => {
       isEditEmailNotif && setEditEmailNotif(true);
       isDeleteEmailNotif && setDeleteEmailNotif(true);
     } else {
-      history.push(routes.ticket);
+      history.push(routes.dashboard);
     }
   }, []);
 

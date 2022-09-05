@@ -131,7 +131,7 @@ const Category = (props) => {
 
       addCategory && setIsAddCategory(true);
     } else {
-      history.push(routes.ticket);
+      history.push(routes.dashboard);
     }
   }, []);
 

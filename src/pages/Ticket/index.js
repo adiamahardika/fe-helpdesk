@@ -371,7 +371,7 @@ const Ticket = (props) => {
       viewSentTicket && setIsViewSentTicket(true);
       viewAssignedToMeTicket && setIsViewAssignedToMeTicket(true);
     } else {
-      history.push(routes.login);
+      history.push(routes.dashboard);
     }
   }, []);
   return (

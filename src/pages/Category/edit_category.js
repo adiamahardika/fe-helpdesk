@@ -207,7 +207,7 @@ const EditCategory = (props) => {
       editCategory && setIsEditCategory(true);
       deleteCategory && setIsDeleteCategory(true);
     } else {
-      history.push(routes.ticket);
+      history.push(routes.dashboard);
     }
   }, []);
 
