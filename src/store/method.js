@@ -3,7 +3,6 @@ import routes from "../helpers/routes.json";
 require("dotenv").config();
 
 const refreshToken = async () => {
-  console.log("refresh");
   const now = new Date();
   const token = localStorage.getItem("accessToken");
   const jwtPayload = JSON.parse(window.atob(token.split(".")[1]));
@@ -77,8 +76,7 @@ export const postMethod = async (data) => {
   let item = null;
   await parse.then((value) => (item = value));
   if (
-    response.status.responseCode ===
-    general_constant.expired_token_response_code
+    item.status.responseCode === general_constant.expired_token_response_code
   ) {
     await refreshToken();
     return await postMethod(data);
