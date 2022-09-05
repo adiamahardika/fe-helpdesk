@@ -8,6 +8,7 @@ import {
   Label,
   FormGroup,
   Media,
+  CardTitle,
 } from "reactstrap";
 import { readCountReportByStatus } from "../../store/pages/report/actions";
 import { readArea } from "../../store/pages/area/actions";
@@ -21,6 +22,7 @@ import { AvForm } from "availity-reactstrap-validation";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import ReactApexChart from "react-apexcharts";
 import Select from "react-select";
+import Loader from "../../helpers/loader";
 
 const Dashboard = (props) => {
   const list_count_report_by_status = props.list_count_report_by_status;
@@ -46,7 +48,7 @@ const Dashboard = (props) => {
   const [requestGrapari, setRequestGrapari] = useState(null);
 
   const start_date = getShortDate(
-    new Date().setDate(new Date().getDate() - 360)
+    new Date().setDate(new Date().getDate() - 30)
   );
   const end_date = getShortDate(new Date());
 
@@ -213,6 +215,7 @@ const Dashboard = (props) => {
 
   return (
     <React.Fragment>
+      {loading && <Loader />}
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title={"Dashboard"} breadcrumbItem={"Dashboard"} />
@@ -221,7 +224,7 @@ const Dashboard = (props) => {
               <Card>
                 <CardBody>
                   <Row>
-                    <Col md={3}>
+                    <Col md={2}>
                       <div className="form-group">
                         <label
                           htmlFor="example-datetime-local-input"
@@ -251,7 +254,7 @@ const Dashboard = (props) => {
                         />
                       </div>
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                       <div className="form-group">
                         <label
                           htmlFor="example-datetime-local-input"
@@ -279,75 +282,72 @@ const Dashboard = (props) => {
                         />
                       </div>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col md={3}>
-                      <AvForm>
-                        {area_code && (
-                          <FormGroup className="select2-container">
-                            <Label>Area</Label>
-                            <Select
-                              value={selectedArea}
-                              placeholder="All"
-                              onChange={(event) => {
-                                handleArea(event);
-                              }}
-                              options={option_area}
-                              classNamePrefix="select2-selection"
-                              isMulti={true}
-                            />
-                          </FormGroup>
-                        )}
-                      </AvForm>
-                    </Col>
-                    <Col md={3}>
-                      <AvForm>
-                        {regional && (
-                          <FormGroup className="select2-container">
-                            <Label>Regional</Label>
-                            <Select
-                              value={selectedRegional}
-                              placeholder="All"
-                              onChange={(event) => {
-                                handleRegional(event);
-                              }}
-                              options={option_regional}
-                              classNamePrefix="select2-selection"
-                              isMulti={true}
-                            />
-                          </FormGroup>
-                        )}
-                      </AvForm>
-                    </Col>
-                    <Col md={3}>
-                      <AvForm>
-                        {grapari_id && (
-                          <FormGroup className="select2-container">
-                            <Label>Grapari</Label>
-                            <Select
-                              value={selectedGrapari}
-                              placeholder="All"
-                              onChange={(event) => {
-                                handleGrapari(event);
-                              }}
-                              options={option_grapari}
-                              classNamePrefix="select2-selection"
-                              isMulti={true}
-                            />
-                          </FormGroup>
-                        )}
-                      </AvForm>
-                    </Col>
+                    {area_code && (
+                      <Col md={2}>
+                        <AvForm>
+                          {area_code && (
+                            <FormGroup className="select2-container">
+                              <Label>Area</Label>
+                              <Select
+                                value={selectedArea}
+                                placeholder="All"
+                                onChange={(event) => {
+                                  handleArea(event);
+                                }}
+                                options={option_area}
+                                classNamePrefix="select2-selection"
+                                isMulti={true}
+                              />
+                            </FormGroup>
+                          )}
+                        </AvForm>
+                      </Col>
+                    )}{" "}
+                    {regional && (
+                      <Col md={3}>
+                        <AvForm>
+                          {regional && (
+                            <FormGroup className="select2-container">
+                              <Label>Regional</Label>
+                              <Select
+                                value={selectedRegional}
+                                placeholder="All"
+                                onChange={(event) => {
+                                  handleRegional(event);
+                                }}
+                                options={option_regional}
+                                classNamePrefix="select2-selection"
+                                isMulti={true}
+                              />
+                            </FormGroup>
+                          )}
+                        </AvForm>
+                      </Col>
+                    )}{" "}
+                    {grapari_id && (
+                      <Col md={3}>
+                        <AvForm>
+                          {grapari_id && (
+                            <FormGroup className="select2-container">
+                              <Label>Grapari</Label>
+                              <Select
+                                value={selectedGrapari}
+                                placeholder="All"
+                                onChange={(event) => {
+                                  handleGrapari(event);
+                                }}
+                                options={option_grapari}
+                                classNamePrefix="select2-selection"
+                                isMulti={true}
+                              />
+                            </FormGroup>
+                          )}
+                        </AvForm>
+                      </Col>
+                    )}
                   </Row>
                 </CardBody>
               </Card>
-              {/* <Row className="mt-3">
-                <Col className="d-flex justify-content-end">
-                  <h3>
-                    {data && data.startDate} / {data && data.endDate}
-                  </h3>
-                </Col>
-              </Row> */}
               <Row>
                 {totalStatus &&
                   totalStatus.map((value, key) => (
@@ -382,67 +382,63 @@ const Dashboard = (props) => {
               <Card>
                 <CardBody>
                   <Row>
+                    <Col className="d-flex justify-content-end">
+                      <h4>
+                        {data.startDate} / {data.endDate}
+                      </h4>
+                    </Col>
+                  </Row>
+                  <Row>
                     <Col>
                       {chartDate && chartSeries && (
                         <ReactApexChart
                           options={{
                             chart: {
-                              zoom: { enabled: !1 },
-                              toolbar: { show: !1 },
-                            },
-                            title: {
-                              text: `${data.startDate} / ${data.endDate}`,
-                              align: "left",
-                              style: {
-                                fontSize: "18px",
-                                fontFamily: "Poppins, sans-serif",
-                                fontWeight: "500",
-                                color: "#495057",
+                              toolbar: {
+                                show: false,
                               },
                             },
+                            plotOptions: {
+                              bar: {
+                                horizontal: false,
+                                columnWidth: "45%",
+                                endingShape: "rounded",
+                              },
+                            },
+                            dataLabels: {
+                              enabled: false,
+                            },
+                            stroke: {
+                              show: true,
+                              width: 2,
+                              colors: ["transparent"],
+                            },
+
                             colors: ["#f46a6a", "#556ee6", "#34c38f"],
-                            dataLabels: { enabled: !0 },
-                            stroke: { width: [3, 3, 3], curve: "straight" },
-                            grid: {
-                              row: {
-                                colors: [
-                                  "transparent",
-                                  "transparent",
-                                  "transparent",
-                                ],
-                                opacity: 0.2,
-                              },
-                              borderColor: "#f1f1f1",
-                            },
-                            markers: { style: "inverted", size: 6 },
                             xaxis: {
                               categories: chartDate,
-                              title: { text: "Date" },
                             },
                             yaxis: {
-                              title: { text: "Total Ticket Status" },
-                              min: 0,
-                              max: maxCount,
+                              title: {
+                                text: "Total Ticket Status",
+                              },
                             },
-                            legend: {
-                              position: "top",
-                              horizontalAlign: "right",
-                              floating: !0,
-                              offsetY: -25,
-                              offsetX: -5,
+                            grid: {
+                              borderColor: "#f1f1f1",
                             },
-                            responsive: [
-                              {
-                                breakpoint: 600,
-                                options: {
-                                  chart: { toolbar: { show: !1 } },
-                                  legend: { show: !1 },
+                            fill: {
+                              opacity: 1,
+                            },
+                            tooltip: {
+                              y: {
+                                formatter: function (val) {
+                                  return val + " Ticket";
                                 },
                               },
-                            ],
+                            },
                           }}
                           series={chartSeries}
-                          type="line"
+                          type="bar"
                           height="380"
                         />
                       )}
