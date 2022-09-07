@@ -55,7 +55,7 @@ const userRoutes = [
   {
     path: "/",
     exact: true,
-    component: () => <Redirect to={routes.dashboard} />,
+    component: () => <Redirect to={routes.ticket} />,
   },
 ];
 
