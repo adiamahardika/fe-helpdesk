@@ -661,7 +661,7 @@ const Ticket = (props) => {
                             type="date"
                             id="example-date-input"
                             min={data && data.startDate}
-                            max={data && data.endDate}
+                            max={getShortDate(new Date())}
                             defaultValue={data && data.endDate}
                             onChange={(event) => (
                               setData({
