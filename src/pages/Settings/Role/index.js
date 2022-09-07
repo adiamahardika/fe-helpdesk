@@ -312,7 +312,7 @@ const Role = (props) => {
                 <tr>
                   <th>Permission</th>
                   <td>:</td>
-                  <td>
+                  <td style={{ minWidth: "80%" }}>
                     {list_all_permission.map((value, index) => (
                       <div id="accordion" key={index}>
                         <div className="mb-2">
@@ -323,15 +323,15 @@ const Role = (props) => {
                                 style={{ cursor: "pointer" }}
                                 className="text-dark has-arrow align-content-center"
                               >
-                                <Col md={2}>
+                                <Col md={1}>
                                   <IsPermisiionIcon
                                     code={value.code}
                                   ></IsPermisiionIcon>
                                 </Col>
-                                <Col md={2} className="pr-0">
+                                {/* <Col md={2} className="pr-0">
                                   {value.code}
-                                </Col>
-                                <Col md={6} className="justify-content-start">
+                                </Col> */}
+                                <Col md={8} className="justify-content-start">
                                   {value.name}
                                 </Col>
                                 <Col md={2}>
@@ -379,20 +379,16 @@ const Role = (props) => {
                                           }}
                                         >
                                           <Row className="align-content-center">
-                                            <Col md={2}>
+                                            <Col md={1}>
                                               <IsPermisiionIcon
                                                 code={sub_level_1_value.code}
                                               ></IsPermisiionIcon>
                                             </Col>
-                                            <Col md={2}>
+                                            {/* <Col md={2}>
                                               {sub_level_1_value.code}
-                                            </Col>
+                                            </Col> */}
                                             <Col
-                                              md={
-                                                sub_level_1_value.sub_level_2
-                                                  ? 6
-                                                  : 8
-                                              }
+                                              md={8}
                                               className="justify-content-start"
                                             >
                                               {sub_level_1_value.name}
@@ -433,15 +429,12 @@ const Role = (props) => {
                                                 className="align-content-center pl-3"
                                                 key={sub_level_2_index}
                                               >
-                                                <Col md={2}>
+                                                <Col md={1}>
                                                   <IsPermisiionIcon
                                                     code={
                                                       sub_level_2_value.code
                                                     }
                                                   ></IsPermisiionIcon>
-                                                </Col>
-                                                <Col md={2} className="pr-0">
-                                                  {sub_level_2_value.code}
                                                 </Col>
                                                 <Col
                                                   md={8}

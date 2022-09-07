@@ -449,8 +449,7 @@ const AddRole = (props) => {
                           }}
                         >
                           <h5 className="my-0">
-                            {" "}
-                            {value.code} <span>{value.name}</span>
+                            <span>{value.name}</span>
                           </h5>
                         </label>
                       </div>
@@ -497,7 +496,6 @@ const AddRole = (props) => {
                                       );
                                     }}
                                   >
-                                    {sl1_value.code}{" "}
                                     <span>{sl1_value.name}</span>
                                   </label>
                                 </div>
@@ -543,7 +541,6 @@ const AddRole = (props) => {
                                                 );
                                               }}
                                             >
-                                              {sl2_value.code}{" "}
                                               <span>{sl2_value.name}</span>
                                             </label>
                                           </div>
