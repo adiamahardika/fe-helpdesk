@@ -1,5 +1,15 @@
 [
   {
+    "name": "Dashboard",
+    "code": "5",
+    "sub_level_1": [
+      {
+        "name": "View Dashboard",
+        "code": "5.1"
+      }
+    ]
+  },
+  {
     "name": "Ticket",
     "code": "1",
     "sub_level_1": [

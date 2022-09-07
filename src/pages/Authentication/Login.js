@@ -98,7 +98,7 @@ const Login = (props) => {
               )
             );
             localStorage.setItem("isAuth", true);
-            history.push(routes.dashboard);
+            history.push(routes.ticket);
           } else {
             setMessage(value.status.description);
           }

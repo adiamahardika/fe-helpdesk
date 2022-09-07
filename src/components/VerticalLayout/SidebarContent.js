@@ -25,6 +25,7 @@ const SidebarContent = (props) => {
   const [isViewCategory, setIsViewCategory] = useState(true);
   const [isGenerateReport, setIsGenerateReport] = useState(true);
   const [isEmailNotif, setIsEmailNotif] = useState(true);
+  const [isDashboard, setIsDashboard] = useState(true);
 
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -46,6 +47,9 @@ const SidebarContent = (props) => {
     let emailNotif = permissions.find(
       (value) => value.code === code_all_permissions.email_notif
     );
+    let dashboard = permissions.find(
+      (value) => value.code === code_all_permissions.dashboard
+    );
 
     viewUsers ? setIsViewUsers(true) : setIsViewUsers(false);
     viewRoles ? setIsViewRoles(true) : setIsViewRoles(false);
@@ -53,6 +57,7 @@ const SidebarContent = (props) => {
     viewTicket ? setIsViewTicket(true) : setIsViewTicket(false);
     generateReport ? setIsGenerateReport(true) : setIsGenerateReport(false);
     emailNotif ? setIsEmailNotif(true) : setIsEmailNotif(false);
+    dashboard ? setIsDashboard(true) : setIsDashboard(false);
 
     var pathName = props.location.pathname;
     const initMenu = () => {
@@ -136,12 +141,14 @@ const SidebarContent = (props) => {
     <React.Fragment>
       <div id="sidebar-menu">
         <ul className="metismenu list-unstyled" id="side-menu">
-          <li>
-            <Link to={routes.dashboard} className="waves-effect">
-              <i className="bx bx-line-chart"></i>
-              <span>{props.t("Dashboard")}</span>
-            </Link>
-          </li>
+          {isDashboard && (
+            <li>
+              <Link to={routes.dashboard} className="waves-effect">
+                <i className="bx bx-line-chart"></i>
+                <span>{props.t("Dashboard")}</span>
+              </Link>
+            </li>
+          )}
           {isViewTicket && (
             <li>
               <Link to={routes.ticket} className="waves-effect">

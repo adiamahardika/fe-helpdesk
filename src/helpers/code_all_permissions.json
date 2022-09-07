@@ -43,5 +43,7 @@
   "report": "4",
   "generate_report": "4.1",
   "filter_created_by": "4.2",
-  "filter_assigned_to": "4.3"
+  "filter_assigned_to": "4.3",
+  "dashboard": "5",
+  "view_dashboard": "5.1"
 }

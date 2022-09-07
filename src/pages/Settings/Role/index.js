@@ -168,7 +168,7 @@ const Role = (props) => {
       );
       setAccordion(newAccordion);
     } else {
-      history.push(routes.dashboard);
+      history.push(routes.ticket);
     }
   }, []);
 

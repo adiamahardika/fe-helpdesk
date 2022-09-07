@@ -379,7 +379,7 @@ const AddTicket = (props) => {
 
       assigningTicket && setIsAssigningTicket(true);
     } else {
-      history.push(routes.dashboard);
+      history.push(routes.ticket);
     }
   }, []);
 

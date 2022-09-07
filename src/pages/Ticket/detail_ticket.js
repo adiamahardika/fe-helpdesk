@@ -410,7 +410,7 @@ const DetailTicket = (props) => {
       closeTicket && setIsCloseTicket(true);
       replyTicket && setIsReplyTicket(true);
     } else {
-      history.push(routes.dashboard);
+      history.push(routes.ticket);
     }
   }, []);
   useEffect(() => {

@@ -151,7 +151,7 @@ const Users = (props) => {
       isEditUser && setEditUser(true);
       isDeleteUser && setDeleteUser(true);
     } else {
-      history.push(routes.dashboard);
+      history.push(routes.ticket);
     }
   }, []);
   return (

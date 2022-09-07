@@ -155,7 +155,7 @@ const AddCategory = (props) => {
         },
       ]);
     } else {
-      history.push(routes.dashboard);
+      history.push(routes.ticket);
     }
   }, []);
 
