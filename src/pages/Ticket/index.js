@@ -378,7 +378,7 @@ const Ticket = (props) => {
     if (data !== null) {
       const timer = setInterval(() => {
         props.readTicket(data);
-      }, 2000);
+      }, 300000);
       return () => clearInterval(timer);
     }
   }, [data]);
