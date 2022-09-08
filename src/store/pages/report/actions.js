@@ -35,7 +35,7 @@ export const readReportFulfilled = (data) => {
 export const readCountReportByStatus = (value) => {
   const data = {
     body: value,
-    url: `/v1/report/get-count-by-status`,
+    url: `/v1/report/get-count-activity`,
   };
   return {
     type: READ_COUNT_REPORT_BY_STATUS,
