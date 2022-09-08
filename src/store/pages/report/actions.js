@@ -2,9 +2,9 @@ import {
   READ_REPORT,
   READ_REPORT_REJECT,
   READ_REPORT_FULFILLED,
-  READ_COUNT_REPORT_BY_STATUS,
-  READ_COUNT_REPORT_BY_STATUS_REJECT,
-  READ_COUNT_REPORT_BY_STATUS_FULFILLED,
+  READ_COUNT_REPORT_ACTIVITY,
+  READ_COUNT_REPORT_ACTIVITY_REJECT,
+  READ_COUNT_REPORT_ACTIVITY_FULFILLED,
 } from "./actionTypes";
 
 export const readReport = (value) => {
@@ -32,27 +32,27 @@ export const readReportFulfilled = (data) => {
   };
 };
 
-export const readCountReportByStatus = (value) => {
+export const readCountReportActivity = (value) => {
   const data = {
     body: value,
     url: `/v1/report/get-count-activity`,
   };
   return {
-    type: READ_COUNT_REPORT_BY_STATUS,
+    type: READ_COUNT_REPORT_ACTIVITY,
     payload: data,
   };
 };
 
-export const readCountReportByStatusReject = (payload) => {
+export const readCountReportActivityReject = (payload) => {
   return {
-    type: READ_COUNT_REPORT_BY_STATUS_REJECT,
+    type: READ_COUNT_REPORT_ACTIVITY_REJECT,
     payload: payload,
   };
 };
 
-export const readCountReportByStatusFulfilled = (data) => {
+export const readCountReportActivityFulfilled = (data) => {
   return {
-    type: READ_COUNT_REPORT_BY_STATUS_FULFILLED,
+    type: READ_COUNT_REPORT_ACTIVITY_FULFILLED,
     payload: data,
   };
 };

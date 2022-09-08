@@ -9,13 +9,12 @@ import {
   FormGroup,
   Media,
 } from "reactstrap";
-import { readCountReportByStatus } from "../../store/pages/report/actions";
+import { readCountReportActivity } from "../../store/pages/report/actions";
 import { readArea } from "../../store/pages/area/actions";
 import { readRegional } from "../../store/pages/regional/actions";
 import { readGrapari } from "../../store/pages/grapari/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { useHistory } from "react-router";
 import { getShortDate } from "../../helpers/index";
 import { AvForm } from "availity-reactstrap-validation";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -65,7 +64,7 @@ const Dashboard = (props) => {
       ...requestGrapari,
       areaCode: area_code,
     });
-    props.readCountReportByStatus({
+    props.readCountReportActivity({
       ...data,
       areaCode: area_code,
       regional: [],
@@ -87,7 +86,7 @@ const Dashboard = (props) => {
       ...requestGrapari,
       regional: regional,
     });
-    props.readCountReportByStatus({
+    props.readCountReportActivity({
       ...data,
       regional: regional,
       grapariId: [],
@@ -102,7 +101,7 @@ const Dashboard = (props) => {
     setSelectedGrapari(event);
     setData({ ...data, grapariId: grapari_id });
 
-    props.readCountReportByStatus({
+    props.readCountReportActivity({
       ...data,
       grapariId: grapari_id,
     });
@@ -141,7 +140,7 @@ const Dashboard = (props) => {
       startDate: start_date,
       endDate: end_date,
     };
-    props.readCountReportByStatus(item);
+    props.readCountReportActivity(item);
 
     setData(item);
   }, []);
@@ -204,13 +203,13 @@ const Dashboard = (props) => {
         startDate: start_date,
         endDate: end_date,
       };
-      props.readCountReportByStatus(item);
+      props.readCountReportActivity(item);
     }
   }, [list_count_report_by_status]);
   useEffect(() => {
     if (data !== null) {
       const timer = setInterval(() => {
-        props.readCountReportByStatus(data);
+        props.readCountReportActivity(data);
       }, 300000);
       return () => clearInterval(timer);
     }
@@ -249,7 +248,7 @@ const Dashboard = (props) => {
                               ...data,
                               startDate: event.target.value,
                             }),
-                            props.readCountReportByStatus({
+                            props.readCountReportActivity({
                               ...data,
                               startDate: event.target.value,
                             })
@@ -277,7 +276,7 @@ const Dashboard = (props) => {
                               ...data,
                               endDate: event.target.value,
                             }),
-                            props.readCountReportByStatus({
+                            props.readCountReportActivity({
                               ...data,
                               endDate: event.target.value,
                             })
@@ -481,7 +480,7 @@ const mapStatetoProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      readCountReportByStatus,
+      readCountReportActivity,
       readArea,
       readRegional,
       readGrapari,

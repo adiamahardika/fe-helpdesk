@@ -2,9 +2,9 @@ import {
   READ_REPORT,
   READ_REPORT_REJECT,
   READ_REPORT_FULFILLED,
-  READ_COUNT_REPORT_BY_STATUS,
-  READ_COUNT_REPORT_BY_STATUS_REJECT,
-  READ_COUNT_REPORT_BY_STATUS_FULFILLED,
+  READ_COUNT_REPORT_ACTIVITY,
+  READ_COUNT_REPORT_ACTIVITY_REJECT,
+  READ_COUNT_REPORT_ACTIVITY_FULFILLED,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -37,19 +37,19 @@ const Report = (state = INIT_STATE, action) => {
         message_report: action.payload.status.description[0],
         loading: false,
       };
-    case READ_COUNT_REPORT_BY_STATUS:
+    case READ_COUNT_REPORT_ACTIVITY:
       return {
         ...state,
         loading: true,
       };
-    case READ_COUNT_REPORT_BY_STATUS_REJECT:
+    case READ_COUNT_REPORT_ACTIVITY_REJECT:
       return {
         ...state,
         response_code_report: action.payload.status.responseCode,
         message_report: action.payload.status.description[0],
         loading: false,
       };
-    case READ_COUNT_REPORT_BY_STATUS_FULFILLED:
+    case READ_COUNT_REPORT_ACTIVITY_FULFILLED:
       return {
         ...state,
         list_count_report_by_status: action.payload.content,
