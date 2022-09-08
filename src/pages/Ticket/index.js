@@ -374,6 +374,15 @@ const Ticket = (props) => {
       history.push(routes.login);
     }
   }, []);
+  useEffect(() => {
+    if (data !== null) {
+      const timer = setInterval(() => {
+        props.readTicket(data);
+      }, 2000);
+      return () => clearInterval(timer);
+    }
+  }, [data]);
+
   return (
     <React.Fragment>
       {loading && <Loader />}

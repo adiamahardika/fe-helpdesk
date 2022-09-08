@@ -8,7 +8,6 @@ import {
   Label,
   FormGroup,
   Media,
-  CardTitle,
 } from "reactstrap";
 import { readCountReportByStatus } from "../../store/pages/report/actions";
 import { readArea } from "../../store/pages/area/actions";
@@ -33,12 +32,9 @@ const Dashboard = (props) => {
   const area_code = JSON.parse(localStorage.getItem("areaCode"));
   const regional = JSON.parse(localStorage.getItem("regional"));
   const grapari_id = JSON.parse(localStorage.getItem("grapariId"));
-  const username = localStorage.getItem("username");
-  const history = useHistory();
 
   const [chartDate, setChartDate] = useState(null);
   const [chartSeries, setChartSeries] = useState(null);
-  const [maxCount, setMaxCount] = useState(null);
   const [totalStatus, setTotalStatus] = useState(null);
   const [data, setData] = useState(null);
   const [selectedArea, setSelectedArea] = useState(null);
@@ -177,8 +173,7 @@ const Dashboard = (props) => {
           data: finish_status,
         },
       ];
-      const merged_array = [...new_status, ...process_status, ...finish_status];
-      setMaxCount(Math.max(...merged_array));
+
       setTotalStatus([
         {
           name: "New",
@@ -212,6 +207,14 @@ const Dashboard = (props) => {
       props.readCountReportByStatus(item);
     }
   }, [list_count_report_by_status]);
+  useEffect(() => {
+    if (data !== null) {
+      const timer = setInterval(() => {
+        props.readCountReportByStatus(data);
+      }, 300000);
+      return () => clearInterval(timer);
+    }
+  }, [data]);
 
   return (
     <React.Fragment>
