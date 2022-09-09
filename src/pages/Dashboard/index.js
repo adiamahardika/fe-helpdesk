@@ -9,7 +9,10 @@ import {
   FormGroup,
   Media,
 } from "reactstrap";
-import { readCountReportActivity } from "../../store/pages/report/actions";
+import {
+  readCountReportActivity,
+  readCountReportStatus,
+} from "../../store/pages/report/actions";
 import { readArea } from "../../store/pages/area/actions";
 import { readRegional } from "../../store/pages/regional/actions";
 import { readGrapari } from "../../store/pages/grapari/actions";
@@ -23,7 +26,9 @@ import Select from "react-select";
 import Loader from "../../helpers/loader";
 
 const Dashboard = (props) => {
-  const list_count_report_by_status = props.list_count_report_by_status;
+  const list_count_report_activity = props.list_count_report_activity;
+  const list_count_report_status = props.list_count_report_status;
+  console.log(list_count_report_status);
   const option_area = props.option_area;
   const option_regional = props.option_regional;
   const option_grapari = props.option_grapari;
@@ -35,6 +40,7 @@ const Dashboard = (props) => {
   const [chartDate, setChartDate] = useState(null);
   const [chartSeries, setChartSeries] = useState(null);
   const [totalStatus, setTotalStatus] = useState(null);
+  const [totalActivity, setTotalActivity] = useState(null);
   const [data, setData] = useState(null);
   const [selectedArea, setSelectedArea] = useState(null);
   const [selectedRegional, setSelectedRegional] = useState(null);
@@ -70,6 +76,12 @@ const Dashboard = (props) => {
       regional: [],
       grapariId: [],
     });
+    props.readCountReportStatus({
+      ...data,
+      areaCode: area_code,
+      regional: [],
+      grapariId: [],
+    });
     delete data.areaCode;
     delete data.regional;
     delete data.grapariId;
@@ -91,6 +103,11 @@ const Dashboard = (props) => {
       regional: regional,
       grapariId: [],
     });
+    props.readCountReportStatus({
+      ...data,
+      regional: regional,
+      grapariId: [],
+    });
     delete data.regional;
     delete data.grapariId;
   };
@@ -102,6 +119,10 @@ const Dashboard = (props) => {
     setData({ ...data, grapariId: grapari_id });
 
     props.readCountReportActivity({
+      ...data,
+      grapariId: grapari_id,
+    });
+    props.readCountReportStatus({
       ...data,
       grapariId: grapari_id,
     });
@@ -141,18 +162,36 @@ const Dashboard = (props) => {
       endDate: end_date,
     };
     props.readCountReportActivity(item);
+    props.readCountReportStatus(item);
 
     setData(item);
   }, []);
 
   useEffect(() => {
-    if (list_count_report_by_status !== null) {
+    if (list_count_report_activity && list_count_report_status) {
+      const count_status = {
+        new: 0,
+        process: 0,
+        on_hold: 0,
+        finish: 0,
+      };
       const date = [];
       const new_status = [];
       const process_status = [];
       const finish_status = [];
 
-      list_count_report_by_status.map((value) => {
+      list_count_report_status.map((value) => {
+        if (value.status === "New") {
+          count_status.new = value.total;
+        }
+        if (value.status === "Process") {
+          count_status.process = value.total;
+        }
+        if (value.status === "Finish") {
+          count_status.finish = value.total;
+        }
+      });
+      list_count_report_activity.map((value) => {
         date.push(getShortDate(value.date));
         new_status.push(value.new);
         process_status.push(value.process);
@@ -172,24 +211,46 @@ const Dashboard = (props) => {
           data: finish_status,
         },
       ];
-
       setTotalStatus([
         {
           name: "New",
           total: new_status.reduce((a, b) => a + b, 0),
-          icon: "bx-error-circle",
           bg_color: "#f46a6a",
         },
         {
           name: "Process",
           total: process_status.reduce((a, b) => a + b, 0),
-          icon: "bxs-hourglass",
           bg_color: "#556ee6",
         },
         {
           name: "Finish",
           total: finish_status.reduce((a, b) => a + b, 0),
-          icon: "bx-check-circle",
+          bg_color: "#34c38f",
+        },
+      ]);
+      setTotalStatus([
+        {
+          name: "Total",
+          total: count_status.new + count_status.process + count_status.finish,
+          icon: "fas fa-ticket-alt",
+          bg_color: "#f1b44c",
+        },
+        {
+          name: "New",
+          total: count_status.new,
+          icon: "bx bx-error-circle",
+          bg_color: "#f46a6a",
+        },
+        {
+          name: "Process",
+          total: count_status.process,
+          icon: "bx bxs-hourglass",
+          bg_color: "#556ee6",
+        },
+        {
+          name: "Finish",
+          total: count_status.finish,
+          icon: "bx bx-check-circle",
           bg_color: "#34c38f",
         },
       ]);
@@ -204,8 +265,9 @@ const Dashboard = (props) => {
         endDate: end_date,
       };
       props.readCountReportActivity(item);
+      props.readCountReportStatus(item);
     }
-  }, [list_count_report_by_status]);
+  }, [list_count_report_activity, list_count_report_status]);
   useEffect(() => {
     if (data !== null) {
       const timer = setInterval(() => {
@@ -251,6 +313,10 @@ const Dashboard = (props) => {
                             props.readCountReportActivity({
                               ...data,
                               startDate: event.target.value,
+                            }),
+                            props.readCountReportStatus({
+                              ...data,
+                              startDate: event.target.value,
                             })
                           )}
                         />
@@ -277,6 +343,10 @@ const Dashboard = (props) => {
                               endDate: event.target.value,
                             }),
                             props.readCountReportActivity({
+                              ...data,
+                              endDate: event.target.value,
+                            }),
+                            props.readCountReportStatus({
                               ...data,
                               endDate: event.target.value,
                             })
@@ -353,7 +423,7 @@ const Dashboard = (props) => {
               <Row>
                 {totalStatus &&
                   totalStatus.map((value, key) => (
-                    <Col md="4" key={"_col_" + key}>
+                    <Col md="3" key={"_col_" + key}>
                       <Card className="mini-stats-wid">
                         <CardBody>
                           <Media>
@@ -368,11 +438,7 @@ const Dashboard = (props) => {
                                 className="avatar-title"
                                 style={{ backgroundColor: value.bg_color }}
                               >
-                                <i
-                                  className={
-                                    "bx " + value.icon + " font-size-24"
-                                  }
-                                ></i>
+                                <i className={value.icon + " font-size-24"}></i>
                               </span>
                             </div>
                           </Media>
@@ -458,7 +524,8 @@ const Dashboard = (props) => {
 
 const mapStatetoProps = (state) => {
   const {
-    list_count_report_by_status,
+    list_count_report_activity,
+    list_count_report_status,
     message_report,
     response_code_report,
     loading,
@@ -467,7 +534,8 @@ const mapStatetoProps = (state) => {
   const { option_regional } = state.Regional;
   const { option_grapari } = state.Grapari;
   return {
-    list_count_report_by_status,
+    list_count_report_activity,
+    list_count_report_status,
     option_area,
     option_regional,
     option_grapari,
@@ -480,6 +548,7 @@ const mapStatetoProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
+      readCountReportStatus,
       readCountReportActivity,
       readArea,
       readRegional,

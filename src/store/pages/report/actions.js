@@ -5,6 +5,9 @@ import {
   READ_COUNT_REPORT_ACTIVITY,
   READ_COUNT_REPORT_ACTIVITY_REJECT,
   READ_COUNT_REPORT_ACTIVITY_FULFILLED,
+  READ_COUNT_REPORT_STATUS,
+  READ_COUNT_REPORT_STATUS_REJECT,
+  READ_COUNT_REPORT_STATUS_FULFILLED,
 } from "./actionTypes";
 
 export const readReport = (value) => {
@@ -53,6 +56,31 @@ export const readCountReportActivityReject = (payload) => {
 export const readCountReportActivityFulfilled = (data) => {
   return {
     type: READ_COUNT_REPORT_ACTIVITY_FULFILLED,
+    payload: data,
+  };
+};
+
+export const readCountReportStatus = (value) => {
+  const data = {
+    body: value,
+    url: `/v1/report/get-count-status`,
+  };
+  return {
+    type: READ_COUNT_REPORT_STATUS,
+    payload: data,
+  };
+};
+
+export const readCountReportStatusReject = (payload) => {
+  return {
+    type: READ_COUNT_REPORT_STATUS_REJECT,
+    payload: payload,
+  };
+};
+
+export const readCountReportStatusFulfilled = (data) => {
+  return {
+    type: READ_COUNT_REPORT_STATUS_FULFILLED,
     payload: data,
   };
 };
