@@ -18,7 +18,7 @@ import { readRegional } from "../../store/pages/regional/actions";
 import { readGrapari } from "../../store/pages/grapari/actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getShortDate } from "../../helpers/index";
+import { getShortDate, parseDate } from "../../helpers/index";
 import { AvForm } from "availity-reactstrap-validation";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import ReactApexChart from "react-apexcharts";
@@ -211,21 +211,21 @@ const Dashboard = (props) => {
           data: finish_status,
         },
       ];
-      setTotalStatus([
+      setTotalActivity([
         {
           name: "New",
           total: new_status.reduce((a, b) => a + b, 0),
-          bg_color: "#f46a6a",
+          color: "#f46a6a",
         },
         {
           name: "Process",
           total: process_status.reduce((a, b) => a + b, 0),
-          bg_color: "#556ee6",
+          color: "#556ee6",
         },
         {
           name: "Finish",
           total: finish_status.reduce((a, b) => a + b, 0),
-          bg_color: "#34c38f",
+          color: "#34c38f",
         },
       ]);
       setTotalStatus([
@@ -419,7 +419,19 @@ const Dashboard = (props) => {
                     )}
                   </Row>
                 </CardBody>
-              </Card>
+              </Card>{" "}
+              <Row>
+                <Col className="d-flex justify-content-center">
+                  <h4>
+                    {data && data.startDate} / {data && data.endDate}
+                  </h4>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <h4>Tickets Status</h4>
+                </Col>
+              </Row>
               <Row>
                 {totalStatus &&
                   totalStatus.map((value, key) => (
@@ -446,16 +458,33 @@ const Dashboard = (props) => {
                       </Card>
                     </Col>
                   ))}
+              </Row>{" "}
+              <Row>
+                <Col>
+                  <h4>Tickets Activity</h4>
+                </Col>
               </Row>
               <Card>
                 <CardBody>
-                  <Row>
-                    <Col className="d-flex justify-content-end">
-                      <h4>
-                        {data && data.startDate} / {data && data.endDate}
-                      </h4>
+                  {/* <Row>
+                    <Col className="d-flex justify-content-center align-items-center">
+                      <h4 className="mr-4">Total</h4>
                     </Col>
                   </Row>
+                  <Row>
+                    <Col className="d-flex justify-content-center align-items-center">
+                      {totalActivity &&
+                        totalActivity.map((value) => (
+                          <h3
+                            className="mr-4 d-flex align-items-center"
+                            style={{ color: value.color }}
+                          >
+                            <i className="bx bxs-square font-size-16 align-middle mr-1"></i>
+                            {value.total}
+                          </h3>
+                        ))}
+                    </Col>
+                  </Row> */}
                   <Row>
                     <Col>
                       {chartDate && chartSeries && (
