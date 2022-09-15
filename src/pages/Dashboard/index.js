@@ -28,7 +28,6 @@ import Loader from "../../helpers/loader";
 const Dashboard = (props) => {
   const list_count_report_activity = props.list_count_report_activity;
   const list_count_report_status = props.list_count_report_status;
-  console.log(list_count_report_status);
   const option_area = props.option_area;
   const option_regional = props.option_regional;
   const option_grapari = props.option_grapari;
