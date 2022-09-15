@@ -8,4 +8,5 @@ Please read carefully:
 REACT_APP_API = http://localhost:8083/svc-helpdesk
 
 REACT_APP_SIGNATURE_SECRET = SignatureKey
+
 REACT_APP_ENCRYPT_KEY = EncryptKey
